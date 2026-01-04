@@ -1,0 +1,23 @@
+\expandafter\ifx\csname ifdraft\endcsname\relax
+   \documentclass[a4paper,12pt]{jreport}
+   \usepackage{setspace}
+   \usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+   \usepackage{caption}
+   \usepackage{enumitem}
+   \setstretch{1.5}
+   \begin{document}
+\fi
+
+\chapter*{研究業績一覧} \label{performance}
+\addcontentsline{toc}{chapter}{研究業績一覧}
+
+\section*{国内会議}
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{渡邉謙吾}，川村天, 小林伶央, 有井知真, 伊藤亮史, 栗原聡，"物語構造分析に基づくLLMを用いたインタラクティブストーリー生成システム"，第24回データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS)(人工知能学会合同研究会2023)，Nov.25，2023
+\item 安部玲央, 有井知真, 伊藤亮史, \textbf{渡邉謙吾}, 小林伶央, 川村天, 栗原聡，"アフォーダンスを活用するマルチエージェントプランニングにおけるタスク分解"，第24回 データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS), Nov.25，2023
+\end{enumerate}
+
+\expandafter\ifx\csname ifdraft\endcsname\relax
+   \end{document}
+\fi

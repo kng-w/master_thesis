@@ -1,0 +1,441 @@
+\expandafter\ifx\csname ifdraft\endcsname\relax
+   \documentclass[a4j,12pt]{jsreport}
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+% 画像
+\usepackage[dvipdfmx]{graphicx}
+
+% biblatex
+\usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
+\addbibresource{graduation_thesis.bib}
+
+%itembox
+\usepackage{ascmac}
+%breakitemboxのためのpackage
+\usepackage{itembkbx}
+% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
+% \usepackage{framed} 枠
+
+%フォント
+\usepackage[ipaex]{pxchfon}
+
+\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{paralist}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{fancyhdr}
+\usepackage{ltablex}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage{enumitem} % itemizeの行間 これは下になければならない
+\usepackage{threeparttable} % 表の脚注
+
+
+   \setlength{\headheight}{16.5pt}
+   \captionsetup{format=hang}
+   \begin{document}
+   % 上部のヘッダー
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+\fi
+
+\chapter{背景}\label{chap:background}% 物語構造
+本章では, 本研究において開発したストーリー創作支援システムが依拠する物語構造について\ref{sec:story_structure}節で述べ, 大規模言語モデルの発展について\ref{sec:llm}節で述べる.
+
+\section{物語構造}\label{sec:story_structure}
+物語構造とは, 語りの構造に関する学問, 物語論(Narratology)の中で取り扱われてきた概念である. Narratology の原点となったのは, 文学作品をそれ自体が形成する独立した言語世界として認識し, 言語表現の技法と構造二つの側面からの解明により, 文学固有の批評の原理の確立を目指したロシア・フォルマリズム\cite{formalizm__1996}とクロード・レヴィ＝ストロースらにより展開された構造主義\cite{deguchi2011}である. Narratology という言葉はそれらの融合として, 1968年にトドロフにより発案された\cite{schermann__1996}. トドロフ\cite{todorov__1974}は, この分野における研究で, 物語の構成要素には最小の物語が有していなければならない段階, 属性付与, 行為の記述, 属性付与という3段階があると主張した. プルーストの『失われた時を求めて』\cite{Proust96}を主題に扱い, 物語を「物語内容」, 「物語言説」, 「物語行為」という三相に分け, 「temps(時間)」,「mode(法)」,「voix(態)」といった用語で出来事の継起順序などについて分析したジュネットの研究\cite{genette85}や物語内における登場人物と行為に関するMargolinの研究\cite{margolin86}なども挙げられる. これらの研究の中で取り扱われてきた要素を物語の構造と呼び, そしてこれらを分析することを物語構造分析と呼ぶ\cite{barthes79}. 物語構造分析において中でもよく知られているのが Propp の研究である.
+
+%物語の進行に共通する要素を分析する研究[ローマンヤコブソン]や物語の登場人物に関する研究[Margolin], 語りの順序と物語の時系列の齟齬に関する分析[]なども含まれる.
+
+Propp\cite{Propp68} は, 約300種のロシアの魔法昔話における登場人物の行為から, 31 機能を導き, 一貫性を持つロシア魔法昔話がこれら 31 機能の任意の組み合わせと順序に従う接続により形成されることを示した. Propp の研究により示された 31 機能を表\ref{propp 31}に示す.
+\vspace{1cm}
+% Propp の例
+\setlongtables
+   \begin{tabularx}{\textwidth}{lXX}
+      \caption[Propp の31機能]{Propp の31機能 \protect\footnotemark \label{propp 31}}
+      \setlength{\belowcaptionskip}{-1pt}
+      \vspace*{-0.3cm}
+         \endfirsthead
+   \hline
+   $\alpha$ && 導入の状況(i) \\
+   $\beta$ & 留守 & 家族の成員のひとりが家を留守にする \\
+   $\gamma$ & 禁止 & 主人公に禁を課す \\
+   $\delta$ & 違反 & 禁が破られる \\
+   $\varepsilon$ & 探り出し & 敵対者が探り出そうとする \\
+   $\zeta$ & 情報漏洩 & 犠牲者に関する情報が敵対者に伝わる \\
+   $\eta$ & 謀略 & 敵対者は、犠牲となる者なりその持ち物なりを手に入れようとして、犠牲となる者をだまそうとする \\
+   $\theta$ & 幇助 & 犠牲となる者は欺かれ、そのことによって心ならずも敵対者を助ける\\
+   A & 加害 & 敵対者が、家族の成員の一人に害を加えるなり損傷を与えるなりする \\
+   a & 欠如 & 家族の成員のひとりに、何かが欠けている。その者が何かを手に入れたいと思う \\
+   B & 仲介／つなぎの段階 & 被害なり欠如なりが〔主人公に〕知らされ、主人公に頼むなり命令するなりして主人公を派遣したり出立を許したりする \\
+   C & 対抗開始 & 探索者型の主人公が、対抗する行動に出ることに同意するか、対抗する行動に出ることを決意する \\
+   ↑ & 出立 & 主人公が家を後にする \\
+   D & 贈与者の第一機能 & 主人公が〔贈与者によって〕試され・訊ねられ・攻撃されたりする。そのことによって主人公が呪具なり助手なりを手に入れる下準備がなされる \\
+   E & 主人公の反応 & 主人公が贈与者となるはずの者の働きかけに反応する \\
+   F & 呪具の贈与・獲得 & 呪具〔あるいは助手〕が主人公の手に入る \\
+   G & 二つの国の間の空間移動 & 主人公は、探し求める対象のある場所へ連れて行かれる・送りとどけられる・案内される \\
+   H & 闘い & 主人公と敵対者とが、直接に闘う \\
+   J & 標づけ & 主人公に、標（しるし）がつけられる \\
+   I & 勝利 & 敵対者が敗北する \\
+   K & 不幸・欠如の解消 & 発端の不幸・災いか発端の欠如が解消される \\
+   ↓ & 帰還 & 主人公が帰路につく \\
+   Pr & 追跡 & 主人公が追跡される \\
+   Rs & 救助 & 主人公は追跡から救われる \\
+   O  & 気付かれざる到着 & 主人公がそれと気付かれずに、家郷か、他国かに到着する \\
+   L & 不当な要求 & ニセ主人公が不当な要求をする \\
+   M & 難題 & 主人公に難題が課される \\
+   N & 解決 & 難題を解決する \\
+   Q & 発見・認知 & 主人公が発見認知される \\
+   Ex & 正体露見 & ニセ主人公あるいは敵対者（加害者）の正体が露見する \\
+   T & 変身 & 主人公に新たな姿形が与えられる \\
+   U & 処罰 & 敵対者が罰せられる \\
+   W & 結婚 & 主人公は結婚し、即位する \\
+   \hline
+   \end{tabularx}
+
+\footnotetext{\cite{Propp68} から引用.}
+これらの機能の中で特定の機能は, その主な担い手となる登場人物の種類が定まっており, それらは 7 種類に大別される. つまり, 7 種類の登場人物は各々決められた機能における行動領域をもつとされている\cite{Propp68}.  
+
+Propp は, 全ての魔法昔話でこれら 31 機能の全てが使われるわけでなく, 欠落するものや, 片方が選択された場合もう片方は現れないような機能の組み合わせもあるとしながらその継起順序は常に同一であるとして, 以下の図式を示した.
+
+% Propp の図式
+$$
+\text { A B C } \uparrow \text { D E F G }\left\{\begin{array}{ccc}
+H&&I\\
+&J&\\
+M&&N
+\end{array}\right\} K \downarrow \operatorname{Pr}-\text { Rs O L Q Ex T U W }
+$$
+ 
+%ここで $\alpha$ から $\theta$ が現れないのは, これらが予備機能であるからである.
+
+物語の自動生成に関する研究において, 物語構造を利用した研究はこれまでもさまざま行われてきた. Propp が見出した 31 機能を並べ替え, プロットの自動生成を試みる研究などである. 
+
+Jaya\cite{Jaya11} らは, Propp のモデルを利用した既存の story generator として Limら\cite{Fairytalegenerator01}により作られた Proppian fairly tale generatorを例に挙げつつ, その問題点を指摘した. Proppian fairly tale generator の操作画面を図\ref{Proppain fairly tale generator}に示す. Proppian fairly tale generator では, 31 機能各々において最大 10 通りの書き方が利用でき, 機能ごとにランダムに選ばれた文章を, 順序に従い出力することで物語を作り上げる. 問題点は単に Propp モデルを利用しただけでは, 物語のトーンやムード, キャラクター, 設定, 文体などの構成要素が認識されず, 意味の破綻が生じてしまうことである. 
+
+% Proppian fairly tale generator の図を入れる
+
+\begin{figure}[htbp]
+   \begin{center}
+      \includegraphics[width=8cm]{pict/02/Fairytalegenerator.jpeg}
+      \caption[proppian fairly tale generator の画面]{proppian fairly tale generator の画面 \protect\footnotemark}
+      \label{Proppain fairly tale generator}
+   \end{center}
+\end{figure}
+\footnotetext{\url{https://web.archive.org/web/20110716054518/http://www.brown.edu/Courses/FR0133/Fairytale_Generator/gen.html} (cited 2024-01-27)}
+
+
+
+そこで Jaya\cite{Jaya11} らは,  ユーザーの選択を尊重し, 状況や関連する属性, 環境に対し首尾一貫した物語が生成できるよう, 登場人物, 場所, 設定, オブジェクトの選択をユーザーに求め, それらを利用し, 一貫性のあるストーリーの生成を目指した Reviesed Proppian Story Generator を提案した. このシステムは Propp が見出した機能に加え, オントロジを用いた意味処理を加えることにより意味の破綻を防ぎ物語の生成を行う. しかしこのシステムが扱える Propp の機能は 31 機能あるうち 5 機能のみにとどまり, 生成できる物語も子ども向けのものに限られる. このシステムにおけるアルゴリズムを以下に示す.
+
+% Jaya のアルゴリズム
+\begin{algorithm}[H]
+   \caption{Revising Proppian's System \protect\footnotemark}
+   \begin{algorithmic}[1] % The number tells where the line numbering should start
+   \Procedure{Revised\_Propp}{$functions, characters, location, settings, objects$}
+   \State \textbf{Step - 1:} retrieve the main characters, settings, location, objects
+   \State \textbf{Step - 2:} Repeat the steps ‘a’ to ‘c’ until all the five functions delivered a text.
+   \While{each function in functions} % loop start
+   \State \textbf{a:}
+   \Repeat % inner loop start
+   \State (i) Extract the list of texts related to the given noun from the array of the list.
+   \State (ii) Extract the texts which match with the location and settings.
+   \State (iii) Select the suitable text and assign it to the function variable to form a story.
+   \Until{suitable text is found}
+   \State \textbf{b:} Output the function variable as a story
+   \State \textbf{c:} Move on to the next function if it exists, for selecting a text.
+   \EndWhile % loop end
+   \EndProcedure
+   \end{algorithmic}
+\end{algorithm}
+\footnotetext[3]{\cite{Jaya11} から引用.}
+
+このように, 物語構造として Propp が見出した 31 機能を利用して, 物語の自動生成に取り組む研究は様々ある.しかしながら, Propp が 見出した 31 機能はあくまで特定のジャンル, ロシア の魔法昔話の分析により得られたものであるため, 一般的 な物語の作成に利用することはできないと考えられる.
+
+そこで村井\cite{murai22}は, 特定ジャンルの物語に限定されない, 一般的な物語の展開パターンを抽出する目的として, 『ブラック・ジャック』を分析対象とし, 物語構造の分析を行った. 
+
+村井の研究によると『ブラック・ジャック』は, 複数ジャンルの物語パターンを含む短編集であり, 分析可能な話数も十分である. 加えて作品自体の評価も高い. 一般的な物語の展開パターンを抽出するにあたり, 異なる作者, 異なる作品の様々なジャンルの物語を組み合わせて分析することも考えられるが, しかしその場合, 作者や作品の違いによって, 演出上の表現技法などが大きく異なることとなり, 分析が困難になると考えられる. このような理由により, 同一作者, 同一作品内において, 複数ジャンルの物語を含み, 国内外で高い評価を持つ『ブラック・ジャック』は一般的な物語構造の分析に適した作品であるといえる\cite{murai22}. 
+
+村井が分析した『ブラック・ジャック』の物語構造の一例を図\ref{BJ_murai}に示す.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=12cm]{pict/02/BJ_murai.png}
+      \caption[村井の分析結果の一例]{村井の分析結果の一例 \protect\footnotemark}
+      \label{BJ_murai}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{murai22} から引用.}
+
+% 村井先生の表を入れる
+
+そこで本研究では, 村井の物語構造分析により得られた『ブラック・ジャック』の物語構造, 展開パターン を LLM の制御に用いることとし, 『ブラック・ジャッ ク』の新作エピソードのプロット創作支援に取り組んだ.
+
+『ブラック・ジャック』の新作プロットの創作支援 により得た知見は, 同作品が複数ジャンルの物語構造を含む複合的な作品であるため, 一般的な物語作品を生成するための汎用的な手法に貢献すると考えられる.
+
+\section{大規模言語モデル}\label{sec:llm}
+言語モデルとは, 単語の系列, すなわち文章が生成される確率を表現するモデルのことである. 中でも自己回帰言語モデルとは, 連鎖律により, ある単語の並びが出現する確率を, 各単語の一つ前までの単語の並びの出現を前提とする条件付き確率の積として表現するモデルのことを言う. これは式\eqref{eq:lm}のように表すことができる. この条件付き確率をニューラルネットで表現するモデルはニューラル言語モデルと呼ばれ, これまでにさまざまなモデルが提案されてきた. %本研究では, その中でも最も基本的なモデルである n-gram モデルと, その拡張である RNNLM,LSTM, GRU, Transformer について説明する.
+
+\begin{equation}
+   p\left(x_1, \ldots, x_T\right)=\prod_{t=1}^{T} p\left(x_t \mid x_1, \ldots, x_{t-1}\right)
+   \label{eq:lm}
+\end{equation}
+
+\subsection{Transformer}
+Transformer は, 2017 年に Vaswani ら\cite{vaswani17}によって提案された, 機械翻訳を行うニューラル言語モデルである. 以前までのニューラル言語モデルにおいて重要な役割を果たしてきた RNN(Recurrent Neural Network)\cite{mikolov10} や CNN(Convolutional Neural Network)を用いず, Attention と呼ばれる機構のみに基づく. 現代において高い性能を誇る言語モデルの多くはこの Transformer をベースとしており, 近年の言語モデルの大規模化およびその発展は Transformer を起点にしているということができる.
+
+Transformer は, 主に以下の 2 つのモジュールから構成されるエンコーダデコーダモデルである. 1 つは, Multi-Head Attention と呼ばれる Self-Attention のモジュールである. これは, 文脈内における単語間の依存関係に基づいた各単語の注目度を計算する. 2 つ目は, Position-wise Feed-Forward Network と呼ばれるモジュールである. これは, Multi-Head Attention の出力に対し各単語の特徴量を独立に変換する全結合ネットワークである. Transformer は, これらのモジュールと 残差結合や正則化, Positional Encoding などを組み合わせることにより構成されている. Transformer のアーキテクチャを図\ref{transformer}に示す.
+
+\subsubsection{エンコーダデコーダモデル}
+
+自然言語処理(NLP)分野におけるエンコーダデコーダモデルは, 機械翻訳に端を発する. エンコーダは, 入力される文章から文意を表すベクトルを作り, デコーダはそのベクトルから目的となる文章を作成する. Sutskever ら\cite{sutskever14}は, このエンコーダデコーダモデルに RNN の一種である LSTM(Long Short-Term Memory) を用い機械翻訳を行うモデルを提案した. このような RNN をベースとしたエンコーダデコーダモデルはseq2seqモデルとも呼ばれる. Transformer は, エンコーダデコーダモデルに RNN も CNN も用いず, Attention 機構のみを用いることで seq2seq モデルよりも高い性能を示した. 図\ref{transformer}における左半分がエンコーダ, 右半分がデコーダに対応する. 
+
+% エンコーダデコーダモデルは, 機械翻訳の分野でよく用いられるモデルである. これは, 入力された文章をエンコーダによりベクトル化し, そのベクトルをデコーダにより文章に変換するモデルである. このモデルは, 以下の式で表される.
+
+% \begin{align}
+%    \bm{h}_{i}^{e} &= \text { Encoder }\left(\bm{x}_{i}^{e}, \bm{h}_{i-1}^{e}\right) \\
+%    \bm{h}_{i}^{d} &= \text { Decoder }\left(\bm{x}_{i}^{d}, \bm{h}_{i-1}^{d}\right)
+% \end{align}
+
+% ここで, $\bm{x}_{i}^{e}$ は入力文章の $i$ 番目の単語, $\bm{x}_{i}^{d}$ は出力文章の $i$ 番目の単語, $\bm{h}_{i}^{e}$ はエンコーダの $i$ 番目の隠れ層, $\bm{h}_{i}^{d}$ はデコーダの $i$ 番目の隠れ層である. 
+
+
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=7cm]{pict/02/transformer.png}
+      \caption[Transformer のアーキテクチャ]{Transformer のアーキテクチャ \protect\footnotemark}
+      \label{transformer}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{vaswani17} から引用.}
+
+\subsubsection{Multi-Head Attention}
+
+% Multi-Head Attention は, Positional Encoding により位置情報が付与された, 単語ごと(実際にはサブワードごと)の Word Embedding というベクトルにおける  Q(query), K(key), V(value) を入力として受け取り, 以下の式で Attention を計算する. 
+
+Transformer に入力される文章は, 単語ごと(実際はサブワードごと)に Word Embedding というベクトルに変換され, 各ベクトルは Positional Encoding から位置情報が付与される. Multi-Head Attention は, これらのベクトルから作成される $Q$(query), $K$(key), $V$(value) を入力として受け取り, 単語間の依存関係に基づく注目度を計算する. Muliti-Head Attention の構造を図\ref{multi-head_attention}に示す.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=12cm]{pict/02/multi-head_attention.png}
+      \caption[Multi-Head Attention の構造]{(左)Multi-Head Attention を構成する Scaled Dot Product と (右)Multi-Head Attention の構造 \protect\footnotemark}
+      \label{multi-head_attention}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{vaswani17} から引用.}
+
+Scaled Dot-Product Attention では, 式\eqref{eq:attention}に示す計算が行われる. これは, $Q$ と $K$ の類似度に基づいた $V$ に含まれる各ベクトルの線型結合を計算するものである. このように並列で行われる計算により, 文章内における全単語間の関連性に依拠した Attention を得ることができる. しかしながら, この計算には学習パラメータが含まれないため, 注意表現を学習することができない. そこで, Multi-Head Attention として, $Q$, $K$, $V$ を $h$ 個のヘッドに分割し, それぞれのヘッドに対して Linear 層を通し Scaled Dot-Product Attention における計算を行う. その出力を結合し, 再度 Linear 層を通すことで, 単語間の Attention Map を獲得する. Multi-Head Attention では, このような計算を通じて, 異なる特徴空間にまたがった文章全体の関連性における注意表現を学習することができる. この計算を式\eqref{eq:multi-head}に示す.
+
+\begin{equation}
+   \operatorname{Attention}(Q, K, V)  =\operatorname{softmax}\left(\frac{Q K^T}{\sqrt{d_k}}\right) V\\
+   \label{eq:attention}
+   \end{equation}
+   \begin{equation}
+      \begin{aligned}
+   \operatorname{MultiHead}(Q, K, V) & =\text { Concat }\left(\operatorname{head}_1, \ldots, \operatorname{ head }_{\mathrm{h}}\right) W^O \\
+   \text { where } \operatorname{ head }_i & =\text { Attention }\left(Q W_i^Q, K W_i^K, V W_i^V\right)
+      \end{aligned}
+      \label{eq:multi-head}
+\end{equation}
+
+
+Where the projections are parameter matrices $W_i^Q \in \mathbb{R}^{d_{\text {model }} \times d_k}, W_i^K \in \mathbb{R}^{d_{\text {model }} \times d_k}, W_i^V \in \mathbb{R}^{d_{\text {model }} \times d_v}$ and $W^O \in \mathbb{R}^{h d_v \times d_{\text {model }}}$.
+
+RNN は, 単語の系列を逐次的に処理するため並列計算が行えず, 長距離にまたがる依存関係の学習が困難であるという問題と学習に長い時間を要するという問題を持っている. Transformer は, この Multi-Head Attention における並列計算によって, 高速な計算と長距離の依存関係の学習を可能にした. 
+% Multi-Head Attention は, Positional Encoding によって位置情報が付与された Word Embedding という 単語をベクトル化したもの Q(query), K(key), V(value) の 3 つを入力として受け取る.  
+
+
+\subsubsection{Position-wise Feed-Forward Network}
+Multi-Head Attention からの出力は, Position-wise Feed-Forward Network というコンポーネントにおいて, 単語ごと独立に, 式\ref{eq:ffn}で表される, 活性化関数としてReLUを関数を挟んだ2層の全結合層に入力される. 単語ごと独立な処理を行うためここでも並列計算が可能であり, Position-wise と言う名称はそのことに由来する. ただし層間のパラメータは共有のものが用いられ, 計算効率の向上が図られている. この構造はニューラルメモリの模倣として解釈され, 知識を抽出し蓄える場所として考えられている\cite{geva20}.
+\begin{equation}
+   \operatorname{FFN}(x)=\max \left(0, x W_1+b_1\right) W_2+b_2
+   \label{eq:ffn}
+\end{equation}
+
+Transformer は以上のようなアーキテクチャをもち, 従来の手法に比べ高い性能を持つことから, その後の言語モデルの発展に大きな影響を与えた. 
+
+\subsection{BERT}
+Transformer をベースとした言語モデルの一つに Google\footnotemark が開発した BERT\cite{devlin18} がある. BERT は Bidirectional Encoder Representations from Transformers の略称であり, その名の通り, Transformer のエンコーダ部分を文の左右双方向から用いた言語モデルである. 従来の言語モデル, 例えば Transformer のデコーダ部分を用いる GPT\cite{radford18} は, その学習において, 予測する単語より前の単語のみを参照する. これは, その単語より後の単語は本来未知であるため, その単語を予測する際には参照できないと制約をおいたためである. これを Masked Multi-Head Attention により実現した. しかしながら, このような単方向の言語モデルは, 文章の意味を解釈するような前後の文脈を読み取ることが必要なタスクにおいて大きな弊害になると考えられた. そこで BERT では, その単語より前の単語だけでなく, その単語より後の単語も参照し, 文の左右双方向から同時に学習する手法が提案され, 従来の手法に比べ, それぞれの単語が前後の文脈においてどのように影響されているかをより正確に捉えることを可能にした.
+\footnotetext{\url{https://www.google.com/} (cited 2024-01-27)}
+
+BERT はアーキテクチャを大きく変えることなくファインチューニングによりあらゆる NLP タスクに適用できる. これは, BERT がラベルなしの大量のテキストデータセットを用いて事前学習を行い, 様々な文脈で単語やフレーズの意味を理解する能力を獲得したためである. 事前学習では, 文中の一部の単語をランダムにマスクし, そのマスクされた単語を予測する Masked Language Modeling (MLM) と 2 つの文が連続した文であるかどうかを判定する Next Sentence Prediction (NSP) を同時に学習し, 文脈を理解する能力を養う. このプロセスにより, BERT はさまざまなタイプのNLPタスク, 例えば感情分析, 質問応答, テキストの要約などに個々のファインチューニングにより適用可能な汎用性を持つようになった.
+
+
+BERT の事前学習モデルのアーキテクチャを図\ref{BERT}に示す. BERT は Transformer のエンコーダ部分を 12 層 または 24 層積み重ねたモデルである. 図\ref{BERT}からわかる通り, 全ての層で, 前の層の全てのノードから値を受け取っており, これにより文を左右双方向から捉え文脈を理解する学習が可能となっている.
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=7cm]{pict/02/BERT.png}
+      \caption[BERT の事前学習モデルのアーキテクチャ]{BERT 事前学習モデルのアーキテクチャ. $\mathrm{T}_\mathrm{i}$ はトークン i の文脈表現を, Trm は Transformer のエンコーダ部分を, $\mathrm{E}_\mathrm{i}$ は入力ベクトルを表す.\protect\footnotemark}
+      \label{BERT}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{devlin18} から引用.}
+
+BERT における事前学習とファインチューニングの関係を図\ref{BERT2}に示す. 事前学習における MLM の学習では, 入力された文章中における単語の 15 \% をランダムに選択し, そのうち 80 \% を [MASK]に, 10 \% をランダムに抽出した単語に置き換え, 残り 10 \% は何にも置き換えない処理をする. このようにして作成された文章を入力とし, その文章内でマスクされた単語を予測する. [MASK] というトークンは事前学習にしか出てこないトークンであり, 事前学習とファインチューニングとの間に差異を生じさせる要因となるため, ランダムに選択された 15 \% の単語を全て[MASK]に置き換えることはせず, 上述した置き換えにより差異を小さく抑えている. NSP の学習では, 50 \% の確率で連続した 2 文が, 50 \% の確率でランダムに選択された 2 文が後者の側にラベルが付与され入力される. これらの入力を用いて2文が連続するか否かを予測する学習が行われる.
+
+このようにして事前学習された BERT はファインチューニングすることでさまざまなタスクに転用できる. ファインチューニングは, 事前学習で獲得されたパラメータをそのまま初期値とし, 各タスクごとのレイヤーを出力層に追加してラベル付きデータセットで学習を行う.
+
+このように学習される BERT は当時, GLUEベンチマーク\cite{wang18}と呼ばれる8個のNLPタスク群におけるその全てのタスクで最高性能を達成し, SQuAD v1.1\cite{rajpurkar16} v2.0\cite{rajpurkar18} や SWAG\cite{zellers18}と呼ばれるNLPタスクにおいても最高性能を達成した. 
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=12cm]{pict/02/BERT2.png}
+      \caption[BERT における事前学習とファインチューニングの関係]{BERT における事前学習とファインチューニングの関係 \protect\footnotemark}
+      \label{BERT2}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{devlin18} から引用.}
+
+\subsection{GPT}
+
+GPT\cite{radford18, radford19, brown20, OpenAI23}はOpenAI\footnotemark\footnotetext{\url{https://openai.com/} (cited 2024-01-27)} により開発された Transformer をベースとした言語モデルの一つである. 2018年に最初のモデル GPT\cite{radford18}(以後簡単のためGPT-1) が発表されてから現在に至るまで, GPT-2\cite{radford19}, GPT-3\cite{brown20}, GPT-4\cite{OpenAI23} とバージョンを重ね, その性能を大きく向上させてきた. 特に, 一般ユーザーが利用できるインターフェースをもつ, GPT-3.5, 4 が搭載された ChatGPT\footnotemark\footnotetext{\url{https://chat.openai.com/} (cited 2024-01-27)} は, ユーザーとの対話において極めて自然に応答し, その性能の高さから世間に広く知られるようになった. ChatGPT のインターフェースを図\ref{chatgpt}に示す. 
+
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=10cm]{pict/02/chatgpt.png}
+      \caption[ChatGPT のインターフェース]{ChatGPT のインターフェース \protect\footnotemark}
+      \label{chatgpt}
+   \end{center}
+\end{figure}
+\footnotetext{\url{https://chat.openai.com/} (cited 2024-01-27)} 
+
+\subsubsection{GPT-1}
+
+Generative Pretrained Transformer の略称として発表された GPT シリーズの最初のモデル GPT-1は, 大規模な事前学習により高い汎化性能を獲得するその特徴において BERT に先立つ. GPT-1 における 事前学習は式\eqref{eq:gpt}に示す対数尤度を目的関数とした学習として表せる. これは単語の系列から次の単語を予測するという教師なし学習であり, これによりラベル付きデータセットの不足に対応した大規模な事前学習を実現した. 大規模データセットで事前学習されたモデルは, タスクに応じた教師あり学習に基づきファインチューニングされることで, さまざまなタスクへ転用可能であることが示され, 言語モデルの発展に大きな影響を与えた. このような教師なし学習による事前学習は, 以前から言語モデルの分野において行われてはきたが, GPT-1 は Transformer をベースとしたモデルとして初めて大規模な事前学習を行いその性能を高めたモデルである. これは Transformer が並列計算を可能にし, 長距離の依存関係の学習と学習の高速化をもたらしたことによる. 
+
+\begin{equation}
+   L_1(\mathcal{U})=\sum_i \log P\left(u_i \mid u_{i-k}, \ldots, u_{i-1} ; \Theta\right)
+   \label{eq:gpt}
+\end{equation}
+ここで, $\mathcal{U}=\left\{u_1, \ldots, u_n\right\}$ はラベルなしトークンコーパスであり, $\Theta$は学習モデルのパラメータを表す.
+
+GPT-1 のアーキテクチャを図\ref{GPT}に示す. GPT-1 は Transformer のデコーダ部分のみを 12 層積み重ねたものである. なお, その後のバージョンにおいても Transformer のデコーダ部分が用いられていることについては GPT-4 まで変わりないとされている\cite{OpenAI23}. GPT-1における処理は式\eqref{eq:gpt}に示す通りである. 通常の Transformer は入力に対し, 三角関数に基づく Positional Encoding により位置情報を付与するが, GPT-1 においては Position Embed により, 学習されるパラメータを通じて位置情報を付与する. これは式\eqref{eq:gpt-1}に示す通りである.
+
+\begin{equation}
+   \begin{aligned}
+   h_0 & =U W_e+W_p \\
+   h_l & =\operatorname{ transformer\_block }\left(h_{l-1}\right) \forall i \in[1, n] \\
+   P(u) & =\operatorname{softmax}\left(h_n W_e^T\right)
+   \label{eq:gpt-1}
+   \end{aligned}
+\end{equation}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=3.5cm]{pict/02/GPT.png}
+      \caption[GPT のアーキテクチャ]{GPT のアーキテクチャ \protect\footnotemark}
+      \label{GPT}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{radford18} から引用.}
+
+ファインチューニングする際には図\ref{GPT-f}に示すように各タスクに応じた入力に対する変換を行い, 事前学習済みモデルにおいて処理された値は線形結合層を経て softmax 関数が適応される. このときのモデルは式\eqref{eq:gpt-f}として, このときの教師あり学習は式\eqref{eq:gpt-f2}を目的関数とする学習として表せる.
+
+\begin{equation}
+   P\left(y \mid x^1, \ldots, x^m\right)=\operatorname{softmax}\left(h_l^m W_y\right)
+   \label{eq:gpt-f}
+\end{equation}
+
+\begin{equation}
+   L_2(\mathcal{C})=\sum_{(x, y)} \log P\left(y \mid x^1, \ldots, x^m\right)
+   \label{eq:gpt-f2}
+\end{equation}
+
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=12cm]{pict/02/GPT-f.png}
+      \caption[GPT のファインチューニングにおけるタスクごとの入力の変換]{GPT-1 のファインチューニングにおけるタスクごとの入力の変換 \protect\footnotemark}
+      \label{GPT-f}
+   \end{center}
+\end{figure}
+\footnotetext{\cite{radford18} から引用.}
+\subsubsection{GPT-2}
+GPT-2 以後, さらなる大規模化が進められ, ファインチューニングを介さず多様なタスクに適応可能な真に汎用的な言語モデルが追求された. 実際, LLM における大規模化が性能において多大な影響を与えることが知られている\cite{kaplan20}. 
+% 実際, LLM における大規模化が性能において多大な影響を与えることが知られている. 図\ref{scaling_law}は計算資源, 学習データセットのサイズ, パラメータ数とニューラル言語モデルの性能の関係をあらわす. 図\ref{}
+
+% \begin{figure}
+%    \begin{center}
+%       \includegraphics[width=15cm]{pict/02/scaling_law.png}
+%       \caption[計算資源, 学習データセットのサイズ, パラメータ数とニューラル言語モデルの性能の関係]{計算資源, 学習データセットのサイズ, パラメータ数とニューラル言語モデルの性能の関係. \small 左図は, モデルサイズが大きいとき, 計算資源が小さいとロスの減少が小さいが計算資源が大きくなると最も性能が高く, モデルサイズが小さいとき, 計算資源が小さくてもロスがすぐに下がり始めるが, 計算資源を大きくしても性能が上がらないことを示す.\protect\footnotemark}
+%       \label{scaling_law}
+%    \end{center}
+% \end{figure}
+% \footnotetext{\cite{kaplan20} から引用.}
+
+GPT-2はGPT-1とほとんど同じアーキテクチャを持つが, 最大のモデルではレイヤーが 48 層, パラメータ数が 15 億個に増えている. これは GPT-1 におけるパラメータ数がおよそ 1.2 億個であるため 10 倍以上の増加である. また, 学習データにおいても大規模化が図られ. GPT-1 においても BookCorpus と呼ばれる未発表の書籍7000冊分, 容量にしておよそ 4.5 GB の大規模なデータセットが事前学習に用いられていたが,  GPT-2 ではさらに大規模なデータセットである WebText が用いられた. WebText は, Raddit\footnotemark\footnotetext{\url{https://support.reddithelp .com/hc/en-us} (cited 2024-01-27)} というソーシャルメディアプラットフォームにおいて価値が高いと評価され, 文書の質に一定程度の保証がある Web ページをスクレイピングすることで作成された 800万文書, 容量にしておよそ 40 GB のデータセットである. これらの大規模化により, GPT-2 は個々のファインチューニングを介さずとも当時としては比較的幅広いタスクに適応できるようになった.
+
+%BERT における事前学習は, 単語穴埋めタスクと次の文の予測タスクである. 
+
+\subsubsection{GPT-3, GPT-4}
+GPT-3 の大規模化は, GPT-2 までに行われてきた大規模化をはるかに凌ぐ. 最大サイズのものでパラメータ数は 1750 億個までに増え, これは当時パラメータ数が大きいものとして知られていた Google の言語モデル T5(Text-to-Text Transfer Transformer)-11B\cite{raffel20} におけるパラメータ数が 110 億個であることを踏まえると, その大きさがよくわかる. また, 学習データセットにおいても, GPT-2 の学習に用いられた WebText に, Common Crawl\footnotemark\footnotetext{\url{https://commoncrawl.org/} (cited 2024-01-27)} という大規模なデータセットにフィルタリングをかけて集めた質の良いテキストも加え, 書籍でいえば 500 万冊分, 容量にしておよそ 570 GB のデータセットが用いられた. これは BERT の改良版である Meta AI(当時Facebook AI)\footnotemark\footnotetext{\url{https://ai.meta.com/} (cited 2024-01-27)} の RoBERTa\cite{liu19} における学習データセットの容量 160 GB を大きく上回るものである. 東大図書館\footnotemark\footnotetext{\url{https://www.lib.u-tokyo.ac.jp/ja/} (cited 2024-01-27)} に貯蔵されている書籍の数がおよそ 130万冊であることを鑑みてもその大きさが窺える. GPT-3 に用いられた学習データセットを表\ref{tab:dataset_details}に示す.
+
+\setlongtables
+\begin{tabularx}{\textwidth}{lccc}
+   \caption[GPT-3 の学習に用いられたデータセット]{GPT-3 の学習に用いられたデータセット \protect\footnotemark \label{tab:dataset_details}}
+   \setlength{\belowcaptionskip}{-1pt}
+   \vspace*{-0.3cm}
+   \endfirsthead
+   \hline
+   \textbf{Dataset} & \textbf{Quantity} & \textbf{Weight in} & \textbf{Epochs elapsed} \\
+    & \textbf{(tokens)} & \textbf{training mix} & \textbf{when training for} \\
+    & & & \textbf{300B tokens} \\ \hline
+   Common Crawl (filtered) & 410 billion & 60\% & 0.44 \\
+   WebText2 & 19 billion & 22\% & 2.9 \\
+   Books1 & 12 billion & 8\% & 1.9 \\
+   Books2 & 55 billion & 8\% & 0.43 \\
+   Wikipedia & 3 billion & 3\% & 3.4 \\ \hline
+\end{tabularx}
+\footnotetext{\cite{brown20} から引用.}
+
+アーキテクチャは GPT-2 とほとんど変わらないが, Attention 機構において Sparse Transformer\cite{child19} のような局所的な Attention パターンが用いられ, モデルのスパース化が図られている. これによりパラメータ数の大規模化に伴う計算量の増加を抑えることができる. 
+
+GPT-3 はその大規模化により, 個々のファインチューニングを介さずともより多くのタスクに適応可能な言語モデルとなったが, さらにその性能を, 人のフィードバックによる強化学習, RLHF(Reinforcement Learning from Human Feedback)によりファインチューニングされた InstructGPT\cite{ouyang22} として, 人との対話における整合性や倫理観といったアライメントが維持されるよう高められた. その後 GPT-3.5 として発表されたモデルは, Chat-GPT に搭載され, 一般ユーザーのさまざまな入力に対し自然な応答が可能であることを示した. 
+
+GPT-4 は, 2,200 億個のパラメータを持つ異なるタスクで学習された 8 つのモデルを混合したモデルであると言われており, そのパラメータ数は 1 兆個に達すると言われている. GPT-4 のその性能は現時点において多くのタスクで最高性能に達成している\cite{OpenAI23}. 
+
+GPTは2023年3月以降 API として利用することが可能であり, 本研究ではシステムとの接続の利便性と生成される文書の精度の高さから GPT-4 をストーリー創作支援システムに用いることとした.
+
+\subsection{現代における大規模言語モデル}
+GPT-3 の登場以後, 大規模言語モデルの開発は加速度的に増加している. その増加は, 図\ref{timeline}に示す2019年から2023年9月までの10Bを超える主要な言語モデルの発表時期年表からわかる通り. 今ではパラメータ数が100億個の言語モデルも当然のこととして受け入れられている. Google DeepMind\footnotemark により開発された Gemini\cite{gemini23} は, フルスペックのもので 1.6 兆個のパラメータを持ち, 言語モデルの大規模化が今後も進んでいくものと考えられる.
+\footnotetext{\url{https://deepmind.com/} (cited 2024-01-27)}
+\begin{figure}[H]
+   \begin{center}
+      \includegraphics[width=10.5cm]{pict/02/timeline.png}
+      \caption{10Bを超える言語モデルが発表された時期を表す年表 \protect\footnotemark}
+      \label{timeline}
+   \end{center}
+\end{figure}
+\vspace*{-10pt}
+\footnotetext{\cite{zhao23} から引用.}
+
+一方, 比較的小規模で高性能な言語モデルの開発も進められている. 例えば Google の Llama\cite{touvron23} は小さいもので70億個, 大きいもので650億個のパラメータを持つ言語モデルであるが, 130億個のパラメータを持つものでもその性能は1750億個のパラメータを持つ GPT-3に匹敵する. その後継である Llama2\cite{touvron23-2} においては, パラメータ数で Llama と同程度でありながら Llama の性能を上回る. Llama と Llama2 はオープンな言語モデルであり, そのファインチューニングにより新たな言語モデルも生まれている. 例えば Alpaca\cite{wang23} は Llama をファインチューニングして生まれたモデルであり, わずか70億個のパラメータで GPT-3.5 に匹敵する会話性能を持つ. さらに, ファインチューニングにおいても, 膨大なパラメータを全て更新することは避け, 一部のパラメータのみを更新し計算資源効率を高める手法 Parameter Efficient Fine-Tuning(PEFT)の開発が進められており, Microsoft\footnotemark\footnotetext{\url{https://www.microsoft.com} (cited 2024-01-27)} が提案した Low-Rank Adaptation(LoRA)\cite{hu21}は, 行列分解に基づいて, 更新する際のパラメータの変化分を低次元同士の行列積として表し, それらの行列について学習を実施する. LoRA を用い, わずかな計算資源で Llama から Alpaca を再現する Alpaca-LoRA\footnotemark なども開発できるようになっている.
+\footnotetext{\url{https://github.com/tloen/alpaca-lora} (cited 2024-01-27)}
+
+言語モデルは大規模化により著しい性能の向上が実現される一方で, 小規模な環境でも十分な性能を持つモデルの開発が可能になってきた. そのため言語モデルはますます社会に浸透することが予想され, 言語モデルを用いた創作支援システムの構築は大きな意義を持つものと考える.
+
+% 加えて, ファインチューニングの技術も進歩しており, Llama\cite{touvron23} や Llama2\cite{touvron23-2} といったオープンな言語モデルをファインチューニングすることで新たな言語モデルも生まれている. 例えば Alpaca\cite{wang23} は Llama をファインチューニングして生まれたモデルであり, 70億個のパラメータで GPT-3.5 に匹敵する会話性能を持つが, より計算コストを抑えたファインチューニングである Microsoft\footnotemark が提案した Low-Rank Adaptation(LoRA)\cite{hu21}を用い, Llama から Alpaca を再現する Alpaca-LoRA\footnotemark なども生まれている.
+
+
+
+
+
+
+\expandafter\ifx\csname ifdraft\endcsname\relax
+   \fancyhead[LO]{}
+   \printbibliography[title=参考文献]
+   \end{document}
+   \fancyhead[LO]{\rightmark}
+\fi

@@ -1,0 +1,175 @@
+\documentclass[a4j,12pt]{jsreport}
+
+% ----- 仕掛け 開始 -----
+\newcommand{\ifdraft}{false}
+% ----- 仕掛け 終了 -----
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+% 画像
+\usepackage[dvipdfmx]{graphicx}
+
+% biblatex
+\usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
+\addbibresource{graduation_thesis.bib}
+
+%itembox
+\usepackage{ascmac}
+%breakitemboxのためのpackage
+\usepackage{itembkbx}
+% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
+% \usepackage{framed} 枠
+
+%フォント
+\usepackage[ipaex]{pxchfon}
+
+\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{paralist}
+\usepackage{caption}
+%\captionsetup{format=plain, justification=centering} % キャプションを中央揃えにする
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{fancyhdr}
+\usepackage{ltablex}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage{enumitem} % itemizeの行間 これは下になければならない
+\usepackage{threeparttable} % 表の脚注
+\usepackage{enumitem}
+
+
+   \setlength{\headheight}{16.5pt}
+   \captionsetup{format=hang}
+
+
+   \setcounter{tocdepth}{2}
+\begin{document}
+% 上部のヘッダー
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+
+%rename
+\renewcommand{\abstractname}{\LARGE 論文要旨}
+
+% タイトル
+\begin{titlepage}
+    \begin{center}
+
+        {\Large 令和5年度卒業論文}
+
+        \vspace*{130truept}
+
+        {\Huge 物語構造分析に基づく}
+
+        \vspace{10truept}
+
+        {\Huge LLMを用いたインタラクティブ}
+
+        \vspace{10truept}
+
+        {\Huge ストーリー生成システム}
+        
+        \vspace{10truept}
+
+        {\Huge による創作支援}
+
+        \vspace{75truept}
+
+        {\Large 主任指導教員}
+
+        \vspace{10truept}
+
+        {\Large 栗原 聡}
+
+        \vspace{65truept}
+
+        {\Large 慶應義塾大学}
+
+        \vspace{10truept}
+
+        {\Large 理工学部管理工学科}
+
+        \vspace{30truept}
+
+        {\Large 氏名 渡邉 謙吾}      
+
+        \vspace{10truept}
+
+        {\Large 学籍番号 62021705}
+
+        \vspace{25truept}
+
+        {\Large 提出日 2024 年 1 月 29 日}
+
+    \end{center}
+\end{titlepage}
+% 概要
+\include{00_abstract.tex}
+
+% 目次
+\tableofcontents
+\listoffigures
+\listoftables
+
+% 上部のヘッダー
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+
+% 序論
+\include{01_introduction.tex}
+
+%事前知識
+\include{02_preliminary.tex}
+
+% 関連研究
+\include{03_relatedworks.tex}
+
+% 提案手法
+\include{04_proposedmethod.tex}
+
+% 実験
+\include{05_experiment.tex}
+
+% 結論
+\include{06_conclusion.tex}
+
+% 謝辞
+\include{07_thanks.tex}
+
+% 参考文献
+% 一時的にヘッダーのスタイルを変更
+\fancypagestyle{bibliography}{
+  \fancyhead{}
+  \fancyhead[RO]{参考文献}
+}
+
+\defbibheading{bibintoc}[\refname]{%
+  \chapter*{#1}%
+  \markboth{参考文献}{}%
+}
+
+% 参考文献の前で一時的なスタイルを適用
+\printbibliography[heading=bibintoc, title=参考文献]
+\addcontentsline{toc}{chapter}{参考文献}
+
+% 参考文献の後で元のスタイルに戻す
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{付録\ \thechapter\ \ #1}{}}
+
+\include{08_performance.tex}
+
+\appendix
+\include{09_appendix.tex}
+
+\end{document}

@@ -1,0 +1,67 @@
+\expandafter\ifx\csname ifdraft\endcsname\relax
+   \documentclass[a4j,12pt]{jsreport}
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+% 画像
+\usepackage[dvipdfmx]{graphicx}
+
+% biblatex
+\usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
+\addbibresource{graduation_thesis.bib}
+
+%itembox
+\usepackage{ascmac}
+%breakitemboxのためのpackage
+\usepackage{itembkbx}
+% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
+% \usepackage{framed} 枠
+
+%フォント
+\usepackage[ipaex]{pxchfon}
+
+\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{paralist}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{fancyhdr}
+\usepackage{ltablex}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage{enumitem} % itemizeの行間 これは下になければならない
+\usepackage{threeparttable} % 表の脚注
+
+
+   \setlength{\headheight}{16.5pt}
+   \captionsetup{format=hang}
+   \begin{document}
+   % 上部のヘッダー
+\pagestyle{fancy}
+\lhead{\rightmark}
+\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+\fi
+
+\chapter{結論}\label{chap:conclusion}
+本研究において我々は, 物語構造分析に基づいた LLM の活用手法を提供するストーリー創作支援システムを web アプリケーションとして開発した. 本システムは, 物語構造分性に基づく LLM の制御を, 直感的な操作により実現するインターフェースと, プロットの質向上を目的とした LLM とのインタラクティブな共創手法を提供する. これらの実装により本システムは, ストーリークリエーターと LLM との仲介をなすシステムとしての役割を果たす. TEZUKA2023プロジェクトの一環として, プロのストーリークリエーター数グループに『ブラック・ジャック』の新作エピソードにおけるプロット制作に本システムを活用して頂く取り組みでは, 本システムの有用性や課題について評価された. 操作性や指示の反映具合におけるLLMの制御性においては高い評価を受け, また, 本システムの編集セククションの利用がプロットの質向上に寄与する可能性も示唆された. これにより本システムが提供する LLM とのインタラクティブな共創手法が有用である可能性, 物語構造分析の活用が作品の質を向上させる可能性が示唆された. 一方, 物語構造分析の活用による LLM の制御は, 分析元の作品らしさ表現することに寄与する可能性がある一方で, 生成されたプロットは目新しさや幅の広さといった面で十分な評価が得られなかった. 既存物語の活用は一貫性を持つ作品が一定程度の質で生み出されることに寄与する可能性を持つが, 新規性や多様性を生み出すことには課題がある可能性が示唆された. 
+
+今後は, 使用者の範囲を拡大した実証実験を実施し, より信頼性のある本システムの有用性を確認する. また, 本研究の取り組みでは, プロットをシナリオ化し, 編集する機能においては十分に活用される機会を得られなかったため, シナリオ制作における創作支援を中心とした活用の場を設け, それらの機能の有用性を確認することも検討される.
+
+ストーリークリエーターの創作支援を目的とする LLM の活用手法の確立において, 本研究が提案する物語構造分析を活用した LLM とのインタラクティブな共創手法は一定程度の有用性を持つ可能性があり, 本研究がクリエーターと LLM との共創のあり方に貢献することを期待する.
+
+% 本研究において我々は, ストーリークリエーターの創作を支援する web アプリケーションを提案した. 本アプリケーションは, 物語構造分析に基づく LLM の活用を, 直感的な操作により実現するとともに, LLM とのインタラクティブなプロット創作手法を提供する. 商業誌に掲載される作品のプロット制作に利用してもらい, 本アプリケーションが高い操作性と満足のいく指示の反映をもたらし, プロットの質向上を目的とする LLM との共創手法に有用である可能性が示唆された. 今後は使用者の範囲を拡大した実証実験を実施し, より信頼性のある有用性の確認を行う. 
+
+
+\expandafter\ifx\csname ifdraft\endcsname\relax
+\fancyhead[LO]{}
+\printbibliography[title=参考文献]
+\end{document}
+\fancyhead[LO]{\rightmark}
+\fi
