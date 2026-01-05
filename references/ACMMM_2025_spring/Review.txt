@@ -1,0 +1,119 @@
+# Review of Submission 4528
+Official Reviewby Reviewer ryDR25 May 2025, 19:37 (modified: 09 Jun 2025, 23:38)Program Chairs, Senior Area Chairs, Area Chairs, Reviewer ryDR, AuthorsRevisions
+Review:
+Summary:
+
+The paper presents Manga109Script, a newly constructed dataset comprising script data for approximately 20,000 manga pages from the Manga109 dataset. The primary objective is to facilitate the Script2Layout task, where narrative scripts are used to generate coherent and expressive manga layouts. Utilizing Vision Large Language Models (VLLMs) such as GPT-4, the authors generate scripts that include scene headings, action descriptions, and dialogues. They then develop and evaluate several Script2Layout models, demonstrating that incorporating script information significantly enhances layout generation quality compared to existing methods. The dataset and associated code are to be made available upon publication, providing a valuable resource for future research in manga layout generation and visual storytelling.
+
+Strengths
+
+The introduction of Manga109Script addresses a significant gap in the domain of manga layout generation by providing a large-scale, script-aligned dataset. This enables the exploration of script-based layout generation, which has been under-researched due to data scarcity.
+
+The authors employ a robust method for script generation using VLLMs with visual prompting and speaker-aware dialogue sequencing. The multi-step interaction with GPT-4 ensures that the scripts are contextually coherent and aligned with the original manga narratives.
+
+Human evaluation metrics such as Scene Heading Recall, Scene Heading Precision, Action Description Precision, Out-of-Context Action Description Detection Accuracy, and Dialogue Recall add credibility to the dataset's quality, demonstrating its reliability for downstream tasks.
+
+The paper is well-structured, with clear explanations of the problem formulation, data construction process, and experimental setup. Figures and tables are effectively used to illustrate key points and results.
+
+Weaknesses
+
+The script generation process relies on GPT-4. This dependence may raise concerns regarding reproducibility and reliability.
+
+While the paper provides quantitative and qualitative evaluations, it lacks a detailed error analysis. Understanding the common failure modes of the Script2Layout models could provide deeper insights and guide future improvements.
+
+The evaluation primarily focuses on comparisons with existing layout generation methods. Exploring alternative script generation techniques or incorporating multiple VLLMs could strengthen the experiment part.
+
+Rating: 6: Marginally above acceptance threshold
+Confidence: 4: The reviewer is confident but not absolutely certain that the evaluation is correct
+Fit: Very clearly a multimedia paper, of interest to a large part of the community
+Fit Justification:
+Script2Layout is a multimedia task.
+
+Technical Quality: 5
+Presentation Quality: 6
+Rebuttal Questions:
+Please refer to the weakness part.
+
+Additional Comments:
+Please refer to the weakness part.
+
+# This paper presents an practical approach to manga layout generation by incorporating script information. The research is well-structured, addressing a clear problem in the field of creative AI and manga production. The authors provide comprehensive experiments and evaluations, comparing their approach with existing methods. While the work shows promise in improving layout generation, there are some concerns regarding the technical innovation in script construction and the depth of dataset application evaluation.
+Official Reviewby Reviewer wi4V19 May 2025, 17:08 (modified: 09 Jun 2025, 23:38)Program Chairs, Senior Area Chairs, Area Chairs, Reviewer wi4V, AuthorsRevisions
+Review:
+The paper introduces Manga109Script, a novel dataset linking scripts to manga layouts for approximately 20,000 pages from the Manga109 dataset. The authors propose a task called Script2Layout to generate manga layouts directly from scripts. They use Vision Large Language Models (VLLMs) to create script data and develop manga layout generation models that take scripts as input. The research compares these Script2Layout models with existing layout generation methods under various constraints, demonstrating improved performance, especially in mean Intersection over Union (mIoU) metrics.
+
+Pros: 1. The paper clearly defines the Script2Layout task and provides a thorough explanation of the Manga109Script dataset creation process. The methodology, experiments, and results are described in detail, giving readers a comprehensive understanding of the research. 2. The research addresses a practical problem in manga production, potentially bridging the gap between narrative scripts and visual layouts. The extensive evaluation using both quantitative metrics (FID, mIoU) and qualitative analysis demonstrates the effectiveness of the proposed approach.
+
+Cons: 1. While the paper presents a new dataset and task, the script/data generation process relies heavily on existing VLLMs and rule-based algorithms. While the process attempts to address narrative continuity across pages, it primarily focuses on structuring interactions with GPT-4o. There is limited innovation in how narrative continuity is maintained or enhanced, especially given the constraint of limited token length. This could impact the coherence and fluidity of the generated scripts across multiple pages. The technical innovation in script construction appears limited, as it primarily combines existing technologies rather than introducing novel algorithms or methods. 2. Although the paper provides extensive evaluations of the Script2Layout models, the assessment of the dataset's broader applications and potential impact on the field could be more comprehensive. The research focuses primarily on layout generation, but it could benefit from exploring other potential uses of the Manga109Script dataset or discussing its limitations and potential biases.
+
+Minor Issues: 1. Line 120: Typo Section 2.1: “unaerexplored” should be “underexplored”; 2. Line 150: “oppotunities” should be “opportunities”;
+
+Rating: 5: Marginally below acceptance threshold
+Confidence: 4: The reviewer is confident but not absolutely certain that the evaluation is correct
+Fit: Relevant to a part of the community
+Fit Justification:
+The paper fits well with the ACM Multimedia community as it bridges computer vision and natural language processing in multimedia content creation. It introduces a novel dataset and task that enhance visual storytelling, aligning with the community's focus on multimedia analysis and generation
+
+Technical Quality: 4
+Presentation Quality: 7
+Rebuttal Questions:
+Here are some questions for the authors to address during the rebuttal:
+
+Technical Innovation: Can you elaborate on the specific technical innovations introduced in the process of constructing manga scripts using VLLMs? How does this approach differ from existing methods?
+
+Dataset Applications: Could you provide more details on the potential applications of the Manga109Script dataset beyond layout generation? How might this dataset be utilized in other areas of multimedia research or industry?
+
+Limitations and Future Work: What are the current limitations of your approach, and what future work do you envision to address these challenges? How might you improve the integration of script information into layout generation?
+
+Additional Comments:
+No
+
+# Work of dataset developed on exsiting images with LLM generated annotations and corresponding evaluation experiments
+Official Reviewby Reviewer zWvJ16 May 2025, 00:39 (modified: 09 Jun 2025, 23:38)Program Chairs, Senior Area Chairs, Area Chairs, Reviewer zWvJ, AuthorsRevisions
+Review:
+This paper presents Manga109Script dataset that consist of manga layout data generated from given script from Manga109 dataset. The authors used Vision Large Language Models (VLLMs) to generate scripts from the Manga109 dataset based on the unique narrative structure of manga, and employed visual prompting and speaker-aware dialogue sequencing to create high-quality script data. The authors also developed and evaluated manga layout generation models based on the proposed dataset and several LLMs, which prove that the script information improves layout generation quality compared to existing methods.
+
+Pros:
+
+The idea of generating manga layout from scripts by VLM and vice verse sounds novel and interesting
+The experiments seem adequate to validate the performance of the manga layout generation models developed on the dataset
+Cons:
+
+The dataset is based on existing manga image dataset and VLM generated prompts, and the manga layout generation models are based on existing LLM models, making the contribution limited
+The diversity of the images in the dataset seems to be limited. For example, there are only Japanese manga of many years ago, and all images seem to be black and white, which may limit the potential application
+The scripts are generated by VLM, and the Script2Layout models trained on the dataset are based on existing LLMs. The performance gap may be because of the distribution bias between the VLM and the LLM
+Rating: 4: Ok but not good enough - rejection
+Confidence: 3: The reviewer is fairly confident that the evaluation is correct
+Fit: Relevant to a part of the community
+Fit Justification:
+This paper presents a manga dataset with scripts, which do involve multimedia, but personally I believe computer vision or computer graphic conferences/journals are better fit
+
+Technical Quality: 4
+Presentation Quality: 5
+Rebuttal Questions:
+Will the dataset be publicly available?
+Is the dataset preparation pipeline effective to color images or comics of other languages?
+How to eliminate the influence of VLM used to annotate the images and the LLMs used in Script2Layout models?
+Additional Comments:
+This work is potentially beneficial to both ML society and comic industry. However, I think the the currently quality is slightly below the bar of ACMMM. It would make the contribution more solid if there are larger amont of more recent and more diverse data, like color images, comics with different languages, comics of different styles. Also, it would be more convincing if there are feedbacks from artists/readers.
+
+# Review of Submission #4528
+Official Reviewby Reviewer ZqvN05 May 2025, 09:52 (modified: 09 Jun 2025, 23:38)Program Chairs, Senior Area Chairs, Area Chairs, Reviewer ZqvN, AuthorsRevisions
+Review:
+This paper constructs the Manga109Script dataset that creates script data for approximately 20,000 pages from the existing Manga109 dataset. An annotation-assisted method is introduced to generate script data from manga images using existing VLLMs. Several baselines are used for the script-based layout generation task. However, the contribution of the whole data creation process is not very clear. The key idea of this paper is to create a new dataset that could support script-based manga layout generation. However, the proposed dataset comes from the existing Manga109script dataset. The script data is generated by existing VLMs. The only contribution is the human evaluation process for quality verification. I cannot see new insights for the proposed benchmark.
+
+Rating: 4: Ok but not good enough - rejection
+Confidence: 4: The reviewer is confident but not absolutely certain that the evaluation is correct
+Fit: Very clearly a multimedia paper, of interest to a large part of the community
+Fit Justification:
+This paper focuses on the manga image understanding task, which includes multiple subtasks that align with the ACM Multimedia Topics of Interest.
+
+Technical Quality: 5
+Presentation Quality: 5
+Rebuttal Questions:
+The difference between the proposed Scirpt2Layout and the existing layout generation model is also not clear. As shown in Fig.2, it is not difficult to extract elements from the script (using rule-based or LLM-based processing) for existing layout generation models.
+
+The current evaluation metrics and compared methods are not thorough. Additional geometric and content-aware evaluation metrics are necessary to evaluate the layout quality. In addition, existing content-aware layout generation methods, including PosterLlama and LVMs, should be compared and discussed in the experiments.
+
+Additional Comments:
+As this paper focuses on the script2layout task, it would be better to show the script data in the qualitative comparisons.

@@ -1,0 +1,157 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[a4j]{jarticle}
+
+\usepackage{docmas_v2}
+\usepackage{color}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{caption}
+\captionsetup[figure]{
+font = small,
+}
+%\usepackage{epsf}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\input{library}
+
+% 和文タイトル
+\title{物語構造分析に基づくLLMを用いたインタラクティブ\\ストーリー生成システムによる創作支援}
+
+% 英文タイトル
+\etitle{Creation Support by Interactive Story Generation System Using LLM Based on Story Structure Analysis.}%DeepLにて翻訳 
+
+% 著者名: 
+%	・各著者を\quad（全角空白）区切りで列挙
+% 	・著者名の直後に\afil{所属番号}を追加→所属番号を上付で出力（\textsuperscript{所属番号}と同じ）
+% 	　複数機関へ所属している場合は番号をカンマ区切りで列挙（下記著者２参照）
+% 　・Corresponding Authorについては所属の後に\thanksを続け，連絡先を記入
+%	・英文著者はカンマ区切りで列挙
+
+\author{渡邉謙吾\afil{1},%
+	\thanks{連絡先：慶應義塾大学理工学部 \newline%
+		　　　　　　神奈川県横浜市港北区日吉3-14-1\newline%
+            　　　　　　kng.w@keio.jp}\quad%
+	川村天\afil{2},
+        小林伶央\afil{2},\
+        有井知真\afil{1},\
+        \\
+        伊藤亮史\afil{1},\
+        栗原聡\afil{1}\\
+	Kengo Watanabe\afil{1}, Takashi Kawamura\afil{1}, Reo Kobayashi\afil{1}, Kazuma Arii\afil{1},\\ Akifumi Ito\afil{1}, and Satoshi Kurihara\afil{2} }
+
+
+% 所属
+\affiliation{%
+	\afil{1} 慶應義塾大学理工学部\\ 
+	\afil{1} Faculty of Science and Technology, Keio University\\
+	\afil{2} 慶應義塾大学大学院理工学研究科\\ 
+	\afil{2} Graduate School of Science and Technology, Keio University
+}
+
+\abstract{In recent years, the fluidity of media contents has expanded rapidly, leading to a growing demand for media contents. As a result, the challenges in creating stories have increased, and there is a growing need for story creation support. The development of AI technology, including large language models (LLMs), has been remarkable, and there are high expectations for these tools to aid in creative activities, though their utilization methods are not yet established. In particular, there is a demand for systems that offer meaningful support to individuals who are not familiar with AI. To address this, we have developed a web application that provides an intuitive interface for controlling LLMs based on narrative structure analysis, as well as interactive co-creation methods aimed at improving the quality of plot development. Our application includes features for generating plots based on the narrative structure analysis of Osamu Tezuka's manga "Black Jack" and functions to enhance plot quality through interactive interactions with the LLM, thus offering a collaborative co-creation approach. When utilized by professional story creators, our application received high evaluations for its usability and reflection of instructions, and it has been suggested as a useful interactive co-creation method. Through our study, we have explored approaches to co-creation between people and AI in support of story creation. }
+
+\maketitle
+\thispagestyle{empty}
+
+\input{sec/1_purpose.tex}
+
+\input{sec/2_related_works.tex}
+
+\input{sec/3_proposed_method}
+
+\input{sec/4_run}
+
+\input{sec/5_result}
+
+\input{sec/6_conclusion}
+
+\section*{謝辞}
+本研究はNEDO・人と共に進化する次世代人工知能に関する技術開発事業「インタラクティブなストーリー型コンテンツ創作支援基盤の開発」の助成を受けたものである．
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{thebibliography}{99}
+\small
+
+\bibitem{ref:Boden09}
+Boden, M. A.: Computer Models of Creativity, \textit{AI Mag}., Vol. 30, pp. 23-34 (2009).
+
+\bibitem{ref:Bommasani21}
+Bommasani, R., Hudson, D. A., Adeli, E., Altman, R., Arora, S., Arx, von S., Bernstein, M. S., Bohg, J., Bosselut, A., Brunskill, E., et al.: On the opportunities and risks of foundation models, \textit{arXiv preprint arXiv:2108.07258} (2021).
+
+\bibitem{ref:Frich19}
+Frich, J., Remy, C., Biskjaer, M. M., Vermeulen, M. L., and Dalsgaard, P.: Mapping the Landscape of Creativity Support Tools in HCI, In Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems, pp. 1-18, (2019). https://doi.org/10.1145/3290605.3300619
+
+\bibitem{ref:OpenAI23}
+Ecoffet, A.: GPT-4 Technical Report, \textit{arXiv preprint arXiv:2303.08774v3} (2023).
+
+\bibitem{ref:Zhao23}
+Zhao, W. X., Zhou, K., Li, J., Tang, T., Wang, X., Hou, Y., Min, Y., Zhang, B., Zhang, J., Dong, Z., et al.: A Survey of Large Language Models, \textit{arXiv preprint, arXiv.2303.18223} (2023).
+
+\bibitem{ref:Mirowski23}
+Mirowski, P., Mathewson, K. W., Pittman, J., and Evans, R.: Co-Writing Screenplays and Theatre Scripts with Language Models: Evaluation by Industry Professionals. In Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems, No. 355, pp. 1–34, (2023).
+
+\bibitem{ref:Chen23}
+Chen, B., Zhang, Z., Langrené, N., and Zhu, S.: Unleashing the potential of prompt engineering in Large Language Models: A comprehensive review, \textit{arXiv preprint arXiv.2310.14735} (2023).
+
+\bibitem{ref:Ko23}
+Ko, H.-K., Park, G., Jeon, H., Jo, J., Kim, J., Seo, J.: Large-scale Text-to-Image Generation Models for Visual Artists’ Creative Works, In Proceedings of the 28th International Conference on Intelligent User Interfaces, pp.919-93, (2023).
+
+\bibitem{ref:Louie20}
+Louie, R., Coenen, A., Huang, C. Z., Terry, M., Cai, C. J.: Novice-AI Music Co-Creation via AI-Steering Tools for Deep Generative Models, In Proceedings of the 2020 CHI Conference on Human Factors in Computing Systems, pp.1-13 (2020).
+
+%\bibitem{ref:Vaswani17}
+%Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., Polosukhin, I.: Attention is All you Need, In Advances in Neural Information Processing Systems 30, (2017).
+
+%\bibitem{ref:Devlin18}
+%Devlin, J., Chang, M.-W., Lee, K., Toutanova, K.: BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding, \textit{arXiv preprint arXiv:1810.04805} (2018).
+\bibitem{ref:Guzdial19}
+Guzdial, M., Liao, N., Chen, J., Chen, S.-Y., Shah, S., Shah, V., Reno, J., Smith, G., Riedl, M. O.: Friend, Collaborator, Student, Manager: How Design of an AI-Driven Game Level Editor Affects Creators, In Proceedings of the 2019 CHI Conference on Human Factors in Computing Systems, No. 624, pp.1-13, (2019).
+
+\bibitem{ref:Osone21}
+Osone, H., Lu, J.-L., and Ochiai, Y.: BunCho: AI Supported Story Co-Creation via Unsupervised Multitask Learning to Increase Writers’ Creativity in Japanese, In Abstracts of the 2021 CHI Conference on Human Factors in Computing Systems, No. 19, pp. 1-10,  (2021). 
+
+
+\bibitem{ref:Radford20}
+Radford, A., Wu, J., Child, R., Luan, D., Amodei, D., and Sutskever, I.: Language models are unsupervised multitask learners, \textit{OpenAI blog}, (2019).
+
+\bibitem{ref:Yuan22}
+Yuan, A., Coenen, A., Reif, E., and Ippolito, D.: Wordcraft: Story Writing With Large Language Models, In Proceedings of the 27th International Conference on Intelligent User Interfaces, pp. 841-852, (2022).
+
+\bibitem{ref:Thoppilan22}
+Thoppilan, R., De Freitas, D., Hall, J., Shazeer, N., Kulshreshtha, A., Cheng, H.-T., Jin, A., Bos, T., Baker, L., Du, Y., et al.: LaMDA: Language Models for Dialog Applications, \textit{arXiv preprint arXiv:2201.08239.}, (2022).
+
+\bibitem{ref:Higasa23}
+Hisaga, T., Kawamura, T., Kurihara, S.: Automated Story Generation Based on Narrative Structure to Inspire Creativity, 人工知能学会全国大会論文集, (2023).
+
+\bibitem{ref:Brown20}
+Brown, T. B., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G., Askell, A., Agarwal, S., et al.: Language Models are Few-Shot Learners, \textit{arXiv preprint arXiv:2005.14165}, (2020). 
+
+\bibitem{ref:Tezuka77}
+手塚 治虫:ブラック・ジャック， 手塚治虫漫画全集， No.151–168, (1977).
+
+\bibitem{ref:Propp64}
+Propp, V. I.: Morphology of the Folktale, Vol. 9, University of Texas Press, (1968).
+
+\bibitem{ref:Jaya11}
+Jaya, A. and Uma, G.V.: An Intelligent Automatic Story Generation System by Revising Proppian’s System, CC- SIT 2011, Vol.131, pp.594–603, (2011).
+
+\bibitem{ref:Murai22}
+Murai, H.: Automatic Story Structure Generation Based on Fundamental Story Pattern within Existing Stories, 情報処理学会論文誌, Vol. 63, No. 2, pp. 335-346, (2022).
+
+\bibitem{ref:Norva23}
+Bakhiyorovna, M. N.: THE SPECIFICATION OF SIGNS AND SYMBOLS IN POETRY, Neo Scientific Peer Reviewed Journal, Vol. 11, pp.43-45, (2023).
+
+\bibitem{ref:Murai21}
+Murai, H., Toyosawa, S., Shiratori, T., Yoshida, T., Ishikawa, K., Iwasaki, J., Saito, Y., Nakamura, S., Nemoto, S., Ohta, S., et al.: Extraction of factors that characterize the structures of plot within each story genre, じんもんこん2021論文集, (2021).
+% \bibitem{ref:testref1}
+% 第１著者, 第２著者, 第３著者: 論文名, 掲載誌名, Vol.~xx, No.~xx, pp.~xxx-xxx, (出版年)
+
+% \bibitem{ref:testref2}
+% First A., Second A., and Third A.: Paper Title, Publication Source, Vol.~xx, No.~xx, pp.~xxx-xxx, (year)
+
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,40 @@
+%insertfigure(ファイルの名前, 図タイトル, width)
+\newcommand{\insertfigure}[3]{
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width={#3}]{#1}
+        \caption[#2]{#2．}
+        \label{fig:#2}
+    \end{center}
+\end{figure}
+}
+
+%insertfigure(ファイルの名前, 図タイトル, width，ref)
+\newcommand{\insertreffigure}[4]{
+\begin{figure}[htbp]
+    \begin{center}
+        \includegraphics[width={#3}]{#1}
+        \caption[#2]{#2．#4より引用．}
+        \label{fig:#2}
+    \end{center}
+\end{figure}
+}
+
+%inserttable(表タイトル, 表本体)
+\newcommand{\inserttable}[2]{
+\begin{table}[htbp]
+    \begin{center}
+        \caption{#1}
+        \label{tb:#1}
+        #2
+    \end{center}
+\end{table}
+}
+
+%inserteqnarray(式タイトル, 式本体)
+\newcommand{\inserteqnarray}[2]{
+\begin{eqnarray}
+    \label{eqn:#1}
+    #2
+\end{eqnarray}
+}

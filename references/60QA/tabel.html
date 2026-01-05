@@ -1,0 +1,162 @@
+<table border="1" cellspacing="0" cellpadding="4"></table>
+  <thead>
+    <tr>
+      <th>カテゴリ</th>
+      <th>パラメータ名</th>
+      <th>値／設定</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- モデル設定 -->
+    <tr>
+      <td rowspan="3"><strong>モデル設定</strong></td>
+      <td>モデルID</td>
+      <td>tokyotech-llm/Swallow-13b-instruct-hf</td>
+      <td>使用されるベースモデル</td>
+    </tr>
+    <tr>
+      <td>データ型</td>
+      <td>torch.float16</td>
+      <td>モデルのパラメータ型</td>
+    </tr>
+    <tr>
+      <td>attention実装</td>
+      <td>flash_attention_2</td>
+      <td>内部で使用するattentionアルゴリズム</td>
+    </tr>
+    <!-- データセット分割 -->
+    <tr>
+      <td rowspan="3"><strong>データセット分割</strong></td>
+      <td>訓練データ</td>
+      <td>約80%</td>
+      <td>全体データの80%が訓練用</td>
+    </tr>
+    <tr>
+      <td>検証データ</td>
+      <td>約10%</td>
+      <td>全体データの10%が検証用</td>
+    </tr>
+    <tr>
+      <td>テストデータ</td>
+      <td>約10%</td>
+      <td>全体データの10%がテスト用</td>
+    </tr>
+    <!-- LoRA設定 -->
+    <tr>
+      <td rowspan="6"><strong>LoRA設定</strong></td>
+      <td>r</td>
+      <td>8</td>
+      <td>LoRAの低ランク行列のランク</td>
+    </tr>
+    <tr>
+      <td>lora_alpha</td>
+      <td>16</td>
+      <td>スケールパラメータ</td>
+    </tr>
+    <tr>
+      <td>target_modules</td>
+      <td>["q_proj", "v_proj"]</td>
+      <td>適用される対象モジュール</td>
+    </tr>
+    <tr>
+      <td>lora_dropout</td>
+      <td>0.1</td>
+      <td>ドロップアウト率</td>
+    </tr>
+    <tr>
+      <td>bias</td>
+      <td>none</td>
+      <td>バイアス項の扱い</td>
+    </tr>
+    <tr>
+      <td>task_type</td>
+      <td>CAUSAL_LM</td>
+      <td>タスク種別（因果言語モデル）</td>
+    </tr>
+    <!-- トレーニングパラメータ -->
+    <tr>
+      <td rowspan="14"><strong>トレーニングパラメータ</strong></td>
+      <td>エポック数</td>
+      <td>20</td>
+      <td>総学習エポック数</td>
+    </tr>
+    <tr>
+      <td>バッチサイズ（訓練）</td>
+      <td>1</td>
+      <td>訓練時のデバイスあたりのバッチサイズ</td>
+    </tr>
+    <tr>
+      <td>バッチサイズ（検証）</td>
+      <td>1</td>
+      <td>検証時のデバイスあたりのバッチサイズ</td>
+    </tr>
+    <tr>
+      <td>グラデーション累積ステップ</td>
+      <td>32</td>
+      <td>実質バッチサイズは1×32 = 32 個分</td>
+    </tr>
+    <tr>
+      <td>オプティマイザ</td>
+      <td>adamw_torch_fused</td>
+      <td>ADAMWのtorch最適化（高速化された実装）</td>
+    </tr>
+    <tr>
+      <td>学習率</td>
+      <td>2e-4</td>
+      <td>初期学習率</td>
+    </tr>
+    <tr>
+      <td>学習率スケジューラ</td>
+      <td>cosine</td>
+      <td>コサインスケジューラ</td>
+    </tr>
+    <tr>
+      <td>fp16</td>
+      <td>True</td>
+      <td>半精度学習の有効化</td>
+    </tr>
+    <tr>
+      <td>ロギングステップ</td>
+      <td>100</td>
+      <td>100ステップごとにログを出力</td>
+    </tr>
+    <tr>
+      <td>評価戦略</td>
+      <td>steps</td>
+      <td>ステップ単位での評価</td>
+    </tr>
+    <tr>
+      <td>評価ステップ数</td>
+      <td>100</td>
+      <td>100ステップごとに評価実施</td>
+    </tr>
+    <tr>
+      <td>シーケンス長でのグループ化</td>
+      <td>True</td>
+      <td>長さに応じたグループ化を有効化</td>
+    </tr>
+    <tr>
+      <td>モデル保存戦略</td>
+      <td>epoch</td>
+      <td>各エポック終了時にチェックポイント保存</td>
+    </tr>
+    <tr>
+      <td>報告先</td>
+      <td>wandb</td>
+      <td>Weights &amp; Biasesへのレポート</td>
+    </tr>
+    <!-- その他 -->
+    <tr>
+      <td rowspan="2"><strong>その他</strong></td>
+      <td>出力先ディレクトリ</td>
+      <td>/workspace/results/results_no_scenario</td>
+      <td>トレーニングの出力先ディレクトリ</td>
+    </tr>
+    <tr>
+      <td>LoRAアダプタ保存パス</td>
+      <td>/workspace/params/swallow-13b</td>
+      <td>学習後にLoRAのパラメータを保存</td>
+    </tr>
+  </tbody>
+</table>

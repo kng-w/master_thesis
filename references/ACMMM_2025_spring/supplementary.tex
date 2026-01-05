@@ -1,0 +1,78 @@
+\documentclass[sigconf, screen, review, nonacm, anonymous]{acmart}
+%\documentclass[sigconf]{acmart}
+
+% Hashimoto added
+\sloppy % 無理に詰めてoverfullになるのを防ぐ。
+\usepackage{xcolor}
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{TODO: #1}}}
+\usepackage{booktabs}
+\usepackage{comment}
+
+\usepackage{multirow} 
+
+
+%%
+%% end of the preamble, start of the body of the document source.
+\begin{document}
+%\balance
+%%
+%% The "title" command has an optional parameter,
+%% allowing the author to define a "short title" to be used in page headers.
+\title{Manga109Script: Manga Script Dataset for Script2Layout -supplementary material-}
+
+\maketitle
+\appendix
+\renewcommand\thefigure{\thesection.\arabic{figure}}    
+
+\section{Training Conditions}
+Model training was performed using the \texttt{transformers} and \texttt{peft} libraries with the following configuration:
+
+\begin{itemize}
+    \item \textbf{Dataset:}
+    \begin{itemize}
+        \item The \texttt{Manga109ScriptDataset} is used with:
+        \begin{itemize}
+            \item Maximum token length: 4096,
+            \item The data sequence is divided into 32 parts.
+        \end{itemize}
+    \end{itemize}
+    \item \textbf{LoRA Configuration:}
+    \begin{itemize}
+        \item Reduction factor $r = 8$,
+        \item \texttt{lora\_alpha} = 16,
+        \item Target modules: \texttt{q\_proj} and \texttt{v\_proj},
+        \item LoRA dropout: 0.1,
+        \item Bias setting: \texttt{none},
+        \item Task type: \texttt{CAUSAL\_LM}.
+    \end{itemize}
+    \item \textbf{Training Parameters:}
+    \begin{itemize}
+        \item \textbf{Batch Size:} 1 per device for both training and evaluation,
+        \item \textbf{Gradient Accumulation:} 32 steps,
+        \item \textbf{Epochs:} 20,
+        \item \textbf{Optimizer:} \texttt{adamw\_torch\_fused},
+        \item \textbf{Learning Rate:} $2 \times 10^{-4}$,
+        \item \textbf{LR Scheduler:} Cosine scheduler,
+        \item \textbf{FP16:} Enabled,
+        \item \textbf{Logging:} Every 100 steps,
+        \item \textbf{Evaluation Strategy:} Evaluation performed every 100 steps with data grouped by length,
+    \end{itemize}
+\end{itemize}
+
+The training is managed through the \texttt{Trainer} class provided by the \texttt{transformers} library.\footnote{\url{https://pypi.org/project/transformers/}~(cited 2025-04-11)} Finally, after training, the model is saved along with the LoRA adapter parameters (saved separately) and the tokenizer.
+
+\section{Additional Qualitative Results}
+In addition to Fig. 3 of the main paper, we introduce a failure case of script2layout models in Fig. \ref{fig:quantitative_results}.
+An extreme case is the excessive enlargement of speech balloons. This occurs when there is a large amount of dialogue, and the Script2Layout model directly takes the dialogue content as input.
+
+
+\begin{figure*}[h]
+  \includegraphics[width=\textwidth]{img/failure.pdf}
+  \caption{
+Failure cases of generated layouts. Each row shows one example: the real manga layout (left), followed by predictions from existing methods and Script2Layout models as in Fig. 3 of the main paper (Source: *Touta Mairimasu* by Shinji Saijo)
+}
+  \Description{}
+  \label{fig:quantitative_results}
+\end{figure*}
+
+\end{document}

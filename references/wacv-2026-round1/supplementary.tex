@@ -1,0 +1,94 @@
+% WACV 2026 Supplementary Material Template
+% based on the WACV 2026 main paper template
+
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+%%%%%%%%% PAPER TYPE - PLEASE UPDATE FOR FINAL VERSION
+%\usepackage[review,algorithms]{wacv}      % To produce the REVIEW version for the algorithms track
+\usepackage[review,applications]{wacv}      % To produce the REVIEW version for the applications track
+%\usepackage{wacv}              % To produce the CAMERA-READY version
+%\usepackage[pagenumbers]{wacv} % To force page numbers, e.g. for an arXiv version
+
+% It is strongly recommended to use hyperref, especially for the review version.
+% hyperref with option pagebackref eases the reviewers' job.
+% Please disable hyperref *only* if you encounter grave issues, 
+% e.g. with the file validation for the camera-ready version.
+%
+% If you comment hyperref and then uncomment it, you should delete *.aux before re-running LaTeX.
+% (Or just hit 'q' on the first LaTeX run, let it finish, and you should be clear).
+\definecolor{wacvblue}{rgb}{0.21,0.49,0.74}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=wacvblue]{hyperref}
+
+%%%%%%%%% PAPER ID - PLEASE UPDATE
+\def\wacvPaperID{967} % *** Enter the WACV Paper ID here
+\def\confName{WACV}
+\def\confYear{2026}
+
+%%%%%%%%% TITLE - PLEASE UPDATE
+\title{Manga109Script Dataset for Script-to-Layout Generation}
+
+%%%%%%%%% AUTHORS - PLEASE UPDATE
+\author{First Author\\
+Institution1\\
+Institution1 address\\
+{\tt\small firstauthor@i1.org}
+\and
+Second Author\\
+Institution2\\
+First line of institution2 address\\
+{\tt\small secondauthor@i2.org}
+}
+
+\begin{document}
+
+%%%%%%%%% SUPPLEMENTARY MATERIAL TITLE
+\maketitlesupplementary
+\renewcommand{\thesection}{\Alph{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+
+\section{Detailed Implementation Parameters}
+
+As referenced in Section 4.4 of the main paper, we provide comprehensive hyperparameters for reproducing our Script2Layout models. All models were fine-tuned using LoRA with the Hugging Face \texttt{transformers} and \texttt{peft} libraries on a single NVIDIA H100 GPU.
+
+\subsection{Dataset Configuration}
+
+\begin{itemize}
+    \item \textbf{Maximum token length:} 4096
+\end{itemize}
+
+\subsection{Model Configuration}
+
+\begin{itemize}
+    \item \textbf{Data type:} \texttt{torch.float16}
+    \item \textbf{Attention implementation:} FlashAttention 2
+    \item \textbf{Tokenizer settings:} Right padding, EOS token addition enabled
+\end{itemize}
+
+\subsection{LoRA Configuration}
+
+\begin{itemize}
+    \item \textbf{Reduction factor:} $r = 8$
+    \item \textbf{LoRA alpha:} 16
+    \item \textbf{Target modules:} \texttt{q\_proj} and \texttt{v\_proj}
+    \item \textbf{LoRA dropout:} 0.1
+    \item \textbf{Bias setting:} \texttt{none}
+    \item \textbf{Task type:} \texttt{CAUSAL\_LM}
+\end{itemize}
+
+\subsection{Training Parameters}
+
+\begin{itemize}
+    \item \textbf{Batch size:} 1 per device (training and evaluation)
+    \item \textbf{Gradient accumulation steps:} 32
+    \item \textbf{Training epochs:} 20
+    \item \textbf{Optimizer:} \texttt{adamw\_torch\_fused}
+    \item \textbf{Learning rate:} $2 \times 10^{-4}$
+    \item \textbf{LR scheduler:} Cosine scheduler
+    \item \textbf{Mixed precision:} FP16 enabled
+    \item \textbf{Logging frequency:} Every 100 steps
+    \item \textbf{Evaluation strategy:} Every 100 steps with data grouped by length
+    \item \textbf{Save strategy:} Every epoch
+    \item \textbf{Experiment tracking:} Weights \& Biases (W\&B)
+\end{itemize}
+
+\end{document}

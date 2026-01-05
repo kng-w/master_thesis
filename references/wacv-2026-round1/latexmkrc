@@ -1,0 +1,15 @@
+# === project-local latexmkrc (pdflatex 用) ===
+$pdf_mode  = 1;  # 直接 PDF を作る
+$pdflatex  = 'pdflatex -synctex=1 -halt-on-error -file-line-error %O %S';
+$bibtex    = 'bibtex %O %S';   # \bibliographystyle{...}/\bibliography{...} を使うなら bibtex
+
+# 必要なら biber（biblatex を使う場合のみ）
+# $biber = 'biber --bblencoding=utf8 -u -U --output_safechars %O %S';
+
+$max_repeat = 5;
+
+# プレビュー（任意）
+$pvc_view_file_via_temporary = 0;
+
+# 掃除（任意）
+$clean_full_ext = "%R.synctex.gz";

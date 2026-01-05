@@ -301,3 +301,8 @@ TSWLatexianTemp*
 #*Notes.bib
 
 .DS_Store
+
+# references
+references/**/out/
+references/**/goodnotes/
+references/**/img/

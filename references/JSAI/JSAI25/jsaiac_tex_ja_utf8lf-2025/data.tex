@@ -1,0 +1,246 @@
+\usepackage{color}
+\usepackage{enumitem}
+\usepackage{amssymb} 
+\usepackage{multirow}
+\usepackage[normalem]{ulem}
+\useunder{\uline}{\ul}{}
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{footmisc}
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
+%%
+\title{
+   \jtitle{Manga109Script:\\[1ex]
+   漫画レイアウト生成モデルのための\\[1ex]
+   脚本データセット}
+\etitle{Manga109Script: A Script Dataset for Manga Layout Generation Models}
+}
+%%英文は以下を使用
+%\title{Style file for manuscripts of JSAI 20XX}
+
+\jaddress{kng.w@keio.jp}
+
+\author{%
+\jname{渡邉 謙吾\first}
+\ename{Kengo Watanabe}
+\and
+\jname{岡田 湧路\first}
+\ename{Yuro Okada}
+%\and
+\and
+\jname{北川 峻\first}
+\ename{Shun Kitagawa}
+%\and
+\and
+\jname{稲葉 通将\second}
+\ename{Michimasa Inaba}
+%\and
+\and
+\jname{橋本 敦史\first \third}
+\ename{Atsushi Hashimoto}
+%\and
+\and
+\jname{栗原 聡\first}
+\ename{Satoshi Kurihara}
+%\and
+%Given-name Surname\third{}%%英文は左を使用
+}
+
+\affiliate{
+\jname{\first{}慶應義塾大学}
+\ename{Keio University}
+\and
+\jname{\second{}電気通信大学}
+\ename{The University of Electro-Communications}
+\and
+\jname{\third{}オムロンサイニックエックス株式会社}
+\ename{Omron Sinic X Corporation}
+%\and
+%\third{}Affiliation \#3 in English%%英文は左を使用
+}
+
+%%
+%\Vol{28}        %% <-- 28th（変更しないでください）
+%\session{0A0-00}%% <-- 講演ID（必須)
+
+\begin{abstract}
+   In creative endeavors, a well-designed layout plays a crucial role. An effective layout enhances visual appeal and draws readers’ attention. While this principle applies to media, manga features a unique layout reflecting its narrative. Manga layouts are established in preliminary drafts called “name,” based on scripts and storytelling. Although layout generation models have evolved in domains such as Web UIs, where visual clarity is prioritized, script-based layout generation had not been explored due to data scarcity. In this study, we created script data for approximately 20,000 pages from the Manga109 dataset and built the Manga109Script dataset linking scripts to manga layouts. Using this dataset, we developed manga layout generation models that directly take scripts as input using several LLMs as base models. We evaluated these models, comparing existing methods and assessing the impact of script input to establish a baseline for script-based layout generation (Script2Layout).
+\end{abstract}
+
+
+% 人間の創造的営みにおいて，レイアウトの巧みな設計は重要な役割をもつ．効果的なレイアウトは作品に視覚的魅力を与え，読者の興味を引き付ける点で意義深い．この原理は様々な表現媒体に適用されるが，漫画においては物語を反映する点において特異なレイアウトをもつ．漫画のレイアウトは，脚本に基づきネームと呼ばれる下書きの中で定められ，物語の魅せ方を左右する演出として機能する．これまでレイアウトを生成するモデルの研究はWeb UIなどを対象に発展してきたが，データの不在から，脚本に基づくレイアウトの生成はこれまでに取り組まれてこなかった．そこで本研究では，Manga109データセットに含まれる約2万ページ分の脚本データを作成し，脚本と漫画レイアウトを結びつけたデータセットManga109Scriptを構築した．このデータセットを活用し，複数のLLMをベースモデルに言語情報である脚本を直接の入力とする漫画レイアウト生成モデルを開発した．これらのモデルについて，既存のレイアウト生成モデルや脚本の有無による評価を網羅的に実施し，脚本に基づくレイアウト生成，Script2Layoutのベースラインを整備した．
+
+
+%\setcounter{page}{1}
+\def\Style{``jsaiac.sty''}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em%
+ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\def\JBibTeX{\leavevmode\lower .6ex\hbox{J}\kern-0.15em\BibTeX}
+\def\LaTeXe{\LaTeX\kern.15em2$_{\textstyle\varepsilon}$}
+
+\begin{document}
+\maketitle
+
+\section{はじめに}
+
+物語を伝える表現には，文字を主体とする小説や映像を描くアニメまで，多岐にわたる形式が存在する．中でも漫画は，平面をコマへと分割し，その中にキャラクターやセリフを配置する独自の表現形式をもつ．一般的な漫画の制作過程において，このような配置はネームと呼ばれる下書きの一部として決定される．脚本やプロットに基づき，より効果的な物語の魅せ方として工夫されるコマの大きさやキャラクターの位置関係といったそのレイアウトは，作品の演出として漫画の魅力を高める重要な役割を担っている~\cite{koma}．
+
+レイアウトを生成するモデルの研究は，これまでWeb UIやポスターなど，主として正確な情報伝達を担う機能的なレイアウトを対象に発展してきた~\cite{layout}．一方，漫画におけるレイアウトのように，物語の展開に応じた演出が求められるレイアウトの研究は十分に行われてきていない．その一因に物語とレイアウトが結びつけられたデータの不足が挙げられる．
+
+%通常，脚本は内部資料として制作されるため一般に公開されることは稀であり，研究に利用可能なデータの確保が困難であった．
+
+しかし近年，Large Vision Language Model（LVLM）の発展により，画像からテキスト情報を高精度に抽出することが可能となった．これは，一連の画像から物語を抽出するVisual Storytellingの研究にも大きく貢献している~\cite{storytelling}．
+
+そこで本研究では，日本の商業漫画作品を集積したデータセットManga109~\cite{manga109}をもとに，LVLMを活用し，漫画19,555 ページ分の脚本データセットManga109Scriptを作成した．ここで作成した脚本は，物語性を有し，場所を示す柱，人物の動作や情景を描写するト書き，セリフを含む，一般に用いられる脚本のフォーマット\footnote{\footnotesize 正しい脚本の書き方や形式とは？演劇やドラマの脚本を書く前にチェック | 資格広場 https://www.tsuushinsei.net/shikaku-hiroba/sonota/38427}に準拠する．その品質については，人手による評価を実施し確認した．概要を図\ref{fig:eyecatch}に示す．
+
+Manga109Scriptを活用することで，言語情報として脚本を直接の入力とする漫画レイアウト生成モデルを複数のLLMで開発した．これらのモデルと従来手法の性能評価および脚本の有無による性能比較を漫画レイアウト生成において網羅的に実施し，脚本に基づくレイアウト生成課題Script2Layoutのベースラインを整備した．
+
+\begin{figure}[t]   
+   \centering
+   \includegraphics[width=1.02\linewidth]{img/eyecatch_script2layout.png}
+   \caption{\small Manga109Scriptのサンプルデータと概略図. 脚本は柱，ト書き，セリフから構成される一般のフォーマットに従い，漫画レイアウトと紐づいている．脚本をもとに漫画レイアウトを生成するScript2Layoutでの活用が想定される．(漫画: 記伊 孝. 犯罪交渉人峯岸英太)}
+   \label{fig:eyecatch}
+\end{figure}
+
+\section{関連研究}
+
+\subsection{レイアウト生成}
+レイアウトは，視覚情報を伝達するうえで，受け手の理解や印象に大きな影響を与える．優れたレイアウトは様々な表現媒体で求められ，レイアウトを生成するモデルの研究が進められている~\cite{layout}．これまでのレイアウト生成の研究では，Web UIやポスター，PDFドキュメントなど構成要素の視認性に重点がおかれるレイアウトの生成が主な課題とされてきた．このような要素配置の問題では，要素のカテゴリと位置情報の組の集合として表現されるレイアウトを，カテゴリに割り当てたIDと位置情報を表す量子化したBounding Box(BBox)を用いそれらのシーケンスとして扱う手法に有効性が示されている．なかでも拡散モデルを用いたLayoutDM~\cite{layoutdm}やTransformerを基盤としたモデルであるLayoutFormer++~\cite{layoutformer}は高い性能を誇る．
+
+本研究では，レイアウト要素のカテゴリをIDとして受け取る従来手法~\cite{layoutdm,layoutformer}を漫画のレイアウト生成に適用し評価を行った．その結果を，脚本を直接の入力とするレイアウト生成モデルとの比較対象とすることで，脚本を活用したレイアウト生成Script2Layoutを検証した．
+
+\subsection{Visual Storytelling}
+Visual Storytellingは，画像内に映る多様な要素を統合し一貫性のある物語の生成を目指す研究課題である．かつては，画像シーケンスの入力に対し，CNNによる特徴量抽出をもとに画像間の連続性をRNNにより捉える物語生成手法~\cite{vist}などが提案されてきた．
+
+近年は，GPT-4o~\cite{gpt4}やGemini~\cite{gemini}などLVLMとみなされるモデルが台頭し，これらは画像内に内包された文脈を高精度に物語として抽出する．さらに，その精度を高める手法として，Visual Prompting ~\cite{visualprompt}なども提案されている．
+
+このような発展は，対象画像を漫画画像とした研究にもつながっている．Regavら~\cite{mangawhisper}が提案するManga Whisperer は，セリフに対応した発話者の認識に加え，セリフを物語の進行順に認識できる．このモデルは，海賊版のデータセットにより学習されており，倫理的問題を抱えるが，漫画という特殊な形式をもつ画像表現に対しても物語の認識精度が向上したことを示すものであるといえる．
+%Yingxuanら~\cite{}は漫画画像を入力として各セリフの発話者を判定するモデルを提案し，
+
+\section{Manga109Script}
+
+% \subsection{データセットの概要}
+% Manga109Scriptは，Manga109~\cite{}に収録された19,555ページの漫画画像に対応する脚本データセットである．Manga109~\cite{}は，日本の商業漫画作品109作品の漫画画像およびその漫画上におけるコマ，キャラクター，セリフの位置情報などを収録したデータセットである．適正な利用を条件に学術研究目的のため著作者の許諾のもと公開されている．Manga109Script の構築は，Manga109~\cite{}に含まれる漫画画像に，識別のためキャラクターの顔をそれぞれ異なる色の円で囲う工夫を施し~\cite{}，それらの画像をLVLMの一つGPT-4o~\cite{}に一連の物語が認識されるよう与えて行った．
+
+% 脚本は一般的なフォーマットに従い，何処であるかを表す柱，人物や情景について描写するト書き，セリフの3要素から構成され，
+
+\subsection{概要}
+Manga109Scriptは，Manga109に収録された19,555ページの漫画画像に対応する脚本データセットである．Manga109は，日本の商業漫画109作品の漫画画像および漫画上におけるコマ，キャラクター，セリフの位置情報などを収録したデータセットである．適正な利用を条件に学術研究目的のため著作者の許諾のもと公開されている．Manga109Scriptでは，Manga109に含まれる見開き単位のレイアウト情報をページ単位に整形し，それぞれのページに対応する脚本データと結びつけた．脚本は，一般に用いられているフォーマットに従い，行頭に「◯」を付け記述される場所を表す柱，行頭から3文字分インデントを空け記述される人物や情景の描写であるト書き，行頭にキャラクター名を記し，その直後の鍵括弧の中に記述されるセリフの3要素から構成される．1ページあたりの平均の数は，柱が1.38，ト書きが7.04，セリフが7.10あり，文字数は1ページあたり342.8字ある．作成した脚本は，単なるキャプションとは異なる文章であるといえる．
+
+\subsection{構築}
+Manga109Script の構築は，Manga109に含まれる漫画画像に，キャラクターの識別のためそれぞれの顔を異なる色の円で囲う処理を施し\cite{visualprompt}，処理した画像を1ページずつGPT-4oに以下の手順で与えることで行った．
+
+GPT-4oとの対話は，脚本生成の対象とする1ページを基準に以下の3種に分けられる．
+\begin{enumerate}[label=(\alph*), itemsep=0pt]
+      \item 対象ページを含む1話分のセリフをすべて与え，「物語を理解できたか」と問い．これに対して「ハイ」という返答がなされたことにする恣意的に作成する対話
+      \item 対象ページの漫画画像およびセリフ情報，(c)で作成する対象ページに至るまでの漫画のあらすじ，脚本フォーマット等の説明，これらを与え脚本を生成させる対話
+      \item 対象ページに至るまでの漫画の内容をあらすじとしてまとめさせる対話
+\end{enumerate}
+上記3種の対話を，「(a)→1ページ前の(b)→対象ページの(b)」とつないで脚本の生成を行い，「(a)→1ページ前の(b)→対象ページの(b)→(c)」とつないであらすじを生成する．この一連の対話パターンを，対象とするページを順に変えながら，交互に入力することでManga109Scriptを構築した．
+
+\subsection{品質の確認}
+作成した脚本は短文のキャプションとは異なり特殊な形式を持つため，一般に用いられている画像キャプションの評価基準を適用することは難しい．そこで本研究では，人手による評価を行い，脚本の品質を確認した．
+
+評価項目は，(1)漫画に描かれた場所が脚本の柱として記述されているか否か正誤で判定する柱Recall，(2)脚本の柱に記述された場所が漫画に描かれているか否か正誤で判定する柱Precision，(3)対象ページのト書きに，他のページで生成されたト書きをランダムに混合し作成したト書きリストの中から，対象ページのト書きが実際そのページのものであるとみなせるか判定するト書きPrecision，(4)同様のリストから他のページで生成されたト書きを実際他のページのものであるとみなせるか判定する文脈外ト書き検知精度，(5)漫画に描かれたセリフが正確に脚本内に記述されているか否かを判定するセリフRecall，以上5つの評価項目を設けた．なお，(3)，(4)において，評価者はどのト書きがどのページで生成されたものかを知らずに評価を行う．また，ト書きリストの作成に際しては，対象ページに描画されたキャラクター以外の名前が含まれないよう注意を払った．
+
+評価は，物語のつながりが理解できるよう，各作品の中から連続するおよそ10ページを無作為に抽出し，合計1000ページを対象に行なった．1000ページの脚本を500ページずつ分け，6名の評価者がそれぞれ500ページを担当することで，1ページあたり3名の評価が得られる構成とした．
+
+それぞれの評価において，正とみなされた数の割合は，それぞれの評価における対象要素の全数で平均を算出し次のように求められた．柱Recallが0.793，柱Precisionが0.838，ト書きPrecisionが0.664，文脈外ト書き検知精度が0.910，セリフRecallが0.988であった．
+
+
+
+\section{実験}
+\begin{figure*}[!t]   
+   \centering
+   \includegraphics[width=0.9\textwidth]{img/script2layout_inputoutput.png}
+   \caption{\small 漫画レイアウト生成課題におけるScript2Layoutと既存手法との比較．既存手法(下図)では，レイアウト要素のカテゴリを制約にそれらの位置情報を生成する．一方Script2Layout(上図)では脚本からルールベースで要素をカテゴリ化せずに抜き出し，不足する要素を人手で加え，それらを脚本とともにモデルへの入力することで，それらの位置情報が生成される．Script2Layoutにおいて与える要素をカテゴリ化すれば，既存手法における制約と等しくなる．}
+   \label{fig:script2layout}
+\end{figure*}
+
+本研究では，Manga109Scriptを用い，漫画レイアウト生成における脚本の有用性を検証するとともにScript2Layoutのベースラインの確立を目的として実験を行った．
+
+\subsection{実験設定}
+Manga109Scriptをもとに，レイアウト要素としてキャラクター，セリフ，コマの各要素を扱う漫画レイアウト生成課題を整備した．図\ref{fig:script2layout}は，漫画レイアウト生成課題における，従来のレイアウト生成モデルの入出力と脚本に基づくレイアウト生成モデルScript2Layoutモデルの入出力の概要を示す．レイアウト$l$は，その要素数が$N \in \mathbb{N}$であるとき，要素$i$のカテゴリ$c_i$とその位置情報$\mathbf{b}_i$の組の集合として$l = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}$と表現することができる．本実験においては，要素の位置情報$\mathbf{b}$を，漫画画像を縦横32等分した格子点上のBBoxとして扱い，各要素のカテゴリが既知である条件下で，各要素の$\mathbf{b}$の予測を行う課題を漫画レイアウト生成課題とした．これは，本研究において開発するモデルが，脚本に基づきネームを制作する際利用されるモデルであることを想定しているためである．
+
+本実験では，複数のLLM（T5~\cite{t5}，Swallow-13B~\cite{swallow}，Sarashina-13B~\cite{sarashina}，GPT-4o）をベースモデルに漫画レイアウト生成課題で追加学習を実施した．これらのモデルと既存のレイアウト生成モデルLayoutFormer++，LayoutDMとの性能比較および脚本の有無による性能比較を漫画レイアウト生成課題において定量的・定性的に行った．既存のレイアウト生成モデルには従来のレイアウト生成課題において高い精度を示す2つを選定し，LLMのベースモデルは日本語性能の高さをもとに選定した．全19,555ページのデータを8:1:1に分割し，訓練データ，検証データ，テストデータとして，それぞれのモデルを訓練データで学習し，過学習の確認を検証データで行い，モデルの性能評価をテストデータで行った．
+
+既存手法では，要素$i$のカテゴリ$c_i$をID化し，量子化した位置情報$\mathbf{b}=(x, y, w, h)$と合わせレイアウト$l$をシーケンス$l=(c_1, x_1, y_1, w_1, h_1, c_2, x_2, \dots)$として扱う．本実験におけるカテゴリは，漫画レイアウトの主要なカテゴリ(キャラクター，セリフ，コマ)を基準にそれぞれ各ページにおいて識別可能な範囲に分類し，$c_i \in \{Chara_i \mid i=1, 2, \dots, 25\} \cup \{Speech_i \mid i=0, 1, \dots, 25\} \cup \{Frame\}$と定めカテゴリ$c_i$をID化した．ここで，$Chara_i$は対象ページにおける$i$番目のキャラクターを，$Speech_i$は$i \neq 0$のとき$Chara_i$の発話を，$i = 0$のときナレーション等対象ページにおけるキャラクターに紐づかないセリフを，$Frame$は漫画のコマを表す．キャラクターの分類を25までとしたのは，Manga109Scriptにおいて，同一ページ内におけるキャラクターの最大数が22で，そこに余白を持たせたためである
+
+LLMを追加学習した漫画レイアウト生成モデルでは，脚本の入力条件として3種，脚本を入力しない No Script, 脚本をそのまま入力する Plain，脚本にコマ区切り情報を追加し入力する Frame-Inserted を用意し，それぞれの入力条件で学習を行った．共通して入力に与えるのは，各レイアウト要素のコンテンツ(例えばキャラクターの名前やセリフの内容そのもの)を列挙した文字列であり，カテゴリ化せず入力とするのは，事前学習済みLLMの能力を引き出す狙いがある．Plain におけるモデルへの入力形式は図\ref{fig:script2layout}の通り．出力するのは，各要素の量子化した位置情報$\mathbf{b}=((x_1 , y_1), (x_2, y_2))$であり，評価する際には，出力結果として得られるレイアウトの各要素それぞれに既存手法と同様なルールでカテゴリを割り当て，シーケンス形式に変換し値を算出した．
+
+定量評価に用いたのは，Manga109Scriptに含まれる本物の漫画レイアウト集合と生成されたレイアウト集合のFIDNetV3~\cite{layoutdm}における特徴量の分布の違いを評価するFréchet inception distance (FID)および各ページに対する本物の漫画レイアウトと生成したレイアウトとの重なりを評価するMaximumIoU(mIoU)~\cite{miou}である．これらは従来のレイアウト生成課題においても信頼される評価指標として用いられている．
+
+\subsection{結果と考察}
+\begin{table*}[t]
+   \centering  % （必要に応じてフォントサイズも調整）
+   \small
+   \caption{各モデルにおけるFIDとmIoUの結果}\label{tab:fid_miou}
+   \begin{tabular}{lcccccc}
+      \hline
+      \multicolumn{1}{r}{Script Type} & \multicolumn{2}{c}{No Script} & \multicolumn{2}{c}{Plain} & \multicolumn{2}{c}{Frame-Inserted} \\ \cline{2-7} 
+      \multicolumn{1}{r}{Model     \space  \textbackslash Metrics} & FID↓ & mIoU↑ & FID↓ & mIoU↑ & FID↓ & mIoU↑ \\ \hline
+      LayoutFormer++ & 24.391 & 0.128 & - & - & - & - \\
+      LayoutDM     & \textbf{14.997} & 0.134 & - & - & - & - \\
+      T5 (Fine-Tuned)           & 26.599 & \textbf{0.241} & 27.473 & \textbf{0.238} & 27.285 & \textbf{0.225} \\
+      Swallow-13B (Fine-Tuned) & 25.680 & 0.183 & 18.954 & 0.191 & {\ul 17.847} & 0.194 \\
+      Sarashina-13B (Fine-Tuned) & 16.794 & {\ul 0.217} & {\ul 16.322} & {\ul 0.219} & 19.402 & {\ul 0.216} \\
+      GPT-4o (Fine-Tuned)        & {\ul 15.442} & 0.179 & \textbf{14.886} & 0.194 & \textbf{14.581} & 0.193 \\ \hline
+      Real data            & 3.945  & - & 3.945  & - & 3.945  & - \\ \hline
+   \end{tabular}
+   \end{table*}
+\begin{figure*}[!t]   
+   \centering
+   \includegraphics[width=0.95\textwidth]{img/generated_images.png}
+   \caption{ 各モデルで生成された，同一ページにおけるレイアウトの例．(漫画: 佐藤 晴美. 翼の記憶)}
+   \label{fig:generatedimage}
+\end{figure*}
+表\ref{tab:fid_miou}に，各モデルにおけるFIDとmIoUの結果を示す．これより，FIDにおいては，脚本なし条件（No Script）下でLayoutDMが最良の性能（14.997）を示したが，GPT-4oの脚本を利用したモデルが，特に Frame-Inserted の条件下で僅かではあるが性能を上回っていることが分かる．また，多くのモデルにおいて，脚本なし条件(No Script)と比較して，脚本を使用した場合にFIDが改善されており，これらの結果は，脚本が漫画のレイアウト生成において有効な役割を果たすことを示唆している．
+また，mIoUおいては，LLMの追加学習モデルが，脚本なし条件(No Script)下でさえ，既存手法を上回る性能を示していることが分かる．これは，従来のレイアウト生成手法が，整列性などの既存のレイアウト生成課題において重視される原則に過度に制約されており，それが漫画特有のレイアウトにはむしろ性能低下を招いている可能性を示唆している．この観察は同じページに対するレイアウトの生成結果を比較した図\ref{fig:generatedimage}からも裏付けられ，既存手法ではコマやセリフが不自然に整列する傾向が見られていることにも符合する．さらに，mIoUにおいても，多くのモデルで脚本を使用した場合に改善がみられ，この結果は漫画レイアウトの生成における脚本の有用性を示唆する．
+
+図\ref{fig:generatedimage}では，脚本の有無にかかわらず，既存手法が生成するレイアウトは漫画のレイアウトにおいて，コマが画面を覆っていないなど，不自然な点が見られ，LLMを追加学習した手法はそのような点が改善されていることが分かる．このような違いがある一方で，FIDの値が近接していることから，漫画のレイアウトの生成に対しては，また新たな別のモデルによる評価指標が必要であるといえる．
+
+\section{おわりに}
+本研究では，脚本を入力として漫画のレイアウトを生成するScript2Layoutを提案し，そのベースラインを揃えた．具体的には，漫画画像データセットManga109に対応する19,555ページ分の脚本データセットManga109Scriptを構築し，これを用いた漫画レイアウト生成課題をScript2Layoutのベンチマークとして整備した．さらに，複数のLLMをベースとして，言語情報である脚本を直接入力に用いる漫画レイアウト生成モデルを開発し，従来のレイアウト生成手法との比較実験および脚本の有無による比較実験の結果，脚本を入力することで，この評価基盤の上でのFIDをわずかに，mIoUでは大きく従来手法を上回る性能を達成した．
+
+今後の展望としては，物語の連続性やキャラクターの姿勢等を考慮した，より漫画らしい要素を加える拡張が考えられる．
+
+\section*{謝辞}
+本研究はNEDO・人と共に進化する次世代人工知能に関する技術開発事業「インタラクティブなストーリー型コンテンツ創作支援基盤の開発」の助成を受けたものである．
+
+% \bibliographystyle{jsaiac}
+% \bibliography{/Users/kengowatanabe/Local/Lab/JSAI/JSAI25/jsaiac_tex_ja_utf8lf-2025/Theme5}
+{\footnotesize
+\begin{thebibliography}{99}
+\bibitem[深谷 19]{koma}
+ 深谷 陽, 東京ネームタンク. もっと魅せる・面白くする魂に響く漫画コマ割り教室. ソーテック社 2019. 
+\bibitem[OpenAI]{gpt4}
+OpenAI. ChatGPT https://chatgpt.com 
+\bibitem[Shi 23]{layout}
+Shi, Y., Shang, M. and Qi, Z. Intelligent layout generation based on deep generative models: A comprehensive survey. Information Fusion, vol. 100. (2023). 
+\bibitem[Daniel 24]{storytelling}
+Daniel A. P. O., Eugénio R. and David M. Story Generation from Visual Inputs: Techniques, Related Tasks, and Challenges. ( 2024).
+\bibitem[Aizawa 20]{manga109}
+Aizawa, K., Fujimoto, A., and et al. Building a Manga Dataset “Manga109” With Annotations for Multimedia Applications. \emph{IEEE MultiMedia}, vol. 27, no. 2, pp. 8--18, Apr. 2020.
+\bibitem[Inoue 23]{layoutdm}
+Inoue, N., Kikuchi, K., Simo-Serra, E., Otani, M. and Yamaguchi, K. LayoutDM: Discrete Diffusion Model for Controllable Layout Generation. \emph{arXiv preprint arXiv:2303.08137}, Mar. 2023. 
+\bibitem[Jiang 23]{layoutformer}
+Jiang, Zhaoyun, Guo, Jiaqi, Sun, Shizhao, et al. LayoutFormer++: Conditional Graphic Layout Generation via Constraint Serialization and Decoding Space Restriction. \emph{arXiv preprint arXiv:2208.08037}, 2023.
+\bibitem[Huang 16]{vist}
+Huang, T.-H. (Kenneth) et al. Visual Storytelling. Association for Computational Linguistics, San Diego, California, 2016, pp. 1233--1239.
+\bibitem[Gemini 24]{gemini}
+Team Gemini, Anil, Rohan, and Borgeaud, Sebastian, et al. Gemini: A Family of Highly Capable Multimodal Models. \emph{arXiv preprint arXiv:2312.11805}, 2024.
+\bibitem[Sachdeva 24]{mangawhisper}
+Sachdeva, R. and Zisserman, A. The Manga Whisperer: Automatically Generating Transcriptions for Comics. \emph{arXiv preprint arXiv:2401.10224}, Mar. 2024.
+\bibitem[Shtedritski 23]{visualprompt}
+Shtedritski, A. et al. Visual prompt engineering for VLMs. In: 2023 IEEE/CVF ICCV, Oct. 2023.
+\bibitem[Raffel 23]{t5}
+Raffel, C., Shazeer, N. and Roberts, A., et al. Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer. \emph{arXiv preprint arXiv:1910.10683}, 2023.
+\bibitem[藤井 24]{swallow}
+藤井 一善, 中村 泰士, Mengsay Loem, and et al. 継続事前学習による日本語に強い大規模言語モデルの構築. 言語処理学会 第30回年次大会, 2024.
+\bibitem[SB 24]{sarashina}
+yama\_flush\_winter. Sarashina の性能評価 - SB Intuitions TECH BLOG. \\https://www.sbintuitions.co.jp/blog/entry/2024/07/26/150005 
+\bibitem[Kikuchi 21]{miou}
+Kikuchi, K., Simo-Serra, E., Otani, M., et al. Constrained Graphic Layout Generation via Latent Optimization. In: \emph{Proc. of the 29th ACM Int. Conf. on Multimedia (MM ’21)}, ACM, Oct. 2021, pp. 88–96.
+\end{thebibliography}
+}
+%

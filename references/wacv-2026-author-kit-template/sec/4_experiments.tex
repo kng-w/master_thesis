@@ -1,0 +1,271 @@
+\section{Experiments}
+\begin{figure*}[t]
+  \includegraphics[width=\textwidth]{img/method.pdf}
+  \caption{
+    Comparison of manga layout generation approaches. Top: Our Script2Layout method takes natural language scripts and extracted layout elements (character names, dialogue, panels) as input to generate layouts via bounding box prediction. Bottom: Traditional methods require predefined category labels (\eg, \texttt{Speech1}, \texttt{Chara2}) as input. Unlike conventional approaches that rely on structured element types, Script2Layout enables direct layout generation from raw narrative scripts conditioned on storytelling intent.}
+  \label{fig:method}
+  \vspace{-1.0em}
+\end{figure*}
+
+The primary goal of our experiments is to evaluate the effectiveness of using scripts as input for manga layout generation and to establish a baseline for Script2Layout. Using Manga109Script, we compare Script2Layout models that are fine-tuned (FT) LLMs generating layout coordinates conditioned on script input, with existing methods~\cite{inoue2023layoutdm, jiang_layoutformer_2023, lin_layoutprompter_2023} under multiple constraint settings, including the presence or absence of script input.
+
+\subsection{Problem Formulation}
+We formulate manga layout generation as the task of predicting spatial positions for a given list of element categories. A layout $\ell$ consisting of $N \in \mathbb{N}$ elements is represented as $\ell = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}$, where $c_i$ denotes the category of the $i$-th element and $\mathbf{b}_i$ is its corresponding bounding box. In our experiments, we consider three types of element categories: \textit{characters}, \textit{speech balloons}, and \textit{panels}. Each bounding box $\mathbf{b}_i$ is quantized on a $32\times32$ grid. Given the number of elements $N$ and their categories $\{c_i\}_{i=1}^N$, the task is to predict their spatial positions $\{\mathbf{b}_i\}_{i=1}^N$ on the manga page.
+
+This formulation reflects real-world manga production workflows, where artists compose layouts (known as ``name'' in Japanese production) based on a predefined script that specifies the categories of elements to be placed on each page, prior to any visual content creation. This formulation also bridges a critical gap between traditional layout generation models, which cannot directly accept script input, and Script2Layout models, which are designed to condition layout prediction on narrative scripts.
+
+Under this formulation, we first describe how existing layout generation methods are applied to this task. We then introduce our Script2Layout models, highlighting the differences in how they utilize script information.
+
+\vspace{-0.8em}
+\paragraph{Existing Methods.}
+The input and output formats of conventional methods are illustrated in the bottom part of Figure~\ref{fig:method}. Conventional layout generation methods require element categories to be predefined. In our experiments, categories are based on the three main types (\textit{characters}, \textit{speech balloons}, and \textit{panels}) and are further distinguished on a per-page basis. Specifically, we assign category as $c_i \in \{\texttt{Chara}_i \mid i=1,\dots,25\} \cup \{\texttt{Speech}_i \mid i=0,\dots,25\} \cup \{\texttt{Panel}\}$. Here, $\texttt{Chara}_i$ denotes the $i$-th character instance on a page, $\texttt{Speech}_i$ represents a speech balloon spoken by $\texttt{Chara}_i$ (or narration when $i = 0$). The number 25 was chosen to provide a buffer, as the maximum number of distinct characters in a single page of Manga109Script is 22. Based on this formulation, we evaluate three representative layout generation methods: LayoutDM~\cite{inoue2023layoutdm}, LayoutFormer++~\cite{jiang_layoutformer_2023}, and LayoutPrompter~\cite{lin_layoutprompter_2023}. The first two models are trained on the manga layout task. LayoutPrompter, in contrast, is a prompt-based system that does not involve model training; we implemented it using the GPT-4o API. Although the system is capable of accepting script inputs, we did not provide script information in our experiments due to input length limitations. Consequently, LayoutPrompter was evaluated under the same conditions as other non-script-based methods. We adopt generation conditioned on types (Gen-T) as the default setting throughout this study. In this setting, each element's category is known. In addition, we evaluate the existing methods under two extended constraint settings: 
+
+\begin{itemize}
+  \item \textbf{Gen-TS (Generation conditioned on types and sizes):} Each element's size (\ie, width and height) is given in addition to its category.
+  \item \textbf{Gen-R (Generation conditioned on relationships):} Pairwise spatial relations (\eg, "element A is above element B") between layout elements are provided as constraints.
+\end{itemize}
+
+\vspace{-1.0em}
+\paragraph{Script2Layout Models}
+Under the above formulation, we use the following LLMs as base for Script2Layout models: T5~\cite{raffel2020exploring_t5, sonoisa_t5_base_japanese}, Swallow-13B~\cite{swallow13b}, Sarashina-13~\cite{sarashina13b}, and DeepSeek-R1-Distill-Qwen-14B-Japanese (DeepSeek-R1-J)~\cite{deepseek-ai_deepseek-r1_2025}, selected for their strong Japanese language capabilities and fine-tuning flexibility. The input and output formats of Script2Layout models are illustrated in the upper part of Figure~\ref{fig:method}. Unlike conventional methods that require predefined category labels, Script2Layout models can directly process linguistic content. They take as input the raw content of layout elements, such as character names and speech texts, extracted from the script. These contents are passed to the tokenizer of each LLM without assigning predefined category labels, allowing the model to interpret them directly based on its pretrained knowledge. The model then outputs a quantized bounding box $\mathbf{b}_i = ((x_1, y_1), (x_2, y_2))$ for each element. In addition, we design input formats that allow the model to incorporate the script itself. Specifically, we consider the following three variants:
+\begin{itemize}
+  \item \textbf{None:} No script is included in the input.
+  \item \textbf{Plain:} Raw script text is included as input.
+  \item \textbf{Panel-Inserted:} Script input is augmented with explicit panel segmentation markers, indicating how the script content is divided across individual panels.
+\end{itemize}
+In addition, we further evaluated Script2Layout models under the Gen-TS setting, combining it with the \textbf{None} and \textbf{Plain} input conditions. This additional experiment aims to assess the extent to which script information contributes to layout prediction when the sizes of all elements are provided in advance.
+
+\subsection{Dataset Split}
+For training and evaluation, we filtered out 90 pages from Manga109Script that contained more than 50 layout elements, as such cases can cause combinatorial explosion in constraint-based models (particularly under Gen-R). The remaining 19,465 pages were used in our experiments.
+
+We split the data by manga title to avoid title-level leakage across splits. The split maintains an 8:1:1 ratio, with 15,333 pages for training, 2,007 for validation, and 2,125 for testing. The training set was used to fine-tune LLMs for Script2Layout and to train conventional baseline models from randomly initialized parameters. The validation set was used for early stopping, and the test set for final performance evaluation.
+
+\subsection{Evaluation Metrics}
+\vspace{-0.5em}
+Given the diverse possibilities of manga layouts, which make evaluation difficult, 
+we follow established metrics to assess their fidelity, spatial consistency, and readability: 
+Fréchet Inception Distance (FID), mean Intersection over Union (mIoU),  Overlap of Speech Balloons (Ovp.) and LTSim-MMD~\cite{otani2024ltsim}
+
+\vspace{-0.5em}
+\paragraph{FID}
+FID measures the similarity between distributions of real and generated layouts in a learned feature space. 
+Following LayoutDM~\cite{inoue2023layoutdm}, we use FIDNetV3 as the feature extractor, which has been shown to be better suited for layout features than traditional conventional method. 
+For Script2Layout, FID is computed between generated layouts and real layouts in the test set. 
+As a reference, we also compute the FID between layouts in the validation and test sets and report it as ``Real data.''
+
+\vspace{-0.5em}
+\paragraph{mIoU}
+Mean Intersection over Union (mIoU) is computed by greedily matching each generated element with the ground-truth element of the same category that yields the highest IoU. 
+This metric, commonly used in prior work~\cite{meanIoU}, measures category-specific spatial accuracy and is reported as the average over all test samples.
+
+\vspace{-0.5em}
+\paragraph{Overlap of Speech Balloons}
+We compute readability loss by first summing the pairwise IoUs of all balloons on each page, and then averaging this value across the dataset. In manga, overlaps between characters or between characters and speech balloons are often used as stylistic devices, but balloon–balloon overlaps are generally detrimental to readability. Therefore, we adapt the commonly used Overlap metric~\cite{li_layoutgan_2019} to penalize only overlaps between speech balloons.
+
+\vspace{-0.5em}
+\paragraph{LTSim-MMD} We also adopt LTSim-MMD~\cite{otani2024ltsim}, which is based on optimal transport and evaluates loose geometric consistency through many-to-many relationships. This allows us to measure collection-level similarity to the ground truth, and it is expected to capture the plausibility of manga layouts.
+
+\vspace{-0.5em}
+\paragraph{Qualitative Evaluation} We qualitatively compare generated layouts with ground truth by visualizing outputs from different models, assessing how well they capture spatial structure and benefit from script information.
+
+\subsection{Implementation Details}
+Our Script2Layout models were fine-tuned using the Low-Rank Adaptation (LoRA) technique. We utilized the Hugging Face transformers and peft libraries for all implementations. All training and inference were conducted on a single NVIDIA H100 GPU. A comprehensive list of hyper parameters, including the LoRA configuration and training parameters, is provided in the Appendix.
+
+\subsection{Evaluations and Discussions}
+
+\begin{table*}[t]
+  \caption{
+    Results under the Gen-T setting. Script2Layout models, fine-tuned (FT) LLMs for layout prediction, are evaluated with three script input types (None, Plain, Panel). They generally outperform existing layout models, demonstrating the effectiveness of script input.
+}
+  \vspace{-0.6em}
+  \centering
+  \label{tab:results}
+  \setlength{\tabcolsep}{2.0pt}
+  \begin{adjustbox}{max width=\textwidth}
+  \begin{tabular}{
+    l@{}l
+    S[table-format=3.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3]
+    S[table-format=2.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3]
+    S[table-format=2.3] S[table-format=1.3] S[table-format=1.3] S[table-format=1.3]
+  }
+    \toprule
+    & \multicolumn{1}{r}{Script} &
+    \multicolumn{4}{c}{None} &
+    \multicolumn{4}{c}{Plain} &
+    \multicolumn{4}{c}{\makecell{Panel-Inserted}} \\
+    \cmidrule(lr){3-6}\cmidrule(lr){7-10}\cmidrule(lr){11-14}
+    Model & \multicolumn{1}{r}{Metric} &
+    {FID$\downarrow$} & {mIoU$\uparrow$} & {Ovp. $\downarrow$} & {\makecell{LTSim\\-MMD ($\times 10^{-2}$)$\downarrow$}} &
+    {FID$\downarrow$} & {mIoU$\uparrow$} & {Ovp. $\downarrow$} & {\makecell{LTSim\\-MMD ($\times 10^{-2}$)$\downarrow$}} &
+    {FID$\downarrow$} & {mIoU$\uparrow$} & {Ovp. $\downarrow$} & {\makecell{LTSim\\-MMD ($\times 10^{-2}$)$\downarrow$}} \\
+    \midrule
+    \multicolumn{14}{l}{\it \small Layout Generation Models} \\
+    \multicolumn{2}{l}{\hspace{0.4em}LayoutDM}
+      & \underline{\num{22.428}} & \num{0.161} & \num{0.084}  & \num{0.763}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} \\
+    \multicolumn{2}{l}{\hspace{0.4em}LayoutFormer++}
+      & \num{28.402} & \num{0.140} & \num{0.203}  & \num{2.236}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} \\
+    \multicolumn{2}{l}{\hspace{0.4em}LayoutPrompter}
+      & \num{133.502} & \num{0.138} & \underline{\num{0.020}} & \num{1.230}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--}
+      & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} & \multicolumn{1}{c}{--} \\
+    \midrule
+    \multicolumn{14}{l}{\it \small Script2Layout Models} \\
+    \multicolumn{2}{l}{\hspace{0.4em}T5 (FT)}
+      & \num{29.549} & \textbf{\num{0.201}} & \num{0.061} & \num{0.587}
+      & \num{28.744} & \textbf{\num{0.210}} & \num{0.064} & \num{0.505}
+      & \num{31.287} & \underline{\num{0.204}} & \num{0.180} & \num{1.147} \\
+    \multicolumn{2}{l}{\hspace{0.4em}Swallow (FT)}
+      & \num{35.845} & \num{0.156} & \num{0.021}  & \num{0.921}
+      & \textbf{\num{18.415}} & \num{0.182} & \num{0.026} & \num{0.429}
+      & \underline{\num{21.557}} & \num{0.184} & \num{0.013} & \num{0.394} \\
+    \multicolumn{2}{l}{\hspace{0.4em}Sarashina (FT)}
+      & \textbf{\num{20.377}} & \underline{\num{0.192}} & \num{0.028} & \underline{\num{0.398}}
+      & \num{24.191} & \underline{\num{0.207}} & \underline{\num{0.012}} & \underline{\num{0.393}}
+      & \num{25.127} & \textbf{\num{0.213}} & \underline{\num{0.009}} & \underline{\num{0.382}} \\
+    \multicolumn{2}{l}{\hspace{0.4em}DeepSeek-R1-J (FT)}
+      & \num{24.618} & \num{0.174} & \textbf{\num{0.007}} & \textbf{\num{0.383}}
+      & \underline{\num{22.502}} & \num{0.186} & \textbf{\num{0.005}} & \textbf{\num{0.359}}
+      & \textbf{\num{21.094}} & \num{0.184} & \textbf{\num{0.004}} & \textbf{\num{0.291}} \\
+    \midrule
+    Real data &
+      & \num{4.780} & \multicolumn{1}{c}{--} & \num{0.002} & \multicolumn{1}{c}{--}
+      & \num{4.780} & \multicolumn{1}{c}{--} & \num{0.002} & \multicolumn{1}{c}{--}
+      & \num{4.780} & \multicolumn{1}{c}{--} & \num{0.002} & \multicolumn{1}{c}{--} \\
+    \bottomrule
+  \end{tabular}
+  \end{adjustbox}
+\end{table*}
+
+\paragraph{Quantitative results under Gen-T}
+As shown in Table~\ref{tab:results}, scripts improve layouts for most models. From None to Plain, FID improves for 3/4 models and mIoU for 4/4, with mean relative changes of -10.3\% (FID) and +9.0\% (mIoU). LTSim-MMD also shows consistent gains, improving in all 4/4 models under this transition. From None to Panel-Inserted, FID improves in 2/4 models, mIoU in 4/4, Ovp. in 3/4, and LTSim-MMD in 3/4. These patterns suggest that scripts act as effective priors for manga layout generation. Character descriptions and speaker attribution likely serve as anchors for determining where speakers and speech balloons should appear, thereby helping to reduce Ovp., improve mIoU, and yield layouts that are semantically closer to ground truth, as captured by LTSim-MMD. In fact, under the Panel-Inserted condition, most models achieve improvements that surpass existing layout methods for these metrics. Moreover, we observe a strong dependence on model capacity. The impact of script input depends strongly on the underlying LLM’s capacity. Weaker models such as T5 sometimes degrade on certain metrics when scripts are provided, suggesting that they underutilize the richer input. In contrast, stronger models like DeepSeek consistently benefit, showing improvements in nearly all metrics; under the Panel-Inserted condition, DeepSeek surpasses existing layout models across all evaluation measures. These results indicate that rich script cues are most effective when the base LLM is sufficiently capable, whereas limited models may be hindered by the additional complexity. As LLM capabilities continue to advance, script conditioning is expected to become increasingly useful in practice for producing more coherent and readable manga layouts.
+
+
+
+\begin{figure*}[t]
+  \includegraphics[width=\textwidth]{img/generated_layouts_3.pdf}
+  \vspace{-1.5em}
+  \caption{
+Qualitative comparison of generated layouts. Each row shows one example: the real manga layout (left), followed by predictions from existing methods and Script2Layout models with different script input settings (None, Plain, Panel-Inserted). Script2Layout models generally produce layouts closer to the real ones, particularly when script information is provided. (Source: *Doll Gun* by Ryusei Deguchi, *Touta Mairimasu* by Shinji Saijo)
+}
+  \label{fig:quantitative_results}
+  \vspace{-1.2em}
+\end{figure*}
+
+\paragraph{Qualitative Results}
+Figure~\ref{fig:quantitative_results} shows that models conditioned on scripts produce layouts closer to the real pages. In the top row, the target page features a dramatic close-up of a character pointing a gun at his own temple. Script2Layout models with script input consistently place large character regions at the top-left, mirroring the original page structure. This alignment likely reflects textual cues such as "Norman stands frozen in shock. His eyes are wide open, with sweat beading on his forehead," which may have guided the models to allocate spatial prominence to the main character.The bottom row shows a page with one dominant character with a bamboo sword. Script2Layout models with script input place a large character region centrally with a speech balloon at the upper right, mimicking the original composition.  The script line "Ayumi Maniwa holds her bamboo sword at the ready, standing with a dignified posture" likely encouraged this semantically meaningful layout. Overall, these examples suggest that leveraging script information is a promising approach for generating layouts with greater narrative coherence and expressiveness.
+
+\begin{table}[t]
+  \centering
+  \vspace{0pt}
+  \caption{
+    Evaluation results of existing layout models under different constraint settings (Constr.).
+  }
+  \label{tab:constraint_existing_method}
+  \vspace{-1.0em}
+  {\setlength{\tabcolsep}{0.75pt}
+  \begin{tabular}{l l r r r r}
+  \toprule
+  \multicolumn{1}{c}{Model} & \multicolumn{1}{c}{Constr.} &
+  \multicolumn{1}{c}{FID $\downarrow$} &
+  \multicolumn{1}{c}{mIoU $\uparrow$} &
+  \multicolumn{1}{c}{Ovp. $\downarrow$} &
+  \multicolumn{1}{c}{{\makecell{LTSim\\-MMD \\ ($\times 10^{-2}$)$\downarrow$}}} \\
+  \midrule
+  \multirow{3}{*}{LayoutDM}
+      & Gen-T  & 22.428             & \underline{0.161} & \textbf{0.084} & \underline{0.763} \\
+      & Gen-TS & \textbf{20.514}    & \textbf{0.271}    & \underline{0.101} & \textbf{0.165} \\
+      & Gen-R  & \underline{20.864} & 0.053             & 0.167 & 8.797 \\
+  \midrule
+  \multirow{3}{*}{LayoutFormer++}
+      & Gen-T  & 28.402  & 0.140   & \underline{0.203} & 2.236 \\
+      & Gen-TS & \textbf{17.487}    & \textbf{0.208}    & \textbf{0.079} & \textbf{0.244} \\
+      & Gen-R  & \underline{26.848} & \underline{0.158} & 0.261 & \underline{2.187} \\
+  \midrule
+  \multirow{3}{*}{LayoutPrompter}
+      & Gen-T  & 133.503            & \underline{0.138} & \textbf{0.020} & \underline{1.230} \\
+      & Gen-TS & \textbf{58.993}    & \textbf{0.148}    & 0.037     & \textbf{0.855}     \\
+      & Gen-R  & \underline{130.502}& 0.097             & \underline{0.024}     & 4.036     \\
+  \bottomrule
+  \end{tabular}}
+\end{table}
+  \hfill
+\begin{table}[t]
+    \centering
+    \vspace{0pt}
+    \caption{
+      Performance of Script2Layout models (FT LLMs) under Gen-T and Gen-TS with/without script input.
+    }
+    \label{tab:constraint_Script2Layout}
+    \vspace{-1.0em}
+    {\setlength{\tabcolsep}{2.25pt}
+    \begin{adjustbox}{max width=\linewidth}
+    \begin{tabular}{l l l r r r r}
+    \toprule
+    \multicolumn{1}{c}{Model} &
+    \multicolumn{1}{c}{Constr.} &
+    \multicolumn{1}{c}{Script} &
+    \multicolumn{1}{c}{FID $\downarrow$} &
+    \multicolumn{1}{c}{mIoU $\uparrow$} &
+    \multicolumn{1}{c}{Ovp. $\downarrow$} &
+    \multicolumn{1}{c}{{\makecell{LTSim\\-MMD\\ ($\times 10^{-2}$)$\downarrow$}}} \\
+    \midrule
+    \multirow{4}{*}{T5}
+      & \multirow{2}{*}{Gen-T}
+        & None & 29.549 & 0.201 & 0.061 & 0.587 \\
+      & & Plain     & 28.744 & 0.210 & 0.064 & 0.505 \\
+      & \multirow{2}{*}{Gen-TS}
+        & None & \textbf{19.445} & \underline{0.379} & \underline{0.053} & \textbf{0.097} \\
+      & & Plain     & \underline{19.734} & \textbf{0.394} & \textbf{0.041} & \underline{0.136} \\
+    \midrule
+    \multirow{4}{*}{Swallow}
+      & \multirow{2}{*}{Gen-T}
+        & None & 35.845 & 0.156 & \underline{0.021} & 0.921 \\
+      & & Plain     & \textbf{18.415} & 0.182 & 0.026 & 0.429 \\
+      & \multirow{2}{*}{Gen-TS}
+        & None & 20.650 & \textbf{0.337} & \textbf{0.020} & \textbf{0.046} \\
+      & & Plain     & \underline{19.946} & \underline{0.334} & \underline{0.021} & \underline{0.057} \\
+    \midrule
+    \multirow{4}{*}{Sarashina}
+      & \multirow{2}{*}{Gen-T}
+        & None & 20.377 & 0.192 & 0.028 & 0.398 \\
+      & & Plain     & 24.191 & 0.207 & \textbf{0.012} & 0.393 \\
+      & \multirow{2}{*}{Gen-TS}
+        & None & \textbf{18.165} & \textbf{0.358} & \underline{0.017} & \underline{0.090} \\
+      & & Plain     & \underline{18.783} & \underline{0.352} & 0.020 & \textbf{0.087} \\
+    \midrule
+    \multirow{4}{*}{DeepSeek}
+      & \multirow{2}{*}{Gen-T}
+        & None & 24.618 & 0.174 & 0.007 & 0.383 \\
+      & & Plain     & 22.502 & 0.186 & \textbf{0.005} & 0.359 \\
+      & \multirow{2}{*}{Gen-TS}
+        & None & \underline{20.769} & \underline{0.381} & 0.007 & \textbf{0.018} \\
+      & & Plain     & \textbf{20.013} & \textbf{0.383} & \underline{0.006} & \underline{0.019} \\
+    \bottomrule
+    \end{tabular}
+    \end{adjustbox}}
+    \label{tab:constraint_Script2Layout_vertical}
+  \vspace{-0.5em}
+\end{table}
+
+\vspace{-2.5em}
+\paragraph{Constraint Analysis} 
+Relational constraints (Gen-R), defining explicit pairwise element relationships, offered little to no performance gain over the Gen-T baseline for conventional models (Table~\ref{tab:constraint_existing_method}). This suggests that simple pairwise relations are less effective than the rich, contextual guidance provided by a narrative script. In contrast, providing element sizes (Gen-TS) dramatically boosted performance across all models, both conventional and our own (Table~\ref{tab:constraint_existing_method} and \ref{tab:constraint_Script2Layout}). For instance, LayoutFormer++’s mIoU jumped from 0.140 to 0.208 and its LTSim-MMD dropped from $2.236 \times 10^{-2}$ to $0.244 \times 10^{-2}$, while T5 model reached 0.394 in mIoU and improved its LTSim-MMD from $0.587 \times 10^{-2}$ to $0.097 \times 10^{-2}$, affirming the critical role of size information. On the other hand, under the Gen-TS condition, where size information already provides strong improvements, the addition of script input did not consistently lead to further gains. This suggests that once geometric constraints sufficiently boost performance, it becomes more challenging for semantic cues to contribute additional improvements.
+
+\vspace{-1.0em}
+\paragraph{Failure Cases and Limitations}
+\begin{figure}[t]
+  \includegraphics[width=\linewidth]{img/failure_2.pdf}
+  \vspace{-1.8em}
+  \caption{
+    Failure cases of generated layouts. Each row shows examples: the real manga layout (left), followed by predictions from existing methods and Script2Layout models (Source: *Touta Mairimasu* by Shinji Saijo)
+    }
+  \label{fig:failure_cases}
+  \vspace{-1.0em}
+\end{figure}
+
+
+Despite the promising results, our approach has several limitations. First, its reliance on bounding boxes prevents it from capturing the full geometric complexity of manga, such as slanted or non-rectangular panels. Second, because our models directly process the script's textual content, they can generate disproportionately large speech balloons for long dialogues (Figure~\ref{fig:failure_cases}). Finally, our LLM-based approach incurs significant computational cost; processing scripts results in a per-sample generation time of approximately 7--12\,seconds depending on script length slower than baselines like LayoutDM (approx.\ 0.66\,s). Addressing these challenges, future work could also explore conditioning diffusion models on scripts to mitigate these limitations, particularly in efficiency.
