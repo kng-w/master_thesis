@@ -1,3 +1,0 @@
-\section{Conclusion}
-
-In this work, we introduced Script2Layout, a framework for manga layout generation from scripts, and constructed Manga109Script, the first large-scale dataset to enable this line of research. Our experiments demonstrate that conditioning on script provides a clear advantage over existing methods, particularly in mIoU. This work provides valuable resources for manga production and demonstrates broader applicability to narrative visualization systems. Future research directions include exploring the complementarity between size and script information, investigating more suitable base models, and evaluating practical system implementations. These advances will contribute to the field of story-to-visual content generation applications.
