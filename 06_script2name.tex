@@ -24,9 +24,10 @@
 \usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
 \usepackage{float}
 \usepackage{multicol}
+\usepackage{multirow}
 \usepackage{paralist}
 \usepackage{caption}
-%\captionsetup{format=plain, justification=centering}
+%\captionsetup{format=plain, justification=centering} % キャプションを中央揃えにする
 \usepackage{setspace}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -38,6 +39,8 @@
 \usepackage{tabularx}
 \usepackage{enumitem} % itemizeの行間 これは下になければならない
 \usepackage{threeparttable} % 表の脚注
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 
 
    \setlength{\headheight}{16.5pt}
@@ -49,21 +52,11 @@
 \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
 \fi
 
-\chapter{}\label{chap:proposedmethod}
-本章ではまず, 本研究で開発したストーリー創作支援システムについて概要を述べる. 次に本システムが内部に持つプロンプトに関して筆者が行った提案について\ref{sec:prompt}節で述べ, 本システムに実装した4つの機能区分, プロット生成セクション, プロット編集セクション, シナリオ生成セクション, シナリオ編集セクションそれぞれについて, \ref{sec:plot_generation}節, \ref{sec:plot_edit}節, \ref{sec:scenario_generation}節, \ref{sec:scenario_edit}節において, その詳細と創作支援としての狙いを述べる. また, \ref{sec:implementation}節において, 本システムの実装における筆者の取り組みを述べる.
-
-\section{概要}\label{sec:outline04}
-
-
-\section{プロンプト}\label{sec:prompt}
-
-\section{プロット生成セクション}\label{sec:plot_generation}
-
-
+\chapter{具体的活用とその考察}\label{chap:experiment}
 
 \expandafter\ifx\csname ifdraft\endcsname\relax
-   \fancyhead[LO]{}
-   \printbibliography[title=参考文献]
-   \end{document}
-   \fancyhead[LO]{\rightmark}
-   \fi
+\fancyhead[LO]{}
+\printbibliography[title=参考文献]
+\end{document}
+\fancyhead[LO]{\rightmark}
+\fi

@@ -1,6 +1,9 @@
 \expandafter\ifx\csname ifdraft\endcsname\relax
    \documentclass[a4paper,12pt]{jreport}
    \usepackage{setspace}
+   \usepackage{threeparttable} % 表の脚注
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
    \usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
    \usepackage{caption}
    \setstretch{1.5}

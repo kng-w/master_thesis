@@ -38,32 +38,68 @@
 \usepackage{tabularx}
 \usepackage{enumitem} % itemizeの行間 これは下になければならない
 \usepackage{threeparttable} % 表の脚注
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 
 
    \setlength{\headheight}{16.5pt}
    \captionsetup{format=hang}
-   \begin{document}
-   % 上部のヘッダー
+\begin{document}
+% 上部のヘッダー
 \pagestyle{fancy}
 \lhead{\rightmark}
 \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
 \fi
 
-\chapter{}\label{chap:proposedmethod}
-本章ではまず, 本研究で開発したストーリー創作支援システムについて概要を述べる. 次に本システムが内部に持つプロンプトに関して筆者が行った提案について\ref{sec:prompt}節で述べ, 本システムに実装した4つの機能区分, プロット生成セクション, プロット編集セクション, シナリオ生成セクション, シナリオ編集セクションそれぞれについて, \ref{sec:plot_generation}節, \ref{sec:plot_edit}節, \ref{sec:scenario_generation}節, \ref{sec:scenario_edit}節において, その詳細と創作支援としての狙いを述べる. また, \ref{sec:implementation}節において, 本システムの実装における筆者の取り組みを述べる.
+\chapter{Manga109ScriptDataset}\label{chap:proposedmethod}
+本章では，本研究の第一段階として構築した，漫画画像に紐づく脚本データセットManga109ScriptDatasetの構築手法およびその詳細について述べる．
 
-\section{概要}\label{sec:outline04}
+序論で定義した通り，本研究における漫画の「ネーム」とは，幾何学的な「要素配置（Layout）」と「演出情報（Directions）」が統合された物語と作品を繋ぐ中間表現である．本研究では，ネームの生成への取り組みに向けた第一段階として，まずは物語とレイアウトの対応関係を学習することを目的に，Manga109ScriptDatasetを構築した．
+
+本章の構成は以下の通りである．まず 3.1 節では，本データセットの基本設計として，対象データの概要および脚本形式の定義について述べる．続く 3.2 節では，LVLM のキャラクター認識精度を向上させ，正確な脚本生成を可能にするため実装した Visual Prompting について述べる．3.3 節では，漫画の読解に重要な，画像間にまたがる連続的な文脈情報の理解精度を高め，物語の一貫性を担保するために活用したチャットフローを示す．3.4 節においては構築されたデータセットの統計量を示し，最後に 3.5 節において，人手によるアノテーションを用いた脚本の品質評価手法とその結果について論じる．
+
+\section{本データセットの基本設計}\label{sec:dataset_design} 本節では，Manga109ScriptDatasetの構築において基盤となるManga109Datasetの選定理由および構築の対象とした記述フォーマットである脚本形式について述べる．
+
+\subsection{Manga109Dataset} 　本研究では，漫画画像に対する脚本生成の基盤データとして，Manga109Dataset~\cite{matsui2017sketch,aizawa_building_2020} を採用した，Manga109は，1970年代から2010年代に出版された日本の商業漫画109作品（計 21,142 ページ）から構成され，数多くの研究で取り上げられてきた\cite{}学術利用可能な漫画画像データセットである．少年漫画，少女漫画，青年漫画など多岐にわたるジャンルと画風を網羅しており，特定の作家やスタイルに過学習することなく，汎用的な漫画の構造を学習する上で最適なデータセットといえる．本研究では，Manga109に含まれる全作品を対象とし，見開き画像を片側単ページに分割した上で，表紙や広告などを除く計19,555ページに対して脚本データの構築を行った．
+
+\subsection{脚本形式} 　本研究において構築の対象とした物語文の形式は，日本の脚本形式に準拠する．脚本は映像制作現場において標準的に用いられる記述様式であり，テキストから視覚的イメージを具体化することを主目的として設計されている．その視覚化のための物語文というフォーマットは，ネーム生成というタスクにおいて親和性が高い．本研究では，Manga109が日本の漫画作品群であることを踏まえ，日本国内の制作様式において標準的に用いられている脚本形式をそのまま採用した．これは，将来的な制作支援応用を見据えた際，プロの作家や編集者が違和感なく扱える形式である実応用性を考慮したためである，その形式は，以下の3つの主要な構成要素から成る（図\ref{fig:script_format}参照）．
+
+\begin{enumerate}
+
+   \item \textbf{柱}: 物語の場面転換を示すヘッダー情報である．行頭に記号「◯」を付記し，その後に「場所」や「時間帯」を記述する（例：◯ 公園・昼）．
+
+   \item \textbf{ト書き}:
+         キャラクターの動作，表情，視線，および周囲の環境音や状況説明を記述する部分である．視認性を高めるため，全角3文字分のインデント（字下げ）を行って記述する．これは，コマ割りや構図（カメラワーク）を示唆する重要な情報源となる．
+
+   \item \textbf{セリフ}:
+         キャラクターの発話内容である．「話者名『セリフ内容』」の形式で記述する．
+\end{enumerate}
+
+本データセットの構築においては，漫画画像を入力とし，これらの構造化された物語文の構築を目指した．
+
+\section{Visual Prompting}\label{sec:visual_prompting}
+本節では，LVLM の画像認識能力を補助し，正確な脚本生成を実現するために導入したVisual Prompting について述べる．
+
+Manga109ScriptDataset の構築において，最も重要な要件の一つは，生成される脚本内で動作主や話者を正確に特定することである．しかし，第2章で述べた通り，漫画画像は白黒の線画表現やしばしば著しくキャラクターがデフォルメされるといった独自のドメイン特性を持つため，GPT-4o などの最新 LVLM であっても，そのまま適用するだけでは正確な認識は困難である．そこで本研究では，登場人物を取り違え，物語の整合性を著しく損なうハルシネーションを抑制するための手段として，画像内に視覚的な手がかりを直接埋め込む Visual Prompting を採用した．キャラクターの顔を色のついた円で囲い，視覚的な識別補助を与える手法である．
+
+Manga109Dataset には，キャラクターの顔領域を示す Bounding Box が付与されており，各領域は作品内で一意のキャラクターIDと紐付いている．本研究ではこの情報を利用し，以下の手順で画像加工を施した．まず，ページ内に登場するキャラクターIDごとに，HSV色空間上で等間隔となるような識別性の高い色を動的に割り当てる．次に，各顔領域に対して，割り当てられた色で円を描画した（図\ref{fig:visual_prompting_example}参照）．
+
+このアプローチは，Shtedritskiら~\cite{shtedritski_what_2023} の手法を漫画ドメイン向けに適応させたものである．この処理により，LVLM はデフォルメされた顔の識別といった高難度なタスクを色の識別という単純な視覚タスクへ置き換えることが可能となる．結果として，複雑な線画や類似したキャラクターが混在するシーンにおいても，モデルは視覚的アンカーを手がかりとして強固にキャラクターを区別し，正確な脚本記述を実現した．
 
 
-\section{プロンプト}\label{sec:prompt}
 
-\section{プロット生成セクション}\label{sec:plot_generation}
+Manga109Datasetには，各キャラクターの描画位置のデータが含まれる．
+
+
+
+
+\section{}\label{sec:plot_generation}
 
 
 
 \expandafter\ifx\csname ifdraft\endcsname\relax
-   \fancyhead[LO]{}
-   \printbibliography[title=参考文献]
-   \end{document}
-   \fancyhead[LO]{\rightmark}
-   \fi
+\fancyhead[LO]{}
+\printbibliography[title=参考文献]
+\end{document}
+\fancyhead[LO]{\rightmark}
+\fi
