@@ -2373,4 +2373,3 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">graduation_thesis.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1" intorder="1">shtedritski_what_2023</bcf:citekey>

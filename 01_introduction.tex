@@ -1,5 +1,4 @@
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \documentclass[a4j,12pt]{jsreport}
+\documentclass[a4j,12pt]{jsreport}
 % 数式
 \usepackage{amsmath,amsfonts}
 \usepackage{bm}
@@ -39,17 +38,22 @@
 \usepackage{enumitem} % itemizeの行間 これは下になければならない
 \usepackage{threeparttable} % 表の脚注
 \usepackage{titlesec}
+\usepackage{forest}
 \titleformat{\chapter}[hang]{\LARGE\bfseries}{{\Large \prechaptername\thechapter\postchaptername}}{1em}{}
 
 
    \setlength{\headheight}{16.5pt}
    \captionsetup{format=hang}
 \begin{document}
-% 上部のヘッダー
-\pagestyle{fancy}
-\lhead{\rightmark}
-\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
+\ifdefined\ismain\else
+   \pagestyle{fancy}
+   \lhead{\rightmark}
+   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+   \setlength{\headheight}{16.5pt}
+   \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 \chapter{序論}\label{chap:introduction}
 
@@ -78,9 +82,10 @@
 \end{enumerate}
 
 
-\expandafter\ifx\csname ifdraft\endcsname\relax
-\fancyhead[LO]{}
-\printbibliography[title=参考文献]
-\end{document}
-\fancyhead[LO]{\rightmark}
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
+\ifdefined\ismain\else
+   \printbibliography[title=参考文献]
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+\end{document}

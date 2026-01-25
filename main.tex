@@ -1,4 +1,4 @@
-\documentclass[a4j,12pt]{jsreport}
+\documentclass[a4j,12pt,dvipdfmx]{jsreport}
 
 % ----- 仕掛け 開始 -----
 \newcommand{\ifdraft}{false}
@@ -43,8 +43,16 @@
 \usepackage{tabularx}
 \usepackage{enumitem} % itemizeの行間 これは下になければならない
 \usepackage{threeparttable} % 表の脚注
-\usepackage{enumitem}
+\usepackage{booktabs}
 \usepackage{titlesec}
+\usepackage{adjustbox}
+\usepackage{docmute}
+\usepackage{makecell}
+\usepackage{forest}
+\usepackage{fancybox}
+\usepackage{longtable}
+\usepackage{xltabular}
+\newcommand{\ismain}{}
 \titleformat{\chapter}[hang]{\LARGE\bfseries}{{\Large \prechaptername\thechapter\postchaptername}}{1em}{}
 
 
@@ -64,58 +72,58 @@
 
 % タイトル
 \begin{titlepage}
-    \begin{center}
+   \begin{center}
 
-        {\Large 令和5年度卒業論文}
+      {\Large 令和5年度卒業論文}
 
-        \vspace*{130truept}
+      \vspace*{130truept}
 
-        {\Huge 物語構造分析に基づく}
+      {\Huge 物語構造分析に基づく}
 
-        \vspace{10truept}
+      \vspace{10truept}
 
-        {\Huge LLMを用いたインタラクティブ}
+      {\Huge LLMを用いたインタラクティブ}
 
-        \vspace{10truept}
+      \vspace{10truept}
 
-        {\Huge ストーリー生成システム}
-        
-        \vspace{10truept}
+      {\Huge ストーリー生成システム}
 
-        {\Huge による創作支援}
+      \vspace{10truept}
 
-        \vspace{75truept}
+      {\Huge による創作支援}
 
-        {\Large 主任指導教員}
+      \vspace{75truept}
 
-        \vspace{10truept}
+      {\Large 主任指導教員}
 
-        {\Large 栗原 聡}
+      \vspace{10truept}
 
-        \vspace{65truept}
+      {\Large 栗原 聡}
 
-        {\Large 慶應義塾大学}
+      \vspace{65truept}
 
-        \vspace{10truept}
+      {\Large 慶應義塾大学}
 
-        {\Large 理工学部管理工学科}
+      \vspace{10truept}
 
-        \vspace{30truept}
+      {\Large 理工学部管理工学科}
 
-        {\Large 氏名 渡邉 謙吾}      
+      \vspace{30truept}
 
-        \vspace{10truept}
+      {\Large 氏名 渡邉 謙吾}
 
-        {\Large 学籍番号 62021705}
+      \vspace{10truept}
 
-        \vspace{25truept}
+      {\Large 学籍番号 62021705}
 
-        {\Large 提出日 2024 年 1 月 29 日}
+      \vspace{25truept}
 
-    \end{center}
+      {\Large 提出日 2024 年 1 月 29 日}
+
+   \end{center}
 \end{titlepage}
 % 概要
-\include{00_abstract.tex}
+\input{00_abstract.tex}
 
 % 目次
 \tableofcontents
@@ -128,36 +136,40 @@
 \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
 
 % 序論
-\include{01_introduction.tex}
+\input{01_introduction.tex}
 
-%事前知識
-\include{02_preliminary.tex}
+%関連研究
+\input{02_relatedworks.tex}
 
-% 関連研究
-\include{03_relatedworks.tex}
+%提案手法
+\input{03_manga109script.tex}
 
-% 提案手法
-\include{04_proposedmethod.tex}
+%提案手法
+\input{04_script2layout.tex}
 
-% 実験
-\include{05_experiment.tex}
+%提案手法
+\input{05_manga109name.tex}
 
 % 結論
-\include{06_conclusion.tex}
+\input{06_script2name.tex}
+
+% 結論
+\input{07_conclusion.tex}
 
 % 謝辞
-\include{07_thanks.tex}
+\input{08_thanks.tex}
+
 
 % 参考文献
 % 一時的にヘッダーのスタイルを変更
 \fancypagestyle{bibliography}{
-  \fancyhead{}
-  \fancyhead[RO]{参考文献}
+   \fancyhead{}
+   \fancyhead[RO]{参考文献}
 }
 
 \defbibheading{bibintoc}[\refname]{%
-  \chapter*{#1}%
-  \markboth{参考文献}{}%
+   \chapter*{#1}%
+   \markboth{参考文献}{}%
 }
 
 % 参考文献の前で一時的なスタイルを適用
@@ -169,9 +181,9 @@
 \lhead{\rightmark}
 \renewcommand{\chaptermark}[1]{\markboth{付録\ \thechapter\ \ #1}{}}
 
-\include{08_performance.tex}
+\input{09_performance.tex}
 
 \appendix
-\include{09_appendix.tex}
+\input{10_appendix.tex}
 
 \end{document}
