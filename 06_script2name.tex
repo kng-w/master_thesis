@@ -489,9 +489,9 @@ Layout 層は，
 ネーム生成における生成粒度と生成順序が
 異なる点で区別される．
 特に，
-Script2Name (Joint) は
+Script2(Direction+Layout)は
 演出情報とレイアウト情報を統合的に生成する設定であり，
-Script2Direction2Layout は
+Script2Direction2Layoutは
 演出情報を明示的な中間表現として導入することで，
 段階的生成の有効性を検証するための設定である．
 
@@ -515,7 +515,7 @@ Script2Direction2Layout は
                    & Layout
                    & LLM                                                           \\
       \addlinespace
-      Script2Name (Joint)
+      Script2(Direction+Layout)
                    & Script
                    & Direction + Layout
                    & LLM                                                           \\
@@ -703,22 +703,17 @@ Direction の意味内容そのものを直接測定するものではないが�
 \section{漫画のネーム生成における結果と考察}\label{sec:script2name_results}
 本節では，
 前節で述べた各生成設定に基づく実験結果をもとに，
-脚本に基づくネーム生成における
-レイアウト生成性能および
-生成設定の違いが与える影響について考察する．
-特に，
-既存のレイアウト生成手法との比較，
-LLM に基づく各生成設定の傾向，
-演出情報の統合方法の違い，
-および段階的生成における課題の観点から結果に付いて考察する．
+既存のレイアウト生成手法との比較や，
+演出情報の統合方法の違い
+について考察する．
 
-\subsection{漫画のネーム生成における定量的結果と考察}
-表~\ref{tab:script2name_results_layout} に，ネーム生成におけるレイアウト生成性能の定量的結果を示す．
+\subsection{ネーム生成におけるレイアウト生成性能の定量的評価}
+まず，表~\ref{tab:script2name_results_layout} に，ネーム生成に伴うレイアウト生成の定量的結果を示す．
 
-\begin{table*}[t]
+\begin{table*}[htbp]
    \captionsetup{font=small}
    \caption{
-      脚本に基づくネーム生成におけるレイアウト生成の定量評価結果（見開き単位）．
+      脚本に基づくネーム生成におけるレイアウト生成の定量評価結果．
    }
    \vspace{-0.6em}
    \centering
@@ -745,45 +740,45 @@ LLM に基づく各生成設定の傾向，
          LayoutPrompter
                                                            & 0.0964                                              & 0.6739             & 64.941            & 1.912             \\
          \midrule
-
-         \multicolumn{5}{l}{\itshape Script2Direction2Layout (Fine-tuned LLM $\rightarrow$ GNN)}                                                                              \\
+         \multicolumn{5}{l}{\itshape Script2Layout (Fine-tuned LLM)}                                                                                                          \\
 
          GPT-OSS-20B
-                                                           & 0.0851                                              & 0.7123             & 78.45             & 2.19              \\
+                                                           & 0.1177                                              & 0.7333             & 18.88             & 1.239             \\
          Llama-3.1-8B
-                                                           & 0.0772                                              & 0.7055             & 105.10            & 3.75              \\
+                                                           & 0.0142                                              & 0.4165             & 166.84            & 64.060            \\
          Qwen3-14B
-                                                           & 0.0822                                              & 0.7106             & 74.97             & 2.35              \\
+                                                           & \textbf{0.1269}                                     & 0.7421             & \underline{18.72} & 0.869             \\
+         \midrule
+
+         \multicolumn{5}{l}{\itshape Script $\rightarrow$ (Direction + Layout) (Fine-tuned LLM)}                                                                              \\
+
+         GPT-OSS-20B
+                                                           & \underline{0.1201}                                  & 0.7360             & 19.76             & 1.041             \\
+         Llama-3.1-8B
+                                                           & 0.0140                                              & 0.4154             & 168.78            & 64.681            \\
+         Qwen3-14B
+                                                           & 0.1254                                              & 0.7434             & 19.72             & 0.903             \\
          \midrule
 
          \multicolumn{5}{l}{\itshape (Script + Direction) $\rightarrow$ Layout (Fine-tuned LLM)}                                                                              \\
 
          GPT-OSS-20B
-                                                           & 0.1086                                              & \underline{0.7484} & 14.52             & 0.71              \\
+                                                           & 0.1086                                              & \underline{0.7484} & 14.52             & 0.712             \\
          Llama-3.1-8B
-                                                           & 0.0162                                              & 0.4212             & 165.30            & 64.17             \\
+                                                           & 0.0162                                              & 0.4212             & 165.30            & 64.174            \\
          Qwen3-14B
-                                                           & 0.1178                                              & \textbf{0.7711}    & \textbf{9.21}     & \textbf{0.50}     \\
+                                                           & 0.1178                                              & \textbf{0.7711}    & \textbf{9.21}     & \textbf{0.499}    \\
          \midrule
 
-         \multicolumn{5}{l}{\itshape Script $\rightarrow$ (Direction + Layout) (Fine-tuned LLM, Joint)}                                                                       \\
+         \multicolumn{5}{l}{\itshape Script2Direction2Layout (Fine-tuned LLM $\rightarrow$ GNN)}                                                                              \\
 
          GPT-OSS-20B
-                                                           & \underline{0.1201}                                  & 0.7360             & 19.76             & 1.04              \\
+                                                           & 0.0851                                              & 0.7123             & 78.45             & 2.192             \\
          Llama-3.1-8B
-                                                           & 0.0140                                              & 0.4154             & 168.78            & 64.68             \\
+                                                           & 0.0772                                              & 0.7055             & 105.10            & 3.753             \\
          Qwen3-14B
-                                                           & 0.1254                                              & 0.7434             & 19.72             & 0.90              \\
-         \midrule
+                                                           & 0.0822                                              & 0.7106             & 74.97             & 2.350             \\
 
-         \multicolumn{5}{l}{\itshape Script2Layout (Fine-tuned LLM)}                                                                                                          \\
-
-         GPT-OSS-20B
-                                                           & 0.1177                                              & 0.7333             & 18.88             & 1.24              \\
-         Llama-3.1-8B
-                                                           & 0.0142                                              & 0.4165             & 166.84            & 64.06             \\
-         Qwen3-14B
-                                                           & \textbf{0.1269}                                     & 0.7421             & \underline{18.72} & 0.87              \\
          \bottomrule
       \end{tabular}
    \end{adjustbox}
@@ -791,14 +786,288 @@ LLM に基づく各生成設定の傾向，
 
 
 \paragraph{既存レイアウト生成手法との比較}
+まず，
+カテゴリ既知条件下で動作する
+既存のレイアウト生成手法（LayoutDM，LayoutFormer++，LayoutPrompter）と，
+脚本を入力としてネーム生成を行う本研究の手法を比較する．
+表~\ref{tab:script2name_results_layout} に示すように，
+mIoUやLTSimといった，正解の見開きとの一対一対応で評価する指標では，Llamaをベースモデルとしたものを除き，多くの場合同等かそれ以上の性能を示した．特に，LTSimでは，GPT-OSS-20B，Qwen3-14Bをベースモデルとした手法は，入出力の設定の違いに関わらず，既存手法を上回る性能を示した．また，FIDやLTSim-MMDといった，正解レイアウトとの分布の類似度を評価する指標では，特にFIDで大きな性能差が見られ，既存手法同士の差の最大値が(LayoutDMとLayoutPrompterの差が)10.8程度であるのに対し，提案手法では，既存手法の最高性能であるLayoutDMの値(54.095)を，30以上の差をもって精度が向上する設定が多く見られた．これは，入力に脚本情報を含め，LLMを通してレイアウトを生成することで，その文脈に応じたより正確なレイアウトの生成が可能になったことを示唆する．
 
-\paragraph{LLM に基づくネーム生成手法の全体的傾向}
-...
+\paragraph{演出情報の統合方法の違いによる比較}
+次に，
+演出情報（Direction）を
+どの段階でレイアウト生成に統合するかの違いに注目する．
+表~\ref{tab:script2name_results_layout} に示す結果から，
+演出情報を脚本と結合し条件として与える設定
+((Script + Direction) $\rightarrow$ Layout) は，
+多くの指標において最も高い性能を示していることが分かる．
+特に Qwen3-14B を用いた場合には，
+LTSim，FID，LTSim-MMD の指標で
+他の設定を上回る結果が得られた．
+これらの結果は，演出情報を明示的な条件として与えることが，
+レイアウト生成においては有効であることを示唆しており，これは演出情報とレイアウト情報が密接な関係にあることを示唆する．
+また，
+演出情報をレイアウトと同時に生成する統合設定
+(Script $\rightarrow$ (Direction + Layout)) と，
+演出情報を明示的に扱わない設定(Script2Layout)を比較すると，その差は比較的小さく，特にFIDでは，Llama-3.1-8Bをベースモデルとした場合を除き，どちらの設定においても既存手法よりも大きな性能の向上を示している．このことから，演出情報の出力の有無という難易度の差は，脚本に基づくレイアウト生成の性能に与える影響が小さく，演出情報とレアウトのどちらも脚本情報をもとに，その出力の傾向を推定できることを示唆する．
+一方で，演出情報を中間表現とし，
+レイアウトまでを段階的に生成する設定
+(Script2Direction2Layout) に着目すると，
+基盤モデルによって性能変化の傾向が異なることが分かる．
+具体的には，
+Llama-3.1-8Bをベースモデルとした場合には性能が向上する一方，
+GPT-OSS-20B および Qwen3-14B をベースモデルとした場合には，
+性能が低下する傾向が見られた．Llama-3.1-8Bをベースモデルとしたものは，多くの設定で，既存手法よりも精度が悪く，GPT-OSS-20B，Qwen3-14Bとは異なる傾向を持っている．
+このように，レイアウト生成における出力精度の差異が近づくよう性能が変化したことから，
+GNN によるレイアウト生成が，
+入力される演出情報のばらつきを吸収し，
+出力を一定の構造に収束させる可能性を示唆する．
+GNN が構造的制約を課すことで
+レイアウトの一貫性や安定性を向上させる効果を持つ一方，
+すでに高い精度でレイアウトを生成することが可能な LLM に対しては，
+その自由度を制限する方向に働き，
+結果として性能低下として観測された可能性がある．
 
-\paragraph{演出情報の統合方法による違い}
-...
+\paragraph{ベースモデル間の性能の比較}
+最後に，
+使用する基盤モデルの違いが
+ネーム生成におけるレイアウトの生成性能に与える影響について考察する．
+表~\ref{tab:script2name_results_layout} に示すように，
+mIoU や LTSim といった見開き単位での対応関係を評価する指標，
+および FID や LTSim-MMD といった分布レベルの指標のいずれにおいても，
+Qwen3-14B および GPT-OSS-20B を基盤モデルとした手法は，
+多くの生成設定で安定して高い性能を示している．
+一方で，
+Llama-3.1-8B を基盤モデルとした場合には，
+すべての生成設定において
+mIoU および LTSim が低く，
+また FID や LTSim-MMD においても
+分布の乖離が大きい．
+この傾向は，
+演出情報を明示的に扱うか否か，
+あるいは段階的生成を行うかといった設定の違いに関わらず
+一貫して観測されており，
+レイアウト生成性能の差が
+生成設定よりも基盤モデルの特性に強く依存していることを示唆している．
+この結果は，
+脚本からネームを生成するというタスクが，
+単なる言語生成にとどまらず，
+複数要素間の空間的・構造的整合性を
+暗黙的に推論する能力を要求することと関係していると考えられる．
+Qwen3-14B や GPT-OSS-20B は，
+このような構造化出力を伴う生成において
+比較的高い一貫性を保っているのに対し，
+Llama-3.1-8B は，
+JSON 形式で表現された複雑なレイアウト情報の生成において
+誤差が蓄積しやすい傾向を持つ可能性がある．また，モデルの大きさの違いに着目すると，本タスクにおいては，より大きなモデルが適しており，高い表現力を要するタスクであることが示唆される．
 
-\paragraph{段階的生成（Script2Direction2Layout）の限界}
+以上より，
+脚本に基づくネーム生成では，LLMのファインチューニングモデルが多くの設定で高い性能を有していることが確認され，また生成設定の工夫に加えて，
+構造的制約を内包した出力を安定して生成できる
+基盤モデルの選択が重要であることが示唆される．
+
+\subsection{GNN を用いた演出情報生成の間接的評価}
+本研究では，
+演出情報（Direction）そのものに対する
+直接的な定量評価指標を設計していないため，
+生成された Direction の妥当性を
+レイアウト生成結果を通じて間接的に評価する．
+具体的には，
+GNN によるレイアウト生成を
+演出情報の構造的整合性を測る評価器として位置づけ，
+入力される Direction の違いが
+最終的なレイアウト性能に与える影響を比較した．
+表~\ref{tab:direction_effect_gnn} に，
+Ground Truth (GT) Direction，
+および各 LLM により生成された Direction を入力として
+同一の GNN を用いてレイアウトを生成した場合の
+定量評価結果を示す．
+
+\begin{table}[htbp]
+   \captionsetup{font=small}
+   \caption{
+      GNN によるレイアウト生成性能を指標とした，
+      演出情報（Direction）生成品質の間接的評価結果．
+      正解（GT）Direction を用いた 理想的設定 と，
+      各 LLM により生成された Direction を用いた場合を比較する．
+   }
+   \vspace{-0.6em}
+   \centering
+   \label{tab:direction_effect_gnn}
+   \setlength{\tabcolsep}{6pt}
+   \begin{adjustbox}{max width=\linewidth}
+      \begin{tabular}{l c c c c}
+         \toprule
+                                                           &
+         \multicolumn{2}{c}{\textbf{Spread-level metrics}} &
+         \multicolumn{2}{c}{\textbf{Distribution-level metrics}}                                                                                                              \\
+         \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+         \textbf{Direction Source}                         &
+         mIoU $\uparrow$                                   & LTSim $\uparrow$                                    &
+         FID $\downarrow$                                  & \makecell{LTSim-MMD ($\times 10^{-2}$)$\downarrow$}                                                              \\
+         \midrule
+
+         \multicolumn{5}{l}{\itshape Oracle setting (GT Direction)}                                                                                                           \\
+
+         Ground Truth
+                                                           & \textbf{0.1066}                                     & \textbf{0.7310}    & \textbf{73.94}    & \textbf{2.062}    \\
+
+         \midrule
+         \multicolumn{5}{l}{\itshape Predicted Direction (Script2Direction2Layout)}                                                                                           \\
+
+         GPT-OSS-20B
+                                                           & \underline{0.0851}                                  & \underline{0.7123} & 78.45             & \underline{2.192} \\
+
+         Llama-3.1-8B
+                                                           & 0.0772                                              & 0.7055             & 105.10            & 3.753             \\
+
+         Qwen3-14B
+                                                           & 0.0822                                              & 0.7106             & \underline{74.97} & 2.350             \\
+
+         \bottomrule
+      \end{tabular}
+   \end{adjustbox}
+\end{table}
+
+まず，正解（GT）Direction を入力とする理想的設定では，すべての指標において最良な結果を示しており，少なくとも本 GNN が，
+Direction に含まれる関係情報や演出属性から
+一定程度妥当なレイアウトを復元できていることを示しており，
+Direction がレイアウト生成にとって有効な中間表現となり得ることを示唆する．
+
+一方，各 LLM が生成した Direction を入力とする場合には，
+いずれのモデルでも GT 条件から性能が低下しており，
+Direction 生成誤差がレイアウト推定へ伝播していることが示唆される．
+なかでも GPT-OSS-20B と Qwen3-14B は，
+mIoU（0.0851/0.0822）および LTSim（0.7123/0.7106）で比較的近い値を示し，
+Llama-3.1-8B は mIoU=0.0772，LTSim=0.7055 と低い．
+分布指標でも同様の傾向が見られ，
+特に Llama-3.1-8B は FID=105.10，LTSim-MMD=0.0375 と大きく悪化しており，
+生成された Direction のばらつきや構造的不整合が
+GNN の出力分布を崩している可能性が高いと考えられる．
+これに対し Qwen3-14B は FID=74.97 と GT に近い値を示しており，
+分布レベルでは GT Direction に近い傾向の Direction を出力していることが示唆される．
+
+GNN によるレイアウト生成性能は，
+あくまで「GNN が利用可能な形で Direction が構造化されているか」
+を測る評価である点に留意が必要であるが，
+それでも，GT 条件と予測条件のギャップが一貫して観測されたことから，
+Direction の品質差を反映する間接指標として一定の感度を持つと考えられる．
+
+\subsection{ネーム生成における生成されたレイアウトの可視化と考察}
+図~\ref{fig:script2name_layout_qualitative} に，
+ネーム生成において生成されたレイアウトの可視化の例を示す．
+\begin{figure*}[htbp]
+   \centering
+
+   % ---- 上段の図 ----
+   \begin{minipage}{\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{pict/06/evaluation_quality_spread01.png}
+   \end{minipage}
+
+   \vspace{1.0em}
+
+   % ---- 下段の図 ----
+   \begin{minipage}{\textwidth}
+      \centering
+      \includegraphics[width=\linewidth]{pict/06/evaluation_quality_spread02.png}
+   \end{minipage}
+
+   \caption{
+      ネーム生成におけるレイアウト生成結果の定性的比較．
+      左から順に，正解となる漫画画像，既存手法の生成結果，
+      Script2Layoutの生成結果，
+      Script $\rightarrow$ (Direction + Layout)の生成結果，
+      (Script + Direction) $\rightarrow$ Layoutの生成結果，
+      Script2Direction2Layoutの生成結果．を示し，ScrはScriptを，DirはDirectionを，LytはLayoutを表す．各行は，モデルの違いに対応している．
+   }
+   \label{fig:script2name_layout_qualitative}
+\end{figure*}
+
+生成されたレイアウトが並ぶ列の最左列は，既存のレイアウト生成手法の生成結果を示しているが，これらの多くは，コマの領域(水色の領域)が連続的に並んでいない，あるいは，見開きをまたぐ中間地点にコマが配置されるなどしており，漫画における可読性の点において不十分な結果であることがわかる．一方，脚本に基づくネーム生成により生成されたレイアウトの結果では，GPT-OSS，Qwen-3 による生成結果がDirectionの取り扱いによる生成設定によらず，漫画の見開きに適した左右に分かれた配置がなされ，また，それぞれのページをコマで満たすというより漫画らしい要件を満たしていることが確認できる．ただし，Llama-3.1 は，出力結果が中心によるなど配置に崩壊が見られ，また，Directionの生成を介しGNNのレイアウト生成へと接続するScript2Durection2Layoutによる結果においても要素の配置パターンの学習が不十分であることが見て取れる．この結果は，事前学習済みのLLMの性能が十分であれば，直接レイアウトを生成する際に脚本の効果が引き出され，生成結果がより漫画らしいものにできることを示唆する．また，下段に示した漫画の例において，GPT-OSSおよびQwen-3の(Script+Direction)2Layoutの結果では，右下に犬の描画(赤い領域)が配置されている点や，そのとなりにオレンジの領域が配置されている点，左の上に大きな緑色の領域が配置されている点など，多くの点で，正解となる漫画の例と近しい配置を示していることがわかる．Direction の効果は，細部にわたるレイアウトの調整に寄与する可能性を示唆する．
+以上の定性的結果から，
+脚本に基づくネーム生成は，
+単なる要素配置にとどまらず，
+漫画特有の可読性や構成原理を反映したレイアウトの生成を可能にすることが示唆される．
+
+\subsection{ネーム生成において推定された演出情報の可視化と考察}
+ここでは，脚本に基づくネーム生成において推定された演出情報について，コマに与えられた演出情報の可視化とキャラクターの描画同士の相互作用(action edge)の可視化の例を示し考察する．
+
+\paragraph{コマに与えられた演出情報の可視化}
+図~\ref{fig:script2name_direction_qualitative} に，
+脚本に基づくネーム生成において推定された演出情報のうち，コマ画像に対する演出情報の可視化の例を示す．
+
+\begin{figure*}[htbp]
+   \centering
+   \includegraphics[width=\linewidth]{pict/06/evaluation_quality_predicted_directions.png}
+   \captionsetup{font=scriptsize}
+   \caption{
+      脚本に基づくネーム生成において推定されたコマに対する演出情報の可視化の例．上段左が対象となったコマ画像，上段中央が，対象のコマを含んだ見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となる演出情報(Direction)，下段が，Scriptを入力に推定されたDirectionを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Directionを示すパネルには，そのパネルにおける要約文(Sum)および，役割(ROLES)，形状(SHAPE)，カメラ距離(DIST)，カメラ角度(ANG)がカテゴリ情報として示されている．
+   }
+   \label{fig:script2name_direction_qualitative}
+\end{figure*}
+
+図\ref{fig:script2name_direction_qualitative}より，いずれのモデルもこのコマの形状(SHAPE)，カメラ距離(DIST)，カメラ角度(ANG)が，Ground Truthの演出情報と同じ値を推定していることがわかる．これは，対象となっているコマが，一番初めに読まれるということや脚本内の情報に基づき演出のパターンの推定がおこなえていることを示唆している．一方で，
+コマの役割（ROLES）については，
+Ground Truth と同一の dialogue\_exchangeがいずれのモデルにおいても推定されていることが確認できるものの，
+一部には異なるカテゴリが推定されているケースも見られる．
+しかし，
+演出情報は本質的に多義的であり，
+脚本の解釈や表現意図に応じて複数の妥当な選択肢が存在し得る．
+そのため，
+Ground Truth と異なる値が生成されたこと自体をもって，
+本モデルの有用性が直ちに否定されるものではない．
+この結果は，本モデルが，脚本の文脈に整合した演出候補を一定程度の精度で提示しつつ，その上で多様なパターンを示せる可能性を示唆するものであり，実際の制作効率の向上に寄与できる可能性を示唆するものである．
+
+\paragraph{キャラクターの描画同士の相互作用(action edge)の可視化}
+次に，図~\ref{fig:script2name_edges_qualitative} に，
+脚本に基づくネーム生成において推定された演出情報のうち，キャラクターの描画同士の相互作用を表す action edge の可視化の例を示す．
+
+\begin{figure*}[htbp]
+   \centering
+   \includegraphics[width=\linewidth]{pict/06/evaluation_quality_predicted_edges.png}
+   \captionsetup{font=scriptsize}
+   \caption{
+      脚本に基づくネーム生成において推定されたaction edgeの可視化の例．上段左側が対象となった見開き，上段中央が，対象の見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となるAction Edge，下段が，Scriptを入力に推定されたAction Edgeを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Action Edge内に示されたC\_instはCharacter Instance ノードを表す．
+   }
+   \label{fig:script2name_edges_qualitative}
+\end{figure*}
+図~\ref{fig:script2name_edges_qualitative} に示す action edge の可視化結果より，
+いずれのモデルにおいても，
+脚本情報のみに基づいて，
+キャラクターの描画(Character Instance: C\_inst)間の相互作用が
+複数本推定されていることが確認できる．Ground Truthと同一のaction edge(C\_inst7->C\_inst1やC\_inst9->C\_inst15など)も見られるが，
+本数や接続関係は
+Ground Truth と完全には一致しておらず，
+一部には過剰あるいは不足した相互作用の推定も見られる．
+しかし，
+キャラクター間の相互作用は，
+演出上の解釈や表現意図に依存する要素が大きく，
+必ずしも一意に定まるものではない．
+そのため，
+Ground Truth との不一致は，
+直ちに誤りを意味するものではなく，
+脚本に基づく別の妥当な解釈として捉えることができる．この結果は，本手法が，
+脚本情報のみに基づいて，
+キャラクター描画間に相互作用を割り当てるという処理を実行できていることを示す結果である．
+すなわち，
+どのキャラクターの描画同士に
+脚本上の相互作用を与えるべきかという判断を，
+少なくとも構造的には成立させ，
+脚本を入力とした演出関係推定の具体例を与えるモデルとなっていることを示唆するものである．
+
+
+これまで見てきた通り，脚本に基づくネーム生成において推定された演出情報は，
+脚本情報のみを入力とした場合でも，ある程度の精度で推定されることが確認でき，
+脚本に基づく別の妥当な解釈として捉えることができる．
+しかし，
+演出情報の多義性は許容され得る考えられる一方で，
+明らかに文脈と乖離した演出や，
+制作上不適切な相互作用が生成される可能性を抑制する必要もある．
+そのため，
+本研究で示したような可視化や間接評価に加えて，
+演出情報の妥当性や一貫性を定量的に捉える評価指標の設計が，
+今後の重要な課題である．
 
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
 \ifdefined\ismain\else

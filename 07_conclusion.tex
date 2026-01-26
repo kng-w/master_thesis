@@ -1,32 +1,32 @@
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \documentclass[a4j,12pt]{jsreport}
+\documentclass[a4j,12pt,dvipdfmx]{jsreport}
+
 % 数式
 \usepackage{amsmath,amsfonts}
 \usepackage{bm}
 
 % 画像
+\usepackage[dvipdfmx,top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
 \usepackage[dvipdfmx]{graphicx}
-
 % biblatex
 \usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
 \addbibresource{graduation_thesis.bib}
 
-%itembox
+% itembox
 \usepackage{ascmac}
-%breakitemboxのためのpackage
+% breakitemboxのためのpackage
 \usepackage{itembkbx}
 % \usepackage{tcolorbox} 画像が見えなくなってしまう原因
 % \usepackage{framed} 枠
 
-%フォント
+% フォント
 \usepackage[ipaex]{pxchfon}
-
-\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\listfiles
 \usepackage{float}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{paralist}
 \usepackage{caption}
+% \captionsetup{format=plain, justification=centering}
 \usepackage{setspace}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
@@ -36,34 +36,103 @@
 \usepackage{ltablex}
 \usepackage{capt-of}
 \usepackage{tabularx}
+\usepackage[export]{adjustbox}
+\usepackage{booktabs}
 \usepackage{enumitem} % itemizeの行間 これは下になければならない
 \usepackage{threeparttable} % 表の脚注
 \usepackage{titlesec}
+\usepackage{makecell}
+\usepackage{forest}
+\usepackage{fancybox}
+% titlesec と \paragraph の相性問題を回避（run-in 見出しにする）
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}{0pt}{} % ←ここには文字や \noindent 等を入れない
+\titlespacing*{\paragraph}
+  {0pt}{1.0ex}{0.8em}
 \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 
+\setlength{\headheight}{16.5pt}
+\captionsetup{format=hang}
+\captionsetup[figure]{font=small}
+\captionsetup[table]{font=small}
+\begin{document}
 
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
+\ifdefined\ismain\else
+   \pagestyle{fancy}
+   \lhead{\rightmark}
+   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
    \setlength{\headheight}{16.5pt}
-   \captionsetup{format=hang}
-   \begin{document}
-   % 上部のヘッダー
-\pagestyle{fancy}
-\lhead{\rightmark}
-\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+   \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 \chapter{結論}\label{chap:conclusion}
-本研究において我々は, 物語構造分析に基づいた LLM の活用手法を提供するストーリー創作支援システムを web アプリケーションとして開発した. 本システムは, 物語構造分性に基づく LLM の制御を, 直感的な操作により実現するインターフェースと, プロットの質向上を目的とした LLM とのインタラクティブな共創手法を提供する. これらの実装により本システムは, ストーリークリエーターと LLM との仲介をなすシステムとしての役割を果たす. TEZUKA2023プロジェクトの一環として, プロのストーリークリエーター数グループに『ブラック・ジャック』の新作エピソードにおけるプロット制作に本システムを活用して頂く取り組みでは, 本システムの有用性や課題について評価された. 操作性や指示の反映具合におけるLLMの制御性においては高い評価を受け, また, 本システムの編集セククションの利用がプロットの質向上に寄与する可能性も示唆された. これにより本システムが提供する LLM とのインタラクティブな共創手法が有用である可能性, 物語構造分析の活用が作品の質を向上させる可能性が示唆された. 一方, 物語構造分析の活用による LLM の制御は, 分析元の作品らしさ表現することに寄与する可能性がある一方で, 生成されたプロットは目新しさや幅の広さといった面で十分な評価が得られなかった. 既存物語の活用は一貫性を持つ作品が一定程度の質で生み出されることに寄与する可能性を持つが, 新規性や多様性を生み出すことには課題がある可能性が示唆された. 
 
-今後は, 使用者の範囲を拡大した実証実験を実施し, より信頼性のある本システムの有用性を確認する. また, 本研究の取り組みでは, プロットをシナリオ化し, 編集する機能においては十分に活用される機会を得られなかったため, シナリオ制作における創作支援を中心とした活用の場を設け, それらの機能の有用性を確認することも検討される.
+本研究では，
+漫画制作工程において重要な役割を担う「ネーム」を，
+作品の下書き画像そのものではなく，
+物語文脈と演出意図を内包した
+構造化された中間表現として捉え直し，
+脚本に基づく漫画ネーム生成という新たな課題設定を提示した．
+従来のレイアウト生成研究が，
+主として機能的媒体や要素配置の最適化を対象としてきたのに対し，
+本研究は，
+物語性や演出上の意思決定と不可分な
+漫画特有の配置問題を扱う点に特徴がある．
 
-ストーリークリエーターの創作支援を目的とする LLM の活用手法の確立において, 本研究が提案する物語構造分析を活用した LLM とのインタラクティブな共創手法は一定程度の有用性を持つ可能性があり, 本研究がクリエーターと LLM との共創のあり方に貢献することを期待する.
+この課題に取り組むため，
+本研究では，
+大規模視覚言語モデル（LVLM）を活用し，
+漫画画像に紐づく物語情報および演出情報を体系的に抽出・構造化した
+Manga109ScriptDataset および Manga109NameDataset を構築した．
+特に，
+人手による読み順アノテーションと
+独自の Visual Prompting 手法を組み合わせることで，
+LVLM 単体では困難であった
+漫画特有の物語構造や演出情報の記述を可能にし，
+脚本およびネーム生成のための学習基盤を整備した．
 
-% 本研究において我々は, ストーリークリエーターの創作を支援する web アプリケーションを提案した. 本アプリケーションは, 物語構造分析に基づく LLM の活用を, 直感的な操作により実現するとともに, LLM とのインタラクティブなプロット創作手法を提供する. 商業誌に掲載される作品のプロット制作に利用してもらい, 本アプリケーションが高い操作性と満足のいく指示の反映をもたらし, プロットの質向上を目的とする LLM との共創手法に有用である可能性が示唆された. 今後は使用者の範囲を拡大した実証実験を実施し, より信頼性のある有用性の確認を行う. 
+さらに，
+構築したデータセットを用いて，
+脚本を入力とし，
+演出情報およびレイアウト情報を生成する
+漫画ネーム生成モデルを提案した．
+大規模言語モデル(LLM)を基盤とした複数の生成設定を比較した結果，
+脚本情報を明示的に入力として与えることで，
+既存のレイアウト生成手法を上回る性能が得られることを
+定量的・定性的に示した．
+また，
+演出情報をどの段階で統合するかという設計の違いなどを複数検討し設計指針を整理した．
+
+一方で，
+演出情報は本質的に多義的であり，
+単一の正解に基づく評価が難しいという課題も明らかとなった．
+本研究では，
+GNN を用いた間接評価や可視化分析を通じて，
+演出情報の品質を検討したが，
+明らかに文脈と乖離した演出や，
+制作上不適切な生成結果を抑制するためには，
+演出情報の妥当性や一貫性を
+より定量的に捉える評価指標の設計が今後必要である．
+
+脚本を条件としてネームを生成するという枠組みは，
+最終成果物を直接生成するのではなく，
+制作工程の中核に位置する意思決定を支援するという点で，
+創作者の創造性を尊重しつつ，
+制作効率の向上に寄与し得る可能性をもつと考えられる．
+本研究で示したデータセット，モデル設計，および評価結果は，
+脚本に基づく漫画ネーム生成という新たな研究領域における
+基礎的なベースラインとなるものであり，
+今後の発展的研究や実制作支援への応用に向けた
+重要な足がかりとなることを期待する．
 
 
-\expandafter\ifx\csname ifdraft\endcsname\relax
-\fancyhead[LO]{}
-\printbibliography[title=参考文献]
-\end{document}
-\fancyhead[LO]{\rightmark}
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
+\ifdefined\ismain\else
+   \printbibliography[title=参考文献]
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+\end{document}
