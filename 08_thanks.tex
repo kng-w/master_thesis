@@ -1,14 +1,72 @@
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \documentclass[a4paper,12pt]{jreport}
-   \usepackage{setspace}
-   \usepackage{threeparttable} % 表の脚注
+\documentclass[a4j,12pt,dvipdfmx]{jsreport}
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+% 画像
+\usepackage[dvipdfmx,top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+% biblatex
+\usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
+\addbibresource{graduation_thesis.bib}
+
+% itembox
+\usepackage{ascmac}
+% breakitemboxのためのpackage
+\usepackage{itembkbx}
+% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
+% \usepackage{framed} 枠
+
+% フォント
+\usepackage[ipaex]{pxchfon}
+\listfiles
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{paralist}
+\usepackage{caption}
+% \captionsetup{format=plain, justification=centering}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{fancyhdr}
+\usepackage{ltablex}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage[export]{adjustbox}
+\usepackage{booktabs}
+\usepackage{enumitem} % itemizeの行間 これは下になければならない
+\usepackage{threeparttable} % 表の脚注
 \usepackage{titlesec}
+\usepackage{makecell}
+\usepackage{forest}
+\usepackage{fancybox}
+% titlesec と \paragraph の相性問題を回避（run-in 見出しにする）
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}{0pt}{} % ←ここには文字や \noindent 等を入れない
+\titlespacing*{\paragraph}
+  {0pt}{1.0ex}{0.8em}
 \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
-   \usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
-   \usepackage{caption}
-   \setstretch{1.5}
-   \begin{document}
+
+\setlength{\headheight}{16.5pt}
+\captionsetup{format=hang}
+\captionsetup[figure]{font=small}
+\captionsetup[table]{font=small}
+\begin{document}
+
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
+\ifdefined\ismain\else
+   \pagestyle{fancy}
+   \lhead{\rightmark}
+   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+   \setlength{\headheight}{16.5pt}
+   \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 \chapter*{謝辞}
 \addcontentsline{toc}{chapter}{謝辞}
@@ -22,6 +80,10 @@
 
 本論文は, 以上の皆様に加え多くの方々からの御助言・御協力を頂き, ここに完成することができました. 改めて心より深く感謝申し上げます.
 
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \end{document}
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
+\ifdefined\ismain\else
+   \printbibliography[title=参考文献]
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+\end{document}

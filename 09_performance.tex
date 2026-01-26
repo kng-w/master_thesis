@@ -1,15 +1,72 @@
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \documentclass[a4paper,12pt]{jreport}
-   \usepackage{setspace}
-   \usepackage{threeparttable} % 表の脚注
-   \usepackage{titlesec}
+\documentclass[a4j,12pt,dvipdfmx]{jsreport}
+
+% 数式
+\usepackage{amsmath,amsfonts}
+\usepackage{bm}
+
+% 画像
+\usepackage[dvipdfmx,top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
+\usepackage[dvipdfmx]{graphicx}
+% biblatex
+\usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
+\addbibresource{graduation_thesis.bib}
+
+% itembox
+\usepackage{ascmac}
+% breakitemboxのためのpackage
+\usepackage{itembkbx}
+% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
+% \usepackage{framed} 枠
+
+% フォント
+\usepackage[ipaex]{pxchfon}
+\listfiles
+\usepackage{float}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{paralist}
+\usepackage{caption}
+% \captionsetup{format=plain, justification=centering}
+\usepackage{setspace}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage{pxjahyper}
+\usepackage{fancyhdr}
+\usepackage{ltablex}
+\usepackage{capt-of}
+\usepackage{tabularx}
+\usepackage[export]{adjustbox}
+\usepackage{booktabs}
+\usepackage{enumitem} % itemizeの行間 これは下になければならない
+\usepackage{threeparttable} % 表の脚注
+\usepackage{titlesec}
+\usepackage{makecell}
+\usepackage{forest}
+\usepackage{fancybox}
+% titlesec と \paragraph の相性問題を回避（run-in 見出しにする）
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}{0pt}{} % ←ここには文字や \noindent 等を入れない
+\titlespacing*{\paragraph}
+  {0pt}{1.0ex}{0.8em}
+\titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
+
+\setlength{\headheight}{16.5pt}
+\captionsetup{format=hang}
+\captionsetup[figure]{font=small}
+\captionsetup[table]{font=small}
+\begin{document}
+
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
+\ifdefined\ismain\else
+   \pagestyle{fancy}
+   \lhead{\rightmark}
+   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+   \setlength{\headheight}{16.5pt}
    \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
-   \usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
-   \usepackage{caption}
-   \usepackage{enumitem}
-   \setstretch{1.5}
-   \begin{document}
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
 \chapter*{研究業績一覧} \label{performance}
 \addcontentsline{toc}{chapter}{研究業績一覧}
@@ -17,10 +74,14 @@
 \section*{国内会議}
 
 \begin{enumerate}[label=(\roman*)]
-\item \textbf{渡邉謙吾}，川村天, 小林伶央, 有井知真, 伊藤亮史, 栗原聡，"物語構造分析に基づくLLMを用いたインタラクティブストーリー生成システム"，第24回データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS)(人工知能学会合同研究会2023)，Nov.25，2023
-\item 安部玲央, 有井知真, 伊藤亮史, \textbf{渡邉謙吾}, 小林伶央, 川村天, 栗原聡，"アフォーダンスを活用するマルチエージェントプランニングにおけるタスク分解"，第24回 データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS), Nov.25，2023
+   \item \textbf{渡邉謙吾}，川村天, 小林伶央, 有井知真, 伊藤亮史, 栗原聡，"物語構造分析に基づくLLMを用いたインタラクティブストーリー生成システム"，第24回データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS)(人工知能学会合同研究会2023)，Nov.25，2023
+   \item 安部玲央, 有井知真, 伊藤亮史, \textbf{渡邉謙吾}, 小林伶央, 川村天, 栗原聡，"アフォーダンスを活用するマルチエージェントプランニングにおけるタスク分解"，第24回 データ指向構成マイニングとシミュレーション研究会(SIG-DOCMAS), Nov.25，2023
 \end{enumerate}
 
-\expandafter\ifx\csname ifdraft\endcsname\relax
-   \end{document}
+% ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
+\ifdefined\ismain\else
+   \printbibliography[title=参考文献]
 \fi
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
+\end{document}
