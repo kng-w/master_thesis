@@ -58,11 +58,11 @@
 
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
 \ifdefined\ismain\else
-   \pagestyle{fancy}
-   \lhead{\rightmark}
-   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
-   \setlength{\headheight}{16.5pt}
-   \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
+  \pagestyle{fancy}
+  \lhead{\rightmark}
+  \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+  \setlength{\headheight}{16.5pt}
+  \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 \fi
 % ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
@@ -106,9 +106,9 @@
 漫画ページ上のレイアウトは，
 $N \in \mathbb{N}$ 個の要素からなる集合として表され，
 これを
-\[
-   \ell = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}
-\]
+\begin{equation}
+  \ell = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}
+\end{equation}
 と定義する．
 ここで $c_i$ は $i$ 番目の要素を識別するカテゴリを表し，
 本研究においては，
@@ -117,15 +117,15 @@ $N \in \mathbb{N}$ 個の要素からなる集合として表され，
 つまり，$c_i$ は，
 要素の基本種別とキャラクター種別に基づいて定義される
 カテゴリ集合 $\mathcal{C}$ の要素であり，$\mathcal{C}$ は
-\[
-   \mathcal{C}
-   =
-   \{\text{panel}\}
-   \;\cup\;
-   \{\text{character}_k\}
-   \;\cup\;
-   \{\text{speech}_k\}
-\]
+\begin{equation}
+  \mathcal{C}
+  =
+  \{\text{panel}\}
+  \;\cup\;
+  \{\text{character}_k\}
+  \;\cup\;
+  \{\text{speech}_k\}
+\end{equation}
 と表されるものとする．
 ここで $\text{character}_k$ はページ内に登場する
 第 $k$ 番目のキャラクターに対応するキャラクター要素を表し，
@@ -173,20 +173,20 @@ Script2Layout の概要を述べる．
 本研究で扱う手法の全体像を示す．
 
 \begin{figure}[htbp]
-   \centering
-   \includegraphics[width=\textwidth]{pict/04/script2layout_inputoutput.png}
-   \captionsetup{font=footnotesize}
-   \caption{
-      Script2Layout による脚本条件付きレイアウト生成の概略図．
-      上段は，本研究で提案する手法であり，
-      自然言語として記述された脚本を直接入力として扱いつつ，
-      キャラクター，セリフ，およびコマに対応する要素を抽出し，
-      Fine-tuned LLM によりページ全体のレイアウトを生成する．
-      下段は，既存のレイアウト生成手法の例であり，
-      要素数やカテゴリといった構造化情報を入力として
-      レイアウトを生成する点で異なる．
-   }
-   \label{fig:script2layout_overview}
+  \centering
+  \includegraphics[width=\textwidth]{pict/04/script2layout_inputoutput.png}
+
+  \caption{
+    Script2Layout による脚本条件付きレイアウト生成の概略図．
+    上段は，本研究で提案する手法であり，
+    自然言語として記述された脚本を直接入力として扱いつつ，
+    キャラクター，セリフ，およびコマに対応する要素を抽出し，
+    Fine-tuned LLM によりページ全体のレイアウトを生成する．
+    下段は，既存のレイアウト生成手法の例であり，
+    要素数やカテゴリといった構造化情報を入力として
+    レイアウトを生成する点で異なる．
+  }
+  \label{fig:script2layout_overview}
 \end{figure}
 
 本研究におけるScript2Layoutは，
@@ -196,9 +196,9 @@ Script2Layout の概要を述べる．
 前節で定義した通り，
 漫画ページのレイアウトは，
 カテゴリとバウンディングボックスの組からなる集合
-\[
-   \ell = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}
-\]
+\begin{equation}
+  \ell = \{(c_1, \mathbf{b}_1), \dots, (c_N, \mathbf{b}_N)\}
+\end{equation}
 として表される．
 本研究では，
 ページ単位の脚本を自然言語列 $S$ とし，脚本に基づく漫画のレイアウト生成タスクを，
@@ -215,15 +215,15 @@ LLM による生成および学習を可能にするため，
 あらかじめ定めた順序に従って線形化し，
 トークン列として表現する．
 具体的には，
-\[
-   L = (l_1, l_2, \dots, l_T)
-\]
+\begin{equation}
+  L = (l_1, l_2, \dots, l_T)
+\end{equation}
 をレイアウト列とし，
 各トークン $l_t$ は
 単一のレイアウト要素に対応するものとして
-\[
-   l_t = (c_{\pi(t)}, \mathbf{b}_{\pi(t)})
-\]
+\begin{equation}
+  l_t = (c_{\pi(t)}, \mathbf{b}_{\pi(t)})
+\end{equation}
 と定義する．
 ここで $\pi(t)$ は，
 集合 $\ell$ に含まれる要素を
@@ -265,23 +265,23 @@ LLM の自己回帰的な生成枠組みと
 それに対応する正解レイアウト列 $L$ からなる
 教師データを用い，
 LLM による条件付き確率
-\[
-   p_{\theta}(L \mid S)
-   =
-   \prod_{t=1}^{T}
-   p_{\theta}(l_t \mid l_{<t}, S)
-\]
+\begin{equation}
+  p_{\theta}(L \mid S)
+  =
+  \prod_{t=1}^{T}
+  p_{\theta}(l_t \mid l_{<t}, S)
+\end{equation}
 を最大化するように，
 モデルパラメータ $\theta$ を最適化する．
 具体的には，
 次トークン予測に基づく
 クロスエントロピー損失
-\[
-   \mathcal{L}
-   =
-   - \sum_{t=1}^{T}
-   \log p_{\theta}(l_t \mid l_{<t}, S)
-\]
+\begin{equation}
+  \mathcal{L}
+  =
+  - \sum_{t=1}^{T}
+  \log p_{\theta}(l_t \mid l_{<t}, S)
+\end{equation}
 を最小化することで，
 脚本とレイアウトとの対応関係を
 モデル内部に学習させる．
@@ -353,7 +353,7 @@ $\texttt{Speech}_k$ は $\texttt{Character}_k$ による発話に対応する．
 キャラクター種別数の最大値を25としたのは，本データセットで単一ページ内に登場するキャラクター種別数の最大値が22であることから余裕をもたせたものである．
 
 比較対象として，
-LayoutDM~\cite{inoue2023layoutdm}，
+LayoutDM~\cite{inoue_layoutdm_2023}，
 LayoutFormer++~\cite{jiang_layoutformer_2023}，
 LayoutPrompter~\cite{lin_layoutprompter_2023}
 の 3 手法を採用した．
@@ -368,13 +368,13 @@ LayoutPrompter は GPT-4o を利用するプロンプトベースの手法であ
 既存の手法が扱う制約条件からは以下のものを採用した．
 
 \begin{itemize}
-   \item \textbf{Gen-T（types 条件）:}
-         各要素のカテゴリ（$\texttt{Panel}$，$\texttt{Chara}_k$，$\texttt{Speech}_k$）のみを与え，
-         バウンディングボックスを生成する条件．本章の基本設定とする．
-   \item \textbf{Gen-TS（types+sizes 条件）:}
-         各要素のカテゴリに加え，
-         バウンディングボックスのサイズ（幅・高さ）を与え，
-         位置のみを生成する条件．
+  \item \textbf{Gen-T（types 条件）:}
+        各要素のカテゴリ（$\texttt{Panel}$，$\texttt{Chara}_k$，$\texttt{Speech}_k$）のみを与え，
+        バウンディングボックスを生成する条件．本章の基本設定とする．
+  \item \textbf{Gen-TS（types+sizes 条件）:}
+        各要素のカテゴリに加え，
+        バウンディングボックスのサイズ（幅・高さ）を与え，
+        位置のみを生成する条件．
 \end{itemize}
 
 一方 Script2Layout では，
@@ -383,13 +383,13 @@ LayoutPrompter は GPT-4o を利用するプロンプトベースの手法であ
 Script2Layout は入力形式を以下の 2 通り比較した．
 
 \begin{itemize}
-   \item \textbf{Without Script:}   脚本全文は入力に含めず，
-         キャラクター名やセリフ内容といった
-         各要素のテキスト情報のみを入力として用いる条件．
-         この条件においても，
-         Script2Layout モデルは同一の学習データを用いて
-         教師ありでファインチューニングされている
-   \item \textbf{With Script:} ページ単位で脚本全文を自然言語としてそのまま与える条件．
+  \item \textbf{Without Script:}   脚本全文は入力に含めず，
+        キャラクター名やセリフ内容といった
+        各要素のテキスト情報のみを入力として用いる条件．
+        この条件においても，
+        Script2Layout モデルは同一の学習データを用いて
+        教師ありでファインチューニングされている
+  \item \textbf{With Script:} ページ単位で脚本全文を自然言語としてそのまま与える条件．
 \end{itemize}
 
 それぞれの条件を，比較手法の Gen-T，Gen-TS と組み合わせて実験を行った．
@@ -403,11 +403,11 @@ Script2Layout は入力形式を以下の 2 通り比較した．
 (3) ページ単位での集合としての幾何的一致，
 (4) データ集合としての幾何的一致
 をそれぞれ測るため，
-Fréchet Inception Distance(FID)，Mean Intersection over Union (mIoU)，Layout Transportation Similarity（LTSim）~\cite{otani2024ltsim}，LTSim Maximum Mean Discrepancy（LTSim-MMD）~\cite{} の4指標を用いる．
+Fréchet Inception Distance(FID)，Mean Intersection over Union (mIoU)，Layout Transportation Similarity（LTSim）~\cite{otani_ltsim_2024}，LTSim Maximum Mean Discrepancy（LTSim-MMD）~\cite{otani_ltsim_2024} の4指標を用いる．
 特に LTSim は最適輸送に基づく柔軟な要素対応付けにより，
-要素数やカテゴリの差異を含むレイアウト対も比較可能な指標として提案されている~\cite{otani2024ltsim}．
+要素数やカテゴリの差異を含むレイアウト対も比較可能な指標として提案されている~\cite{otani_ltsim_2024}．
 また，FID は分布比較に広く用いられる一方で，
-知覚品質と必ずしも一致しない可能性も指摘されているため~\cite{otani2024ltsim}，
+知覚品質と必ずしも一致しない可能性も指摘されているため~\cite{otani_ltsim_2024}，
 本研究では LTSim 系指標を併用して多面的に評価する．
 
 \par
@@ -417,25 +417,25 @@ Fréchet Inception Distance（FID）を用いる．
 FID は，レイアウトを特徴空間へ写像した後，生成分布と実分布を
 それぞれ多変量正規分布として近似し，
 その間の Fréchet 距離として定義される：
-\[
-   \mathrm{FID}
-   =
-   \|\boldsymbol{\mu}_g - \boldsymbol{\mu}_r\|_2^2
-   +
-   \mathrm{Tr}
-   \left(
-   \boldsymbol{\Sigma}_g
-   +
-   \boldsymbol{\Sigma}_r
-   -
-   2(\boldsymbol{\Sigma}_g \boldsymbol{\Sigma}_r)^{1/2}
-   \right),
-\]
+\begin{equation}
+  \mathrm{FID}
+  =
+  \|\boldsymbol{\mu}_g - \boldsymbol{\mu}_r\|_2^2
+  +
+  \mathrm{Tr}
+  \left(
+  \boldsymbol{\Sigma}_g
+  +
+  \boldsymbol{\Sigma}_r
+  -
+  2(\boldsymbol{\Sigma}_g \boldsymbol{\Sigma}_r)^{1/2}
+  \right),
+\end{equation}
 ここで $(\boldsymbol{\mu}_g, \boldsymbol{\Sigma}_g)$ および
 $(\boldsymbol{\mu}_r, \boldsymbol{\Sigma}_r)$ は，
 それぞれ生成レイアウトと実レイアウトから抽出した特徴の
 平均および共分散行列である．
-特徴抽出器には LayoutDM~\cite{inoue2023layoutdm} に倣い
+特徴抽出器には LayoutDM~\cite{inoue_layoutdm_2023} に倣い
 FIDNetV3 を用いる．
 
 \paragraph{mIoU}
@@ -445,35 +445,35 @@ FIDNetV3 を用いる．
 要素 $i$ に対する IoU は，
 生成バウンディングボックス $\mathbf{b}_i^{(g)}$ と
 正解バウンディングボックス $\mathbf{b}_i^{(r)}$ に対して
-\[
-   \mathrm{IoU}_i
-   =
-   \frac{
-      \mathrm{area}
-      \left(
-      \mathbf{b}_i^{(g)} \cap \mathbf{b}_i^{(r)}
-      \right)
-   }{
-      \mathrm{area}
-      \left(
-      \mathbf{b}_i^{(g)} \cup \mathbf{b}_i^{(r)}
-      \right)
-   }
-\]
+\begin{equation}
+  \mathrm{IoU}_i
+  =
+  \frac{
+    \mathrm{area}
+    \left(
+    \mathbf{b}_i^{(g)} \cap \mathbf{b}_i^{(r)}
+    \right)
+  }{
+    \mathrm{area}
+    \left(
+    \mathbf{b}_i^{(g)} \cup \mathbf{b}_i^{(r)}
+    \right)
+  }
+\end{equation}
 として定義される．
 同一カテゴリ内で IoU が最大となる対応を貪欲に選択し，
 全要素に対する平均値
-\[
-   \mathrm{mIoU}
-   =
-   \frac{1}{N}
-   \sum_{i=1}^{N} \mathrm{IoU}_i
-\]
+\begin{equation}
+  \mathrm{mIoU}
+  =
+  \frac{1}{N}
+  \sum_{i=1}^{N} \mathrm{IoU}_i
+\end{equation}
 を最終的な指標として算出する．
 
 \paragraph{LTSim}
 ページ単位での幾何的一致を評価するため，
-最適輸送に基づく Layout Transportation Similarity（LTSim）~\cite{otani2024ltsim} を用いる．
+最適輸送に基づく Layout Transportation Similarity（LTSim）~\cite{otani_ltsim_2024} を用いる．
 LTSim は，
 生成レイアウト $\hat{\ell}$ と正解レイアウト $\ell$ に含まれる要素集合を，
 一対一に対応付けるのではなく，
@@ -490,43 +490,43 @@ $\gamma$ は各要素の総重みを保存する制約のもとで最適化さ�
 
 このとき，
 対応に基づく輸送コスト（Earth Mover's Distance; EMD）は
-\[
-   \mathrm{EMD}(\ell,\hat{\ell})
-   =
-   \sum_{i=1}^{N}\sum_{j=1}^{\hat{N}}
-   \gamma^\ast_{i,j}\,
-   \mu\bigl((c_i,\mathbf{b}_i),(c_j,\hat{\mathbf{b}}_j)\bigr)
-\]
+\begin{equation}
+  \mathrm{EMD}(\ell,\hat{\ell})
+  =
+  \sum_{i=1}^{N}\sum_{j=1}^{\hat{N}}
+  \gamma^\ast_{i,j}\,
+  \mu\bigl((c_i,\mathbf{b}_i),(c_j,\hat{\mathbf{b}}_j)\bigr)
+\end{equation}
 として定義される．
 ここで $\gamma^\ast$ は輸送コストを最小化する最適輸送行列であり，
 $\mu(\cdot,\cdot)$ は要素間のコスト関数である．
 本研究では，
 $\mu$ として
 バウンディングボックス間の幾何的差異を表す Generalized IoU（GIoU）と，
-カテゴリ一致の有無を組み合わせたコストを用いる~\cite{otani2024ltsim}．
+カテゴリ一致の有無を組み合わせたコストを用いる~\cite{otani_ltsim_2024}．
 これにより，
 位置関係と要素種別の両方を考慮した対応付けが実現される．
 
 EMD に基づき，
 LTSim は次式で定義される：
-\[
-   \mathrm{LTSim}(\ell,\hat{\ell})
-   =
-   \exp\!\left(-\frac{\mathrm{EMD}(\ell,\hat{\ell})}{\sigma}\right).
-\]
+\begin{equation}
+  \mathrm{LTSim}(\ell,\hat{\ell})
+  =
+  \exp\!\left(-\frac{\mathrm{EMD}(\ell,\hat{\ell})}{\sigma}\right).
+\end{equation}
 $\sigma$ はスケールパラメータであり，
 EMD の大きさを類似度に変換する際の感度を制御する．
 本研究では，
 1ページ全体を1つのレイアウトとして比較する
 layout-level の設定に従い，
-$\sigma=1$ とする~\cite{otani2024ltsim}．
+$\sigma=1$ とする~\cite{otani_ltsim_2024}．
 
 
 \paragraph{LTSim-MMD}
 生成レイアウト集合と実レイアウト集合の分布的一致を評価するため，
 LTSim をカーネル関数とする
 Maximum Mean Discrepancy（MMD）に基づく
-LTSim-MMD~\cite{otani2024ltsim} を用いる．
+LTSim-MMD~\cite{otani_ltsim_2024} を用いる．
 
 MMD は，
 2つの集合が同一の分布から生成されたかどうかを評価する指標であり，
@@ -540,15 +540,15 @@ $k(\ell,\hat{\ell})=\mathrm{LTSim}(\ell,\hat{\ell};\sigma)$
 正解レイアウト集合 $\mathcal{L}=\{\ell_i\}_{i=1}^{s}$ と
 生成レイアウト集合 $\hat{\mathcal{L}}=\{\hat{\ell}_j\}_{j=1}^{t}$ に対し，
 LTSim-MMD は
-\[
-   \mathrm{MMD}^2(\mathcal{L},\hat{\mathcal{L}})
-   =
-   \frac{1}{s(s-1)}\sum_{i\neq j} k(\ell_i,\ell_j)
-   +
-   \frac{1}{t(t-1)}\sum_{i\neq j} k(\hat{\ell}_i,\hat{\ell}_j)
-   -
-   \frac{2}{st}\sum_{i,j} k(\ell_i,\hat{\ell}_j)
-\]
+\begin{equation}
+  \mathrm{MMD}^2(\mathcal{L},\hat{\mathcal{L}})
+  =
+  \frac{1}{s(s-1)}\sum_{i\neq j} k(\ell_i,\ell_j)
+  +
+  \frac{1}{t(t-1)}\sum_{i\neq j} k(\hat{\ell}_i,\hat{\ell}_j)
+  -
+  \frac{2}{st}\sum_{i,j} k(\ell_i,\hat{\ell}_j)
+\end{equation}
 として定義される．
 第1項と第2項はそれぞれ
 正解集合内および生成集合内の平均類似度を表し，
@@ -573,8 +573,8 @@ Script2Layout は，
 複数の LLM をベースモデルとして用い，
 教師あり学習によりScript2Layoutへ適応させた．
 具体的には，
-Swallow-13B，Sarashina-13B，
-および DeepSeek-R1-Distill-Qwen-14B-Japanese を用いた．選定は，これらが高い日本語性能を有しており，日本語で記述された脚本の入力に対応できることと，オープンソースモデルであり自由にファインチューニングが可能であることを理由とした．
+Swallow-13B~\cite{fujii2024swallow}，Sarashina-13B~\cite{sarashina13b}，
+および DeepSeek-R1-Distill-Qwen-14B-Japanese~\cite{deepseek2024r1,bai2023qwen}を用いた．選定は，これらが高い日本語性能を有しており，日本語で記述された脚本の入力に対応できることと，オープンソースモデルであり自由にファインチューニングが可能であることを理由とした．
 
 座標のグリッド表現については，既存のレイアウト生成タスクにならう形で32×32のグリッドを用い，離散トークンとして扱い学習を行った．
 
@@ -590,7 +590,7 @@ Parameter-Efficient Fine-Tuning（PEFT）ライブラリを用いた．
 
 学習および推論は NVIDIA H100（1 枚）上で行った．
 LoRA の設定，学習率，バッチサイズなどの
-詳細なハイパーパラメータは付録~\ref{}に示す．
+詳細なハイパーパラメータは付録~\ref{app:script2layout_hyperparams}に示す．
 
 \section{漫画のレイアウト生成における結果と考察}\label{sec:results}
 
@@ -625,54 +625,54 @@ Gen-T 条件（要素のカテゴリを既知とする条件）における
 
 
 \begin{table*}[h]
-   \captionsetup{font=small}
-   \caption{
-      Gen-T 条件下におけるレイアウト生成の定量評価の結果．
-   }
-   \vspace{-0.6em}
-   \centering
-   \label{tab:results_gen_t}
-   \setlength{\tabcolsep}{6pt}
-   \begin{adjustbox}{max width=\textwidth}
-      \begin{tabular}{l c c c c}
-         \toprule
-                                                         &
-         \multicolumn{2}{c}{\textbf{Page-level metrics}} &
-         \multicolumn{2}{c}{\textbf{Distribution-level metrics}}                                                                                                             \\
-         \cmidrule(lr){2-3} \cmidrule(lr){4-5}
-         \textbf{Model}                                  &
-         mIoU $\uparrow$                                 & LTSim $\uparrow$                                    &
-         FID $\downarrow$                                & \makecell{LTSim-MMD ($\times 10^{-2}$)$\downarrow$}                                                               \\
-         \midrule
+  \captionsetup{font=small}
+  \caption{
+    Gen-T 条件下におけるレイアウト生成の定量評価の結果．
+  }
+  \vspace{-0.6em}
+  \centering
+  \label{tab:results_gen_t}
+  \setlength{\tabcolsep}{6pt}
+  \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l c c c c}
+      \toprule
+                                                      &
+      \multicolumn{2}{c}{\textbf{Page-level metrics}} &
+      \multicolumn{2}{c}{\textbf{Distribution-level metrics}}                                                                                                             \\
+      \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+      \textbf{Model}                                  &
+      mIoU $\uparrow$                                 & LTSim $\uparrow$                                    &
+      FID $\downarrow$                                & \makecell{LTSim-MMD ($\times 10^{-2}$)$\downarrow$}                                                               \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Existing Methods}                                                                                                                       \\
-         LayoutDM
-                                                         & 0.1238                                              & 0.7263             & \textbf{19.779}    & 0.614             \\
-         LayoutFormer++
-                                                         & 0.1499                                              & 0.7145             & 36.479             & 3.126             \\
-         LayoutPrompter
-                                                         & 0.1368                                              & 0.7213             & 62.728             & 1.343             \\
-         \midrule
+      \multicolumn{5}{l}{\itshape Existing Methods}                                                                                                                       \\
+      LayoutDM
+                                                      & 0.1238                                              & 0.7263             & \textbf{19.779}    & 0.614             \\
+      LayoutFormer++
+                                                      & 0.1499                                              & 0.7145             & 36.479             & 3.126             \\
+      LayoutPrompter
+                                                      & 0.1368                                              & 0.7213             & 62.728             & 1.343             \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Script2Layout（Without Script）}                                                                                                          \\
-         DeepSeek
-                                                         & 0.1740                                              & 0.7471             & 21.953             & 0.467             \\
-         Sarashina
-                                                         & \underline{0.1939}                                  & \underline{0.7542} & 22.464             & 0.586             \\
-         Swallow
-                                                         & 0.1540                                              & 0.7373             & 33.235             & 0.881             \\
-         \midrule
+      \multicolumn{5}{l}{\itshape Script2Layout（Without Script）}                                                                                                          \\
+      DeepSeek
+                                                      & 0.1740                                              & 0.7471             & 21.953             & 0.467             \\
+      Sarashina
+                                                      & \underline{0.1939}                                  & \underline{0.7542} & 22.464             & 0.586             \\
+      Swallow
+                                                      & 0.1540                                              & 0.7373             & 33.235             & 0.881             \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Script2Layout（With Script）}                                                                                                             \\
-         DeepSeek
-                                                         & 0.1809                                              & 0.7495             & \underline{19.849} & \textbf{0.343}    \\
-         Sarashina
-                                                         & \textbf{0.1983}                                     & \textbf{0.7550}    & 22.569             & 0.396             \\
-         Swallow
-                                                         & 0.1728                                              & 0.7452             & 21.824             & \underline{0.391} \\
-         \bottomrule
-      \end{tabular}
-   \end{adjustbox}
+      \multicolumn{5}{l}{\itshape Script2Layout（With Script）}                                                                                                             \\
+      DeepSeek
+                                                      & 0.1809                                              & 0.7495             & \underline{19.849} & \textbf{0.343}    \\
+      Sarashina
+                                                      & \textbf{0.1983}                                     & \textbf{0.7550}    & 22.569             & 0.396             \\
+      Swallow
+                                                      & 0.1728                                              & 0.7452             & 21.824             & \underline{0.391} \\
+      \bottomrule
+    \end{tabular}
+  \end{adjustbox}
 \end{table*}
 
 
@@ -734,18 +734,18 @@ Gen-T 条件下における
 レイアウト生成の可視化結果を示す．
 
 \begin{figure}[htbp]
-   \centering
-   \includegraphics[width=\textwidth]{pict/04/evaluation_quality.png}
-   \captionsetup{font=footnotesize}
-   \caption{
-      Gen-T 条件下におけるレイアウト生成の可視化結果．
-      各行に対して，左から順に
-      正解レイアウト，
-      既存手法の生成例，
-      Script2Layoutの生成例，
-      が並び，Script2Layoutでは上段にScript条件なし，下段にScript条件ありの結果を示す．
-   }
-   \label{fig:gen_t_qualitative}
+  \centering
+  \includegraphics[width=\textwidth]{pict/04/evaluation_quality.png}
+
+  \caption{
+    Gen-T 条件下におけるレイアウト生成の可視化結果．
+    各行に対して，左から順に
+    正解レイアウト，
+    既存手法の生成例，
+    Script2Layoutの生成例，
+    が並び，Script2Layoutでは上段にScript条件なし，下段にScript条件ありの結果を示す．(漫画: 上段『ヒーリング・プラネット』©桜野 みねね/エニックス，下段『ドールガン』©出口 竜正/秋田書店)
+  }
+  \label{fig:gen_t_qualitative}
 \end{figure}
 
 まず，既存手法と Script2Layout の生成結果を比較すると，コマ(水色の領域)の配置が，Script2Layout の方がより正解に近ししい傾向が見てとれる．例えば，1 行目の例では，正解のレイアウトにおいてコマがページを上段中段下段に分割するよう配置されているが，既存手法ではこれが再現されていない．一方で，Script2Layout ではこの傾向がより正確に捉えられている．また，目立たせるべきキャラクターの大きさについても，Script2Layout の方が正解に近しい傾向がみられる．例えば 2 行目の例では，正解レイアウトにおいて右下のキャラクター(オレンジ色の領域)が大きく描かれているが，既存手法ではこれが反映されていない．一方で，Script2Layout では配置の点では違いがみられるものの、このキャラクターを画面に大きく目立たせようとする傾向は見て取れる．セリフやキャラクター名の情報がこのようなコマ割りやキャラクターの重要度に関する配置設計に有効に働いた可能性を示唆している．
@@ -768,54 +768,54 @@ Gen-TS 条件（要素のカテゴリとサイズを既知とする条件）に�
 レイアウト生成の定量評価結果を示す．
 
 \begin{table*}[h]
-   \captionsetup{font=small}
-   \caption{
-      Gen-TS 条件下におけるレイアウト生成の定量評価結果．
-   }
-   \vspace{-0.6em}
-   \centering
-   \label{tab:results_gen_ts}
-   \setlength{\tabcolsep}{6pt}
-   \begin{adjustbox}{max width=\textwidth}
-      \begin{tabular}{l c c c c}
-         \toprule
-                                                         &
-         \multicolumn{2}{c}{\textbf{Page-level metrics}} &
-         \multicolumn{2}{c}{\textbf{Distribution-level metrics}}                                                                                                             \\
-         \cmidrule(lr){2-3} \cmidrule(lr){4-5}
-         \textbf{Model}                                  &
-         mIoU $\uparrow$                                 & LTSim $\uparrow$                                    &
-         FID $\downarrow$                                & \makecell{LTSim-MMD ($\times 10^{-2}$)$\downarrow$}                                                               \\
-         \midrule
+  \captionsetup{font=small}
+  \caption{
+    Gen-TS 条件下におけるレイアウト生成の定量評価結果．
+  }
+  \vspace{-0.6em}
+  \centering
+  \label{tab:results_gen_ts}
+  \setlength{\tabcolsep}{6pt}
+  \begin{adjustbox}{max width=\textwidth}
+    \begin{tabular}{l c c c c}
+      \toprule
+                                                      &
+      \multicolumn{2}{c}{\textbf{Page-level metrics}} &
+      \multicolumn{2}{c}{\textbf{Distribution-level metrics}}                                                                                                             \\
+      \cmidrule(lr){2-3} \cmidrule(lr){4-5}
+      \textbf{Model}                                  &
+      mIoU $\uparrow$                                 & LTSim $\uparrow$                                    &
+      FID $\downarrow$                                & \makecell{LTSim-MMD ($\times 10^{-2}$)$\downarrow$}                                                               \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Existing Methods}                                                                                                                       \\
-         LayoutDM
-                                                         & 0.1890                                              & 0.7432             & \textbf{17.554}    & 0.263             \\
-         LayoutFormer++
-                                                         & 0.2034                                              & 0.7525             & \underline{18.058} & 0.378             \\
-         LayoutPrompter
-                                                         & 0.1326                                              & 0.7046             & 80.477             & 1.053             \\
-         \midrule
+      \multicolumn{5}{l}{\itshape Existing Methods}                                                                                                                       \\
+      LayoutDM
+                                                      & 0.1890                                              & 0.7432             & \textbf{17.554}    & 0.263             \\
+      LayoutFormer++
+                                                      & 0.2034                                              & 0.7525             & \underline{18.058} & 0.378             \\
+      LayoutPrompter
+                                                      & 0.1326                                              & 0.7046             & 80.477             & 1.053             \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Script2Layout（Without Script）}                                                                                                          \\
-         DeepSeek
-                                                         & \underline{0.3435}                                  & \underline{0.8145} & 19.981             & \textbf{0.052}    \\
-         Sarashina
-                                                         & 0.3165                                              & 0.8049             & 22.422             & 0.112             \\
-         Swallow
-                                                         & 0.3139                                              & 0.8042             & 20.977             & 0.108             \\
-         \midrule
+      \multicolumn{5}{l}{\itshape Script2Layout（Without Script）}                                                                                                          \\
+      DeepSeek
+                                                      & \underline{0.3435}                                  & \underline{0.8145} & 19.981             & \textbf{0.052}    \\
+      Sarashina
+                                                      & 0.3165                                              & 0.8049             & 22.422             & 0.112             \\
+      Swallow
+                                                      & 0.3139                                              & 0.8042             & 20.977             & 0.108             \\
+      \midrule
 
-         \multicolumn{5}{l}{\itshape Script2Layout（With Script）}                                                                                                             \\
-         DeepSeek
-                                                         & 0.3429                                              & 0.8143             & 19.497             & \underline{0.057} \\
-         Sarashina
-                                                         & \textbf{0.3461}                                     & \textbf{0.8154}    & 19.426             & 0.078             \\
-         Swallow
-                                                         & 0.3431                                              & 0.8143             & 21.028             & 0.068             \\
-         \bottomrule
-      \end{tabular}
-   \end{adjustbox}
+      \multicolumn{5}{l}{\itshape Script2Layout（With Script）}                                                                                                             \\
+      DeepSeek
+                                                      & 0.3429                                              & 0.8143             & 19.497             & \underline{0.057} \\
+      Sarashina
+                                                      & \textbf{0.3461}                                     & \textbf{0.8154}    & 19.426             & 0.078             \\
+      Swallow
+                                                      & 0.3431                                              & 0.8143             & 21.028             & 0.068             \\
+      \bottomrule
+    \end{tabular}
+  \end{adjustbox}
 \end{table*}
 
 まず，既存のレイアウト生成手法と Script2Layout の
@@ -898,7 +898,7 @@ Script2Layout の挙動理解を深める上で
 
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
 \ifdefined\ismain\else
-   \printbibliography[title=参考文献]
+  \printbibliography[title=参考文献]
 \fi
 % ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 

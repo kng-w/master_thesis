@@ -1,7 +1,8 @@
-\documentclass[a4j,12pt,dvipdfmx]{jsreport}
+\documentclass[a4j,10.5pt,dvipdfmx]{jsreport}
 
 % ----- 仕掛け 開始 -----
 \newcommand{\ifdraft}{false}
+\newcommand{\ismain}{} 
 % ----- 仕掛け 終了 -----
 
 % 数式
@@ -9,169 +10,188 @@
 \usepackage{bm}
 
 % 画像
+\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
 \usepackage[dvipdfmx]{graphicx}
 
 % biblatex
 \usepackage[style=numeric, sorting=none, maxbibnames=1000]{biblatex}
-\addbibresource{graduation_thesis.bib}
+\addbibresource{master_thesis.bib}
 
-%itembox
+% itembox
 \usepackage{ascmac}
-%breakitemboxのためのpackage
 \usepackage{itembkbx}
-% \usepackage{tcolorbox} 画像が見えなくなってしまう原因
-% \usepackage{framed} 枠
 
-%フォント
+% フォント
 \usepackage[ipaex]{pxchfon}
 
-\usepackage[top=35truemm,bottom=30truemm,left=30truemm,right=30truemm]{geometry}
 \usepackage{float}
 \usepackage{multicol}
 \usepackage{multirow}
 \usepackage{paralist}
 \usepackage{caption}
-%\captionsetup{format=plain, justification=centering} % キャプションを中央揃えにする
+\captionsetup[figure]{font=small}
+\captionsetup[table]{font=small}
+\captionsetup{format=hang}
+
+% 行間設定
 \usepackage{setspace}
+\setstretch{1.25}
+
 \usepackage{algorithm}
 \usepackage{algpseudocode}
-\usepackage[dvipdfmx,hidelinks]{hyperref}
+\usepackage[dvipdfmx,
+    colorlinks=true,       % 色付けを有効にする
+    linkcolor=blue,        % 目次・図表リンクなど（青）
+    citecolor=green,       % 参考文献の引用 [1] など（緑）
+    urlcolor=blue,         % URL（青 ※ここも緑がよければ green に）
+    bookmarks=true,        % しおり（PDFの目次）を作成
+    bookmarksnumbered=true % しおりに番号を入れる
+]{hyperref}
 \usepackage{pxjahyper}
 \usepackage{fancyhdr}
-\usepackage{ltablex}
 \usepackage{capt-of}
 \usepackage{tabularx}
-\usepackage{enumitem} % itemizeの行間 これは下になければならない
-\usepackage{threeparttable} % 表の脚注
+\usepackage{enumitem}
+\usepackage{threeparttable}
 \usepackage{booktabs}
-\usepackage{titlesec}
-\usepackage{adjustbox}
-\usepackage{docmute}
+\usepackage{titlesec} % titlesec必須
+\usepackage[export]{adjustbox} 
+\usepackage{docmute} 
 \usepackage{makecell}
 \usepackage{forest}
 \usepackage{fancybox}
 \usepackage{longtable}
 \usepackage{xltabular}
-\newcommand{\ismain}{}
+
+% paragraphの設定
+\titleformat{\paragraph}[runin]
+  {\normalfont\normalsize\bfseries}
+  {}{0pt}{}
+\titlespacing*{\paragraph}
+  {0pt}{1.0ex}{0.8em}
+
+% Chapterの設定
 \titleformat{\chapter}[hang]{\LARGE\bfseries}{{\Large \prechaptername\thechapter\postchaptername}}{1em}{}
 
+\setlength{\headheight}{16.5pt}
+\setcounter{tocdepth}{2}
 
-   \setlength{\headheight}{16.5pt}
-   \captionsetup{format=hang}
+% =========================================================
+% ▼▼▼ ヘッダー・フッターの決定版設定 ▼▼▼
 
-
-   \setcounter{tocdepth}{2}
-\begin{document}
-% 上部のヘッダー
+% 1. 基本設定（通常ページ用）
 \pagestyle{fancy}
-\lhead{\rightmark}
+\fancyhf{} % 一度クリア
+
+% ヘッダー：左に章、右に節
+\lhead{\leftmark}  
+\rhead{\rightmark} 
+% フッター：中央下にページ番号
+\cfoot{\thepage}
+
+\renewcommand{\headrulewidth}{0.4pt} % 線の太さ
+
+% 章・節タイトルの表示形式
 \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\ #1}{}}
+
+% 2. 章の始まり専用のスタイル「chapterstart」を定義
+\fancypagestyle{chapterstart}{
+   \fancyhf{}       % ヘッダー・フッターを空にする
+   \cfoot{\thepage} % ページ番号を中央下に配置
+   \renewcommand{\headrulewidth}{0pt} % 線なし
+}
+
+% 3. titlesecの機能で「章の始まりはこのスタイルを使え」と命令
+\assignpagestyle{\chapter}{chapterstart}
+
+% ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+% =========================================================
+
+\begin{document}
 
 %rename
 \renewcommand{\abstractname}{\LARGE 論文要旨}
 
-% タイトル
+% タイトルページ
 \begin{titlepage}
+   \noindent
+   {\Large 修士論文} \hfill {\Large 2025年度}
+
+   \vspace*{70truept}
+
    \begin{center}
+      \vspace{60truept}
+      {\Huge \bfseries 脚本に基づく漫画のネーム生成} \par
 
-      {\Large 令和7年度修士論文}
+      \vspace{110truept}
 
-      \vspace*{130truept}
+      {\LARGE 渡邉 謙吾} \par
+      \vspace{5truept}
+      {\LARGE （学籍番号：82420611）} \par
 
-      {\Huge 脚本から漫画のネーム生成}
+      \vspace{110truept}
 
-      \vspace{75truept}
+      {\LARGE 指導教員 教授 栗原 聡} \par
 
-      {\Large 主任指導教員}
+      \vspace{50truept}
 
+      {\Large 2026 年 3 月 } \par
+
+      \vspace{50truept}
+
+      {\Large 慶應義塾大学大学院理工学研究科} \par
       \vspace{10truept}
-
-      {\Large 栗原 聡}
-
-      \vspace{65truept}
-
-      {\Large 慶應義塾大学}
-
-      \vspace{10truept}
-
-      {\Large 理工学部管理工学科}
-
-      \vspace{30truept}
-
-      {\Large 氏名 渡邉 謙吾}
-
-      \vspace{10truept}
-
-      {\Large 学籍番号 62021705}
-
-      \vspace{25truept}
-
-      {\Large 提出日 2024 年 1 月 29 日}
-
+      {\Large 開放環境科学専攻} \par
    \end{center}
 \end{titlepage}
+
 % 概要
 \input{00_abstract.tex}
 
+% ページ番号リセット
+\clearpage
+\pagenumbering{arabic}
+
 % 目次
+% ▼▼▼ 修正箇所：tocloftpagestyle を削除し、thispagestyle で対応 ▼▼▼
 \tableofcontents
+\thispagestyle{chapterstart} % 目次の1ページ目もスタイルを強制適用
+
 \listoffigures
+\thispagestyle{chapterstart} % 図目次も同様
+
 \listoftables
+\thispagestyle{chapterstart} % 表目次も同様
 
-% 上部のヘッダー
-\pagestyle{fancy}
-\lhead{\rightmark}
-\renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
-
-% 序論
+% 各章の読み込み
 \input{01_introduction.tex}
-
-%関連研究
 \input{02_relatedworks.tex}
-
-%提案手法
 \input{03_manga109script.tex}
-
-%提案手法
 \input{04_script2layout.tex}
-
-%提案手法
 \input{05_manga109name.tex}
-
-% 結論
 \input{06_script2name.tex}
-
-% 結論
 \input{07_conclusion.tex}
-
-% 謝辞
 \input{08_thanks.tex}
 
-
 % 参考文献
-% 一時的にヘッダーのスタイルを変更
 \fancypagestyle{bibliography}{
    \fancyhead{}
    \fancyhead[RO]{参考文献}
+   \cfoot{\thepage}
 }
-
 \defbibheading{bibintoc}[\refname]{%
    \chapter*{#1}%
    \markboth{参考文献}{}%
 }
-
-% 参考文献の前で一時的なスタイルを適用
 \printbibliography[heading=bibintoc, title=参考文献]
 \addcontentsline{toc}{chapter}{参考文献}
 
-% 参考文献の後で元のスタイルに戻す
-\pagestyle{fancy}
-\lhead{\rightmark}
-\renewcommand{\chaptermark}[1]{\markboth{付録\ \thechapter\ \ #1}{}}
-
+% 付録
 \input{09_performance.tex}
 
 \appendix
+\renewcommand{\chaptermark}[1]{\markboth{付録\ \thechapter\ \ #1}{}}
 \input{10_appendix.tex}
 
 \end{document}

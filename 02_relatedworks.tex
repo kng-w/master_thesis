@@ -77,10 +77,10 @@
 まず，
 ~\ref{sec:layout_generation}節でレイアウト生成研究の流れを概観し，
 要素配置問題としての定式化から，
-深層生成モデル，大規模言語モデルを用いた近年の発展までを整理する．
+深層生成モデル，LLMを用いた近年の発展までを整理する．
 次に，
 ~\ref{sec:visual_storytelling}節で画像列から物語を生成するビジュアルストーリーテリング研究について，
-従来手法から大規模視覚言語モデルおよびVisual Promptingに至る技術的進展を述べる．
+従来手法からLVLMおよびVisual Promptingに至る技術的進展を述べる．
 最後に，
 ~\ref{sec:manga}節で漫画を対象とした画像理解・物語理解研究を取り上げ，
 特に Manga109Dataset を中心としたデータセット整備と，
@@ -100,17 +100,17 @@
 
 レイアウト生成の初期研究においては，
 視覚要素の配置を人間のデザイン知識に基づくルールや制約として明示的に定義し，
-それらを満たす配置を探索するアプローチが主流であった~\cite{}．%lok1990survey,roth1990data,kamps1999constraints
+それらを満たす配置を探索するアプローチが主流であった~\cite{lok1999survey,chuah1995sagebook,kamps1999constraints}．%lok1990survey,roth1990data,kamps1999constraints
 
 このアプローチでは，レイアウト生成を「制約充足問題」あるいは「最適化問題」として定式化する．
 具体的には，要素の整列や間隔，余白の確保，サイズ比率の一貫性といったデザイン原則を数理的な制約条件として表現する．
 典型的には，各要素の位置 $(x_i, y_i)$ や大きさ $(w_i, h_i)$ を決定変数とし，
 可読性や審美性を反映した目的関数（エネルギー関数）$E$ を定義して，
-その最大化（あるいはコストの最小化）を行うことでレイアウトを決定する~\cite{}．%data_characterization
+その最大化（あるいはコストの最小化）を行うことでレイアウトを決定する~\cite{roth1994data}．%data_characterization
 
 例えば，
 要素間の重なりを避ける制約，グリッドへの整列を促すペナルティ項，
-視線誘導を考慮した配置順序の制約などが導入され~\cite{}，%constraint-based
+視線誘導を考慮した配置順序の制約などが導入され~\cite{feiner1988constraint,kamps1999constraints}，%constraint-based
 これらを満たす最適解としてレイアウトが求められる．
 この枠組みは，専門家の知識を数式として表現する必要があったものの，
 レイアウト生成を明確な「要素配置問題」として定義した点で重要な基盤を与えた．
@@ -120,7 +120,7 @@
 デザイン原則の重み付けは経験的に決定されることが多く，
 新たな媒体や異なる表現様式に適用する際にはルールの再設計が不可欠となる．
 また，複雑な制約を同時に満たす大域的最適解を探索することは計算量的に困難であり，
-生成される表現の多様性や柔軟性にも限界があった~\cite{}．%intelligent_layout_generation
+生成される表現の多様性や柔軟性にも限界があった~\cite{shi_intelligent_2023}．%intelligent_layout_generation
 
 こうした「人手による特徴設計」の限界から，
 データセットからレイアウトの分布や配置パターンを直接学習する手法への関心が高まり，
@@ -135,11 +135,12 @@
 その分布から妥当な配置をサンプリングするという観点が重要となる．
 \subsubsection{GAN・VAE に基づく手法}
 ここでは，まず
-GAN および VAE の基本的定式化を整理した上で，
+Generative Adversarial Network（GAN）~\cite{goodfellow2014generative}および
+Variational AutoEncoder（VAE）~\cite{kingma2013autoencoding}の基本的定式化を整理した上で，
 それらをレイアウト生成に適用した代表的手法である
-LayoutGAN および LayoutVAE について詳述する．
-\paragraph{Generative Adversarial Network（GAN）}
-GAN~\cite{goodfellow2014generative} は，
+LayoutGAN~\cite{li_layoutgan_2019} および LayoutVAE~\cite{jyothi_layoutvae_2021} について詳述する．
+\paragraph{GAN}
+GAN は，
 Generator $G$ と Discriminator $D$ の
 二者による敵対的学習を通じて，
 データ分布 $p_{\text{data}}(x)$ を
@@ -215,13 +216,13 @@ LayoutGAN は要素集合全体を
 整合性のあるレイアウト生成を可能にしている．
 
 \paragraph{Variational Autoencoder（VAE）}
-VAE~\cite{kingma2013autoencoding} は，
+VAEは，
 確率的潜在変数モデルに基づき，
 データ $x$ を潜在変数 $z$ を介して生成する枠組みである．
 Encoder $q_\phi(z \mid x)$ と
 Decoder $p_\theta(x \mid z)$ を用い，
 対数尤度 $\log p_\theta(x)$ の
-下界である変分下限（ELBO）を最大化する：
+下界である変分下限を最大化する：
 
 \begin{equation}
    \log p_\theta(x)
@@ -237,7 +238,7 @@ VAE は，
 生成結果が平均化されやすいという特徴を持つ．
 
 \paragraph{LayoutVAE}
-LayoutVAE~\cite{jyothi2021layoutvaestochasticscenelayout} は，
+LayoutVAE~\cite{jyothi_layoutvae_2021} は，
 VAE をレイアウト生成に適用し，
 要素数が可変なレイアウトを
 確率的に生成可能とした．
@@ -284,12 +285,12 @@ GAN や VAE に基づく手法では，
 この課題に対し，
 近年ではレイアウトを「要素列」として扱い，
 自己注意機構により要素間関係を明示的にモデル化する
-Transformer ベースの手法が提案されている．
+Transformer~\cite{vaswani2017attention} ベースの手法が提案されている．
 代表的な手法として，
-LayoutTransformer~\cite{gupta_layouttransformer_2021}，
-BLT~\cite{kong2021blt}，
-LayoutFormer~\cite{jiang_layoutformer_2023}，
-およびその拡張である LayoutFormer++~\cite{jiang_layoutformerpp_2023}
+LayoutTransformer~\cite{gupta2021layouttransformer}，
+BLT~\cite{kong_blt_2022}，
+LayoutFormer~\cite{jiang2023layoutformer}，
+およびその拡張である LayoutFormer++~\cite{jiang_layoutformer_2023}
 が挙げられる．
 
 \paragraph{Transformer の基本構造と系列モデリング}
@@ -395,7 +396,7 @@ $\theta$ はモデルパラメータである．
 制約をレイアウトと同一形式で与える方法や，
 制約ごとに専用のモデル設計を行う方法が取られてきたが，
 これらは柔軟性に欠け，新たな制約設定への拡張が困難であった．
-Transformer ベースの手法である LayoutFormer++ は，
+Transformer ベースの手法である LayoutFormer++~\cite{jiang_layoutformer_2023} は，
 これらの課題に対し，
 \textbf{制約直列化（constraint serialization）}
 という枠組みを導入した．
@@ -435,8 +436,8 @@ LayoutFormer++ はレイアウト補完，洗練，関係条件付き生成な�
 
 \subsubsection{拡散モデルによるレイアウト生成}
 一方，系列モデルである Transformer とは異なる生成パラダイムとして，
-近年では拡散モデル（Diffusion Models; DMs）を用いたアプローチも台頭している．
-拡散モデル（Diffusion Models; DMs）は，
+近年では拡散モデル~\cite{ho2020ddpm}を用いたアプローチも台頭している．
+拡散モデルは，
 データ分布からの生成を
 「ノイズ付加による前向き過程」と
 「ノイズ除去による逆過程」
@@ -446,9 +447,8 @@ LayoutFormer++ はレイアウト補完，洗練，関係条件付き生成な�
 複雑な要素間依存を段階的に回復するという性質が
 有効に働くことが示されている．
 
-\paragraph{連続拡散（DDPM）の基本定式化}
-まず連続値を対象とする代表的枠組みとして，
-Denoising Diffusion Probabilistic Models（DDPM）を概観する．
+\paragraph{連続拡散モデルの基本定式化}
+まず連続値を対象とする代表的枠組みとして，連続拡散モデルを概観する．
 データ $x_0 \sim q(x_0)$ に対し，
 前向き過程 $q(x_{1:T}\mid x_0)$ は
 段階的にガウスノイズを付与するマルコフ連鎖として定義される：
@@ -509,14 +509,14 @@ $T$ ステップの反復により $x_T\!\to\!x_0$ を復元することで生�
 $(x_i,y_i,w_i,h_i)$ のように，
 しばしば離散値（トークン）として表現されるのは前述の通り．
 そのため，
-連続値ガウス拡散（DDPM）を直接適用するよりも，
+連続拡散を直接適用するよりも，
 語彙集合 $\mathcal{V}$ 上のカテゴリ分布遷移として
 ノイズ付加を定義する
-\textbf{離散拡散（discrete diffusion）} を用いる設計が自然となる．
+\textbf{離散拡散} を用いる設計が自然となる．
 
 離散拡散では，各時刻 $t$ の状態 $z_t$ を
 $K = |\mathcal{V}|$ 通りのカテゴリ変数とし，
-前向き過程（forward process）を
+前向き過程を
 マルコフ連鎖として
 \begin{equation}
    q(z_{1:T}\mid z_0)
@@ -524,7 +524,7 @@ $K = |\mathcal{V}|$ 通りのカテゴリ変数とし，
    \prod_{t=1}^{T} q(z_t\mid z_{t-1})
 \end{equation}
 で定義する．
-D3PM（Discrete Denoising Diffusion Probabilistic Models）等の枠組みでは，
+D3PM~\cite{hoogeboom2021d3pm}等の枠組みでは，
 各ステップの遷移は
 遷移行列 $Q_t\in\mathbb{R}^{K\times K}$ を用いて
 \begin{equation}
@@ -553,7 +553,7 @@ $\bar{Q}_t:=\prod_{s=1}^{t}Q_s$ を用いて
 で近似され，
 $z_T\to z_0$ を段階的に復元することで生成を行う．
 さらに，
-変分下限（VLB）に基づく学習では，
+変分下限に基づく学習では，
 各時刻での posterior
 $q(z_{t-1}\mid z_t, z_0)$ が重要となる．
 マルコフ性とベイズ則から，
@@ -578,7 +578,7 @@ $q(z_{t-1}\mid z_t, z_0)$ が重要となる．
 
 
 \paragraph{LayoutDM：離散状態空間拡散による統一的レイアウト生成}
-LayoutDM~\cite{inoue2023layoutdm} は，
+LayoutDM~\cite{inoue_layoutdm_2023} は，
 レイアウトを離散表現として扱い，
 \textbf{離散状態空間拡散} に基づく単一モデルで
 多様なレイアウト生成タスクを統一的に扱う枠組みを提案した．
@@ -630,7 +630,7 @@ $\tilde{p}_\theta(\tilde{z}_0\mid z_t)$
 これは「$z_0$ を直接当てる」予測器を用いつつ，
 拡散過程に整合した $z_{t-1}$ の分布へ落とし込む
 D3PM の代表的パラメータ化であり，
-VLB に基づく学習（KL 項の最小化）と相性が良い．
+変分下限に基づく学習（KL 項の最小化）と相性が良い．
 
 \paragraph{(iii) 条件付き生成（制約注入）の数式化}
 LayoutDM は，条件付き生成を
@@ -666,8 +666,8 @@ logit adjustment は，
 
 
 \paragraph{LayoutDiffusion:}
-zhangら~\cite{zhang_layoutdiffusion_2023}によるLayoutDiffusion~\cite{} は，
-レイアウトを異種混在（heterogeneous）な離散トークン列として表現し，
+zhangら~\cite{zhang_layoutdiffusion_2023}によるLayoutDiffusionは，
+レイアウトを異種混在な離散トークン列として表現し，
 離散拡散過程で生成する点では LayoutDM と同系統である．
 一方で，
 カテゴリ（nominal）と座標（ordinal）が混在する場合，
@@ -755,19 +755,19 @@ $T$ ステップの反復で $z_T\!\to\!z_0$ を復元する．
 推論時のトークン固定や候補抑制により
 条件付き生成へ拡張可能であることが示されている．
 これらの設計により，
-PubLayNet や RICO 等で既存法を上回る性能が報告され，
+PubLayNet~\cite{zhong_publaynet_2019} や RICO~\cite{deka_rico_2017} 等で既存法を上回る性能が報告され，
 前向き過程の設計が離散拡散レイアウト生成の鍵であることを示した．
 
 
-\subsection{大規模言語モデルを用いたレイアウト生成}
+\subsection{LLMを用いたレイアウト生成}
 \label{sec:llm_layout_generation}
 前節までで述べた深層生成モデルは、レイアウトを座標やサイズの数値列として扱い、その確率分布を学習するアプローチが主流であった．これに対し
 近年，
-自然言語処理分野における大規模言語モデル（Large Language Models; LLMs）の発展に伴い，
+自然言語処理分野におけるLLMの発展に伴い，
 レイアウト生成においても
 レイアウトを言語的・記号的な表現へと変換し，
 LLM の持つ知識や推論能力を活用する試みが活発化している
-\cite{layoutprompter,layoutgpt,layoutnuwa,posterlama,tanaka_scipostlayout_2024}．
+\cite{lin_layoutprompter_2023,feng_layoutgpt_2023,tang2023layoutnuwa,seol_posterllama_2024,tanaka_scipostlayout_2024}．
 
 \paragraph{数値生成から言語生成への転換}
 GAN，VAE，Transformer，拡散モデルといった従来手法では，
@@ -797,7 +797,7 @@ LLM は自然言語を通じて，
 として再定式化する研究が提案されている．
 
 \paragraph{LayoutPrompter}
-LayoutPrompter~\cite{layoutprompter} は，
+LayoutPrompter~\cite{lin_layoutprompter_2023} は，
 LLM をレイアウト生成に利用する代表的研究である．
 この手法では，
 要素種別や要素間関係といった制約を
@@ -816,7 +816,7 @@ LLM によってレイアウト仕様を生成させる．
 人間にとって直感的な言語表現で記述できる点が特徴である．
 
 \paragraph{LayoutGPT}
-LayoutGPT~\cite{layoutgpt} は，
+LayoutGPT~\cite{feng_layoutgpt_2023} は，
 レイアウト生成を
 \textbf{完全に言語生成問題として扱う}点で一歩踏み込んだ手法である．
 この研究では，
@@ -848,7 +848,7 @@ LLM が持つコード生成能力を活用して
 その生成は言語トークン列の一部として扱われる．
 
 \paragraph{LayoutNUWA：マルチモーダル条件付き生成}
-LayoutNUWA~\cite{layoutnuwa} は，
+LayoutNUWA~\cite{tang2023layoutnuwa} は，
 LLM ベースの生成をさらに拡張し，
 テキスト条件だけでなく，
 画像やキャンバス情報を含む
@@ -862,7 +862,7 @@ LLM ベースの生成をさらに拡張し，
 LLM を融合する試みとして位置づけられる．
 
 \paragraph{PosterLlama：ポスター生成における LLM の活用}
-PosterLlama~\cite{posterlama} は，
+PosterLlama~\cite{seol_posterllama_2024} は，
 ポスターという実応用性の高い媒体を対象に，
 LLM によるレイアウト生成を検討した研究である．
 この手法では，
@@ -899,16 +899,14 @@ LLM 系手法が
 
 レイアウト生成が対象としてきたのは，
 雑誌表紙，Web/UI，プレゼンテーションスライド，バナー広告，ドキュメント組版など，
-多様なデザイン媒体における視覚要素の配置である．
-\cite{scipostlayout2024,huang_survey_2023,shi_intelligent_2023}.
+多様なデザイン媒体における視覚要素の配置である
+\cite{deka_rico_2017,zhong_publaynet_2019,tanaka_scipostlayout_2024,huang_survey_2023,shi_intelligent_2023}.
 近年は，これらの応用領域の拡大に伴い，
 ユーザの意図を反映した編集可能性（controllability）を備えることが重要視され，
-\textbf{無条件生成（unconditional generation）}と
-\textbf{条件付き生成（conditional generation）}を区別して整理する枠組みが広く用いられる
-\cite{scipostlayout2024}.
+\textbf{無条件生成}と
+\textbf{条件付き生成}を区別して整理する枠組みが広く用いられる.
 無条件生成はデータ分布からもっともらしいレイアウトを直接サンプリングする設定であり，
-条件付き生成はユーザが指定する制約（条件）を満たす範囲でレイアウトを生成する設定である
-\cite{scipostlayout2024}.
+条件付き生成はユーザが指定する制約（条件）を満たす範囲でレイアウトを生成する設定である.
 
 \vspace{0.5em}
 \paragraph{応用領域（対象媒体）の多様化}
@@ -917,21 +915,19 @@ LLM 系手法が
 例えば，
 (1) \textbf{UI レイアウト}（モバイルアプリ等）は，
 タップ可能性や可読性，情報密度といった機能要件が強く，
-RICO を代表とするデータセットとともに研究が進展した
-\cite{deka_rico_2017,rico,gupta_layouttransformer_2021,jiang_layoutformer_2023,jiang_layoutformerpp_2023}.
+RICO~\cite{deka_rico_2017}を代表とするデータセットとともに研究が進展した.
 (2) \textbf{ドキュメント組版・文書レイアウト}では，
 段組みや図表配置などの規則性が強く，
-PubLayNet などのデータセットを中心に，解析と生成の両面から研究が蓄積された
-\cite{publaynet,docbank,tablebank,layoutlmv3,dit}.
+PubLayNet~\cite{zhong_publaynet_2019}などのデータセットを中心に，解析と生成の両面から研究が蓄積された~\cite{li2020docbank,li2019tablebank,huang2022layoutlmv3,li2022dit}.
 (3) \textbf{雑誌表紙・広告・ポスター}は，
 視線誘導や視覚的バランスに加えて，
 背景画像や商品画像などキャンバスに含まれるコンテンツとの調和が重要であり，
 内容を考慮した（content-aware）生成が主要な論点となる
-\cite{contentgan,cgl_gan,ds_gan,radm,posterlama}.
+\cite{yang2019contentgan,li2020cglgan,xu2020dsgan,seol_posterllama_2024}.
 (4) \textbf{プレゼンテーションスライド}や\textbf{科学ポスター}は，
 文章・図表・セクションといった異種要素が混在し，
 強いマルチモーダル性を持つため，媒体特有のデータ整備と評価が重要となる
-\cite{scipostlayout2024}.
+~\cite{tanaka_scipostlayout_2024}.
 
 これらの媒体は共通して「要素の集合／列」を扱う一方，
 要素種別の語彙や制約の性質（規則性の強さ，背景画像の有無，ユーザ編集の頻度）が異なるため，
@@ -940,7 +936,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
 \vspace{0.5em}
 \paragraph{条件付き生成における制約の類型}
 既存研究では，条件付きレイアウト生成で扱う制約は大きく以下に分類できる
-\cite{scipostlayout2024,shi_understanding_2023}.
+~\cite{shi_understanding_2023}.
 
 \begin{enumerate}
    \item \textbf{要素種別（Gen-T）条件}\\
@@ -955,8 +951,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
             p_\theta(L \mid S_{\text{type}})
          \end{equation}
          を学習する．
-         初期の GAN/VAE 系や Transformer 系の多くは，この条件を基本形として採用する
-         \cite{li_layoutgan_2019,jyothi2021layoutvaestochasticscenelayout,gupta_layouttransformer_2021,kong2021blt,jiang_layoutformer_2023}.
+         初期の GAN/VAE 系や Transformer 系の多くは，この条件を基本形として採用する~\cite{lee2020neuraldesign,jiang2023layoutformer}.
 
    \item \textbf{要素種別 + サイズ（Gen-TS）条件}\\
          要素種別に加えて，幅・高さなどのサイズ情報 $(w_i,h_i)$ を条件として与える設定である．
@@ -966,8 +961,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
             p_\theta(L \mid S_{\text{size}})
          \end{equation}
          のように定式化され，配置の自由度を減らすことで，
-         実務上のワークフロー（素材サイズが先に決まる等）に近づける
-         \cite{jiang_layoutformerpp_2023,kong2021blt}.
+         実務上のワークフロー（素材サイズが先に決まる等）に近づける~\cite{kong_blt_2022}.
 
    \item \textbf{要素間関係（Gen-R）条件}\\
          「A は B の上」「A は B より左」「A は B と整列」といった関係制約を条件として与える設定である．
@@ -978,7 +972,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
          を用いて，関係集合を満たすレイアウトを生成する
          \cite{kikuchi_constrained_2021,jiang_layoutformerpp_2023}.
          これは，人間のデザイン意図を比較的解釈可能な形で入力できる利点を持つ一方，
-         関係集合の設計が人手に依存しやすい．
+         関係集合の設計が人手に依存しやすい~\cite{li2021attribute,kikuchi_constrained_2021}．
 
    \item \textbf{補完（layout completion）}\\
          部分レイアウト $L_{\text{partial}}$ を条件として，
@@ -986,8 +980,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
          \begin{equation}
             p_\theta(L_{\text{missing}} \mid L_{\text{partial}})
          \end{equation}
-         を学習し，インタラクティブ編集や途中状態からの生成を支援する
-         \cite{gupta_layouttransformer_2021,jiang_layoutformerpp_2023}.
+         を学習し，インタラクティブ編集や途中状態からの生成を支援する~\cite{li_layoutgan_2019}.
 
    \item \textbf{洗練（layout refinement）}\\
          既存レイアウト $L$ を入力として，重なりの解消や整列の改善など，
@@ -995,8 +988,7 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
          \begin{equation}
             p_\theta(L' \mid L)
          \end{equation}
-         の学習として定式化され，デザイン支援ツールとしての実用性と親和性が高い
-         \cite{rahman2021ruite,jiang_layoutformerpp_2023}.
+         の学習として定式化され，デザイン支援ツールとしての実用性と親和性が高い~\cite{rahman2021ruite}.
 \end{enumerate}
 
 \vspace{0.5em}
@@ -1005,13 +997,12 @@ PubLayNet などのデータセットを中心に，解析と生成の両面か�
 ポスターや広告などでは，背景画像やキャンバス内容との調和（可読性・視覚的バランス）が性能を大きく左右する．
 この観点は content-aware layout generation として位置づけられ，
 画像特徴とテキスト内容を併用して配置を決定する試みが継続的に提案されてきた
-\cite{contentgan,cgl_gan,ds_gan,radm,posterlama}.
-特に PosterLlama は，
+\cite{yang2019contentgan,seol_posterllama_2024,horita_retrieval-augmented_2023}.
+特に PosterLlama~\cite{seol_posterllama_2024} は，
 レイアウト要素を数値列として扱うだけでは「意味的関係」を捉えにくいという問題意識から，
 HTML 形式への変換により言語モデルの知識を活用し，
 さらに視覚内容も入力に含めることで，
-視覚的コンテキストを考慮したポスター生成を目指している
-\cite{posterlama,layoutprompter,layoutgpt,layoutnuwa}.
+視覚的コンテキストを考慮したポスター生成を目指している.
 
 \vspace{0.5em}
 \paragraph{本研究との接続：制約の設計から制約の生成へ}
@@ -1043,64 +1034,23 @@ HTML 形式への変換により言語モデルの知識を活用し，
 要素間関係や部分補完などを同一枠組みで扱うことにより，
 \textbf{編集可能性（controllability）}と\textbf{生成品質}を両立しつつ，
 実デザイン作業に近い条件付き生成を実現している
-\cite{jiang_layoutformerpp_2023,inoue2023layoutdm,zhang_layoutdiffusion_2023}．
-
-しかし，
+\cite{jiang_layoutformer_2023,inoue_layoutdm_2023,lin_layoutprompter_2023}．しかし，
 既存研究で中心的に扱われてきた「条件（制約）」は，
 要素種別，サイズ，幾何関係，部分レイアウトなど，
 主として \textbf{幾何構造に関する明示的・構造化された条件}である．
 これらの条件は，
 ユーザが外部から与える（あるいはデータから直接得る）ことを前提に設計されており，
 「なぜその配置になるべきか」という意味的根拠はモデルの外側に置かれがちであった．
-例えば LayoutFormer++ は，
-多様な制約をトークン列へ統一することで汎用な条件付き生成を可能にしたが，
-制約自体は依然として人手で与えられることを前提としている
-\cite{jiang_layoutformerpp_2023}．
-また LayoutDM や LayoutDiffusion は，
-反復的復元により高い生成品質と条件注入の柔軟性を示した一方で，
-条件はやはり構造化制約（固定トークン，候補剪定など）として与えられる
-\cite{inoue2023layoutdm,zhang_layoutdiffusion_2023}．
-
 近年は LLM を用い，
-自然言語からレイアウト記述（HTML/JSON 等）を生成する試みも活発化している
-\cite{layoutprompter,layoutgpt,layoutnuwa,posterlama}．
+自然言語からレイアウト記述（HTML/JSON 等）を生成する試みも活発化しており，
 これらは「言語で意図を与える」点で条件設計を大きく前進させたが，
 多くはポスターや UI のような，
 ユーザが意図・要件を明示的に記述できる状況を主に想定している．
+
 一方で，本研究では
-\textbf{物語（脚本）に内在する出来事・感情・関係の推移}が，
-\textbf{コマ割りや視点，情報提示順序}といったレイアウト決定に直接影響するような媒体を扱い，
-「物語文脈 $\rightarrow$ 制約（演出上の要請） $\rightarrow$ レイアウト」
-という接続そのものを主要な問題として取り上げている．
-すなわち，
-レイアウト生成を「与えられた制約を満たす配置」から，
-\textbf{物語から制約を獲得し，その制約に従って配置を生成する}段階への拡張である．
-
-以上を踏まえると，
-既存の条件付きレイアウト生成は
-\begin{quote}
-   \textbf{制約をいかに表現し，いかに満たして生成するか}
-\end{quote}
-を中心に発展してきたのに対し，
-本研究は
-\begin{quote}
-   \textbf{物語文脈から制約（演出・構造要件）をいかに抽出・生成し，生成モデルへ接続するか}
-\end{quote}
-に焦点を置く点で新規性を有する．
-
-具体的に本研究は，
-脚本に含まれる出来事列・登場人物関係・会話の流れ・強調すべき情報などを手掛かりとして，
-（i）コマの役割（導入・転換・強調等），
-（ii）視点や情報提示の順序，
-（iii）重要要素の優先度や相対配置といった
-レイアウトに影響する高次の条件を自動的に導出し，
-これをレイアウト生成へ活用する枠組みを構成する．
-この意味で本研究は，
-LayoutFormer++ 等が確立した「制約を系列として扱う」設計原理を継承しつつ
-\cite{jiang_layoutformerpp_2023}，
-制約そのものを脚本から生成することで，
-従来の幾何中心の条件付き生成を
-\textbf{物語条件付き（narrative-conditioned）レイアウト生成}へ拡張する試みとして位置づけられる．
+\textbf{物語（脚本）に内在する出来事・感情・関係などの推移}が，
+\textbf{コマ割りや視点，情報提示順序}といったレイアウトの決定にいかに影響を与えるかという問題を取り上げており，
+物語文脈に内在する暗黙知的なレイアウト制約の獲得に焦点を置いている．この点において本研究は既存のレイアウト生成の研究とは異なる．
 
 \section{ビジュアルストーリーテリング}
 \label{sec:visual_storytelling}
@@ -1112,14 +1062,13 @@ LayoutFormer++ 等が確立した「制約を系列として扱う」設計原�
 このような研究は，
 画像系列に基づく物語理解・生成という観点から，
 一般に
-\textbf{ビジュアルストーリーテリング（Visual Storytelling）}
-としても整理されている~\cite{huang2016visual}．
+\textbf{ビジュアルストーリーテリング}
+としても整理されている~\cite{noauthor_papers_nodate}．
 
 本節では，
 その基盤技術である画像キャプション生成研究から出発し，
 画像系列を対象とした物語生成への拡張，
-さらに近年の大規模視覚言語モデル
-（Large Vision-Language Models; LVLM）
+さらに近年のLVLM
 による技術的発展までを，
 モデル構造および学習手法の観点から体系的に概観する．
 
@@ -1159,8 +1108,7 @@ $\sigma(\cdot)$ は ReLU などの非線形活性化関数である．
 $\mathbf{v} = \mathrm{CNN}(\mathbf{I})$
 として得られる．
 
-言語生成を担うデコーダには，
-LSTM や GRU に代表される RNN が用いられ，
+言語生成を担うデコーダには，RNN が用いられ，
 時刻 $t$ における隠れ状態 $\mathbf{h}_t$ は，
 直前の状態 $\mathbf{h}_{t-1}$，
 入力単語 $x_t$，
@@ -1193,7 +1141,7 @@ RNN に基づく逐次生成は，
 複数の画像 $\{I_1,\ldots,I_N\}$ を入力として
 一貫した物語文を生成する課題が，
 ビジュアルストーリーテリングとして提案された
-\cite{huang2016visual}．
+\cite{huang-etal-2016-visual}．
 この課題では，
 各画像の内容記述に加え，
 画像間の時間的推移や因果関係を補完し，
@@ -1205,7 +1153,7 @@ $\mathbf{v}_n = \mathrm{CNN}(I_n)$
 を入力とし，
 階層的に構成された RNN により
 ローカルな文脈と物語全体の文脈を分離して扱う手法が提案された
-\cite{yu2017hierarchically,nahian2019hierarchical}．
+\cite{yu_hierarchically-attentive_2017,nahian_hierarchical_2019}．
 物語レベルの状態更新は，
 概念的には次式で表される：
 \begin{equation}
@@ -1225,7 +1173,7 @@ RNN による逐次的な状態更新では，
 自己注意機構を用いる Transformer アーキテクチャが導入され，
 長距離依存関係のモデリング能力が大きく向上した．
 
-\subsection{大規模視覚言語モデルへの発展}
+\subsection{LVLMへの発展}
 \label{sec:lvlm_evolution}
 
 画像と言語を同時に扱う視覚言語モデルは，
@@ -1237,7 +1185,7 @@ Transformer に基づく大規模事前学習へと発展する中で，
 (2) 視覚と言語を同一空間へ整合させる学習，
 (3) 生成モデルとして視覚条件付き言語生成を可能にする統合，
 という段階を経ることで，
-現在の大規模視覚言語モデル（Large Vision-Language Models; LVLM）へと至っている．
+現在のLVLMへと至っている．
 以下では，
 この発展を主要なモデル構造ごとに整理する．
 
@@ -1251,7 +1199,7 @@ Transformer に基づく大規模事前学習へと発展する中で，
 局所演算を積み重ねる CNN のみでは限界があり，
 視覚側にも「系列としての表現」と「長距離依存を捉える機構」を導入することが重要になった．
 
-dosovitskiyら~\cite{dosovitskiy2020image}は Vision Transformer（ViT）により，
+dosovitskiyら~\cite{dosovitskiy2021vit}は Vision Transformer（ViT）により，
 画像を固定サイズのパッチに分割し，
 それらを系列として扱うことで，
 自己注意機構により画像全体の関係性を直接モデル化する手法を提案した．
@@ -1288,11 +1236,11 @@ $\mathbf{e}_i$ は位置埋め込みである．
 この課題に対し，
 大量の画像・テキスト対を用いて
 \emph{対応するペアは近く，対応しないペアは遠く}なるように学習する
-対照学習（contrastive learning）が有効であることが示された．
+対照学習が有効であることが示された．
 
 視覚と言語を同一の意味空間に埋め込む手法として，
-CLIP~\cite{radford2021learning} や
-ALIGN~\cite{jia2021scaling} が提案された．
+CLIP~\cite{radford_learning_2021-2} や
+ALIGN~\cite{jia2021align} が提案された．
 これらのモデルでは，
 画像エンコーダ $f_{\mathrm{img}}$ と
 テキストエンコーダ $f_{\mathrm{text}}$ を独立に学習し，
@@ -1326,7 +1274,7 @@ ALIGN~\cite{jia2021scaling} が提案された．
 ゼロショット分類や検索において強力であり，
 「視覚と言語の意味対応」を大規模データから獲得できることを示した．
 一方で，
-CLIP/ALIGN は本質的に「整合（alignment）」の学習であり，
+CLIP/ALIGN は本質的に alignment の学習であり，
 物語生成のような \emph{長文生成・推論を伴う生成的タスク}に対しては，
 別途「生成モデルとしての統合」が必要になるという課題が残った．
 
@@ -1342,7 +1290,7 @@ CLIP/ALIGN は本質的に「整合（alignment）」の学習であり，
 視覚特徴を言語生成に条件付けるモデルが提案された．
 BLIP~\cite{li2022blip} や
 Flamingo~\cite{alayrac2022flamingo} は，
-視覚エンコーダと大規模言語モデルを結合し，
+視覚エンコーダとLLMを結合し，
 クロスモーダル注意機構によって視覚情報を言語生成に注入する．
 
 言語デコーダにおけるクロスアテンションは，
@@ -1380,7 +1328,7 @@ Flamingo~\cite{alayrac2022flamingo} は，
 視覚特徴を言語トークンと同等に扱い，
 単一の Transformer により処理する
 統合型 LVLM が提案されている．
-LLaVA~\cite{liu2023llava} などは，
+LLaVA~\cite{liu2024llava} などは，
 視覚エンコーダで得た特徴 $\mathbf{V}$ を，
 線形射影により言語埋め込み空間へ写像し，
 \begin{equation}
@@ -1398,14 +1346,12 @@ LLaVA~\cite{liu2023llava} などは，
 この枠組みは，
 視覚と言語を跨ぐ推論や長い文脈統合を促進し，
 物語生成や複雑な指示理解といった高次タスクにおける性能向上につながっている．
-（なお，GPT-4V などの商用モデルも同様に，
-視覚情報をトークン化して統合する方向性に基づくと理解できる~\cite{wu2024gpt4o}．）
 
 
 \subsection{Visual Prompting}
 \label{sec:visual_prompting}
 
-大規模視覚言語モデル（Large Vision-Language Models; LVLM）は，
+LVLMは，
 自然画像を対象とした事前学習により，
 画像理解・推論・言語生成において高い性能を示している．
 一方で，
@@ -1427,7 +1373,7 @@ Prompting の概念的背景から，
 \subsubsection{Prompting と In-Context Learning}
 
 Prompting は，
-大規模言語モデル（LLM）に対して，
+LLMに対して，
 明示的なパラメータ更新を行うことなく，
 入力文（プロンプト）の設計によって
 タスク遂行を誘導する手法である．
@@ -1525,7 +1471,7 @@ LVLM は，
 そのため，
 複雑な構造や非自然画像的な表現を含む入力では，
 推論が不安定になることが報告されている
-\cite{vivoli2025comix}．
+\cite{vivoli_comix_2024-1}．
 
 Visual Prompting は，
 この問題に対し，
@@ -1544,59 +1490,31 @@ LVLM の能力を拡張するというよりも，
 ビジュアルストーリーテリング研究は，
 画像系列を入力として，
 その内容に内在する出来事の推移や文脈関係を捉え，
-自然言語による物語文を生成することを主目的として発展してきた．
-特に近年では，
-Transformer や LVLM の導入により，
+自然言語による物語文を生成することを目的として発展してきた．
+近年では，大規模視覚言語モデル（LVLM）の導入により，
 長距離依存関係のモデリングや高次の意味推論が可能となり，
 生成される物語文の一貫性や表現力は大きく向上している．
 
-一方で，
-従来のビジュアルストーリーテリングにおける出力は，
-主として「人が読むこと」を想定した散文的な物語文であり，
-その内容を
-後段の生成・設計工程に直接利用することは必ずしも想定されてこなかった．
-すなわち，
-物語としての自然さや流暢さは重視されてきた一方で，
-出来事や関係，役割分担といった情報を
-明示的に整理された
-\textbf{構造化表現}として出力する取り組みは十分に取り組まれてきたとは言えない．
-しかし，漫画のネームを構築することを考慮すると，
-物語理解の結果を，
-自由形式の文章に加えて，編集支援，演出設計，配置設計などに有用な
-要素，順序，関係が明示された中間表現として整理されることが望ましい．
+このような性能向上を背景として，
+ビジュアルストーリーテリングの出力は，
+単に物語として自然であることに加え，
+出来事，登場人物，役割分担，関係性といった情報を
+より明示的に整理した形で扱うことが可能になってきた．
+すなわち，物語文を
+出来事や演出の単位に分解可能な
+\textbf{構造化表現}として捉える視点が，
+現実的な選択肢として成立しつつある．
 
 本研究は，
-このギャップに着目し，
+このような技術的進展を踏まえ，
 ビジュアルストーリーテリングを
-「画像系列から物語文を直接生成する問題」としてではなく，
-\textbf{画像系列から，後段で利用可能な物語構造を抽出する問題}
-として再整理する立場を取る．
-すなわち，
-最終的な自然言語文の生成そのものよりも，
-出来事，登場要素，関係性，進行順序といった
-物語を構成する情報を
-明示的に整理した構造化出力を獲得することを目的とする．
-
-さらに，
-このような構造化出力を安定して得るためには，
-モデルが入力画像のどの情報に着目すべきかを適切に誘導することが重要となる．
-本研究では，
-Visual Prompting の枠組みを用いて，
-入力の与え方を工夫することで，
-LVLM の注意を
-物語構造の抽出に有効な視覚要素へと誘導する．
-これは，
-モデルのパラメータを変更することなく，
-入力設計によって推論挙動を制御するという点で，
-既存の Prompting／Visual Prompting 研究の考え方と整合的である．
-
-以上より，
-本研究は，
-ビジュアルストーリーテリング研究の流れを踏まえつつ，
-その出力を
-「読むための物語」から
-「生成・設計に接続するための構造化表現」へと拡張する点に
-新たな位置づけを持つ．
+「物語文の生成」にとどめるのではなく，
+後段の制作工程と接続可能な
+構造化中間表現の獲得へと拡張する立場を取る．
+特に漫画という媒体において，
+物語理解とレイアウト・演出設計が密接に結び付いている点に着目し，
+LVLM を用いて抽出した物語情報および演出情報を，
+脚本やネーム生成へ接続する枠組みを構築する．
 
 
 \section{漫画を対象とした研究}
@@ -1627,14 +1545,14 @@ LVLM の注意を
 汎用的な読解能力の獲得と評価の前提となる．
 
 \paragraph{eBDtheque}
-Guérinら~\cite{eBDtheque: A Representative Database of Comics}による eBDtheque は，
+Guérinら~\cite{guerin2013ebdtheque}による eBDtheque は，
 合計100ページの漫画画像からなるデータセットである．
 例えばバージョン3では，100ページに対し，
 850のコマ領域，1081のセリフ吹き出し領域，4,693行のセリフ文字列，
 1,620のキャラクター描画といった粒度で整備されている．
 
 \paragraph{COMICS}
-大規模データとしては，Iyyerら~\cite{iyyer2017comics}の \textit{COMICS} が代表的であり，
+大規模データとしては，Iyyerら~\cite{iyyer_amazing_2017}の \textit{COMICS} が代表的であり，
 これは120万以上のコマに対して自動のテキスト認識を付与したデータセットである．
 同データは，複数パネル文脈に基づくテキストや視覚の穴埋めタスクを通じ，
 「コマ間の欠落を推論して物語を接続する」能力を評価するベンチマークを築いている．
@@ -1653,26 +1571,25 @@ Manga109Dataset は，1990年代から2000年代にかけて出版された日�
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=0.9\linewidth]{pict/02/ARMS003.jpg}
-   \caption{Manga109Dataset に含まれる漫画画像の例（『ARMS』より）．© 加藤 雅基／東京三世社}
+   \caption{Manga109Dataset~\cite{matsui2017sketch} に含まれる漫画画像の例（『ARMS』© 加藤 雅基／東京三世社）}
    \label{fig:manga109example}
 \end{figure}
 
 \paragraph{Manga109 派生データ：物語文・属性注釈への拡張}
 Manga109 を基盤として，擬音語や漫符など漫画特有表現に関する研究も進められており，
-例えば，対話理解の基盤整備として，
-セリフテキストと話者キャラクター（バウンディングボックス）を対応付けた大規模注釈データセット
-Manga109Dialog が提案されている．
-Manga109Dialog は話者--テキスト対応を 132{,}692 ペア規模で整備し，
-同一コマ内に話者が存在しない難例も含めて漫画における話者推定の評価基盤（ベンチマーク）を提供する~\cite{li2024manga109dialog}．
-また近年は，ページ画像に対して物語文を付与する方向の整備も進んでおり，
-Manga109Story は Manga109 の一部に対してストーリー記述データを構築する試みとして報告されている~\cite{chen2024manga109story}．
+COO（Comic Onomatopoeia Dataset）~\cite{baek2022coo}は，漫画に描画された擬音語領域のデータセットを提供し，その検出が漫画固有の課題として困難なものであることを指摘している．
+
+Manga109Dialog~\cite{li_manga109dialog_2024}は，Manga109におけるセリフと話者領域の関係性を紐づけたデータセットであり，従来の「セリフに最も近い人物が話者」という規則ベースが複雑な例で破綻し得ることを指摘している．コマの読解順序といった漫画固有の構造を考慮しなければ，LVLMでも安定した推定が難しいことが示唆された．
+
+また近年では，ページ画像に対して物語文を付与する方向の整備も進んでおり，
+Manga109Story は Manga109 の一部に対してストーリー記述データを構築する試みとして報告されている~\cite{chen_manga_2024}．
 ただし，Manga109Story の物語文は散文的記述であり，
 本研究が意図する実制作上の「脚本形式の記述」とは目的・粒度が異なる点に留意が必要である．
 
 \subsection{漫画読解の多段構造と評価ベンチマーク}
 \label{sec:manga_lmms}
 
-近年の大規模視覚言語モデル（Large Vision-Language Models; LVLM）の発展により，
+近年のLVLMの発展により，
 自然画像を対象とする VQA やキャプション生成，画像推論は著しい性能向上を示している．
 一方で漫画読解は，
 \textbf{二次元レイアウト構造}と\textbf{文字情報}と\textbf{物語推論}が強く結合しており，
@@ -1684,7 +1601,7 @@ Manga109Story は Manga109 の一部に対してストーリー記述データ�
 \paragraph{多段タスクとしての漫画読解}
 漫画読解に必要な処理は，典型的には以下のサブタスク群として整理できる．
 これらは独立ではなく，
-上流の誤りが下流に伝播する（error propagation）ため，
+上流の誤りが下流に伝播するため，
 全体としての頑健な読解を難しくする．
 
 \begin{itemize}
@@ -1707,57 +1624,50 @@ Manga109Story は Manga109 の一部に対してストーリー記述データ�
 LVLM の進歩にもかかわらず依然として困難なタスクとして残っている．
 
 \vspace{0.5em}
-\paragraph{漫画理解におけるベンチマーク整備}
+\paragraph{漫画理解におけるベンチマークの整備}
 このような漫画の読解困難性を示す定量的な死票として
 近年では漫画理解に必要な能力を細分化し評価するベンチマークが整備されつつある．
-MangaUB~\cite{ikuta2024mangaub} は，
+MangaUB~\cite{ikuta_mangaub_2025} は，
 単一パネルの内容認識に閉じない評価を目指し，
-複数パネルをまたいだ理解を含む多面的な評価枠組みを提示している．これにより，最新の LVLMのモデルでも「認識としては強いが，複数パネルにまたがる感情・情報の理解は難しい」といった弱点を可視化している．
+複数パネルをまたいだ理解を含む多面的な評価枠組みを提示している．これにより，最新の LVLMのモデルでも，認識としては強いが，複数パネルにまたがる感情・情報の理解は難しいといった弱点を可視化している．
 
 より包括的な評価の方向として，
-CoMix \cite{vivoli2024comix} は，
+CoMix~\cite{vivoli_comix_2024-1} は，
 検出（パネル・人物・テキスト等），対応付け（話者同定・キャラクター再同定等），読解順などの計算的タスクに加え，
 「誰が何を言ったか」を順序付きで書き起こすような統合タスクまで含む総合ベンチマークを提示している．
 ベースライン評価ではLVLMと人手との差が大きいことが報告されており，
-漫画読解が依然として未解決のギャップとして残っていることを示している．
-
-Manga109Dialog \cite{li2024manga109dialog} は，
-従来の「セリフに最も近い人物が話者」という規則ベースが複雑な例で破綻しうることを指摘し，
-人物領域とテキスト領域の関係を明示的に扱う大規模データセットとベンチマークを整備している．
-ここでも，読解順序やコマ（フレーム）といった漫画固有の構造を考慮しないと，
-安定した推定が難しいことが示唆される．
+漫画の読解が依然として困難な課題であることを示した．
 
 \vspace{0.5em}
-\paragraph{推論時設計（プロンプト／パイプライン）による押し上げ}
+\paragraph{プロンプト設計による漫画読解の工夫}
 一方で，このギャップを直接埋める方向として，
 既存 LVLM を追加学習で作り替えるのではなく，
 \textbf{推論時の工夫}により漫画理解を押し上げる試みも現れている．
 ComiCap~\cite{vivoli2024comiccap} はその代表例であり，
-既存の Vision-Language Models（VLMs）を用いて
+既存のLVLMを用いて
 コミックパネルの dense captioning を生成するパイプラインを提案している．
 同研究は，
 単に自由文キャプションを生成するのではなく，
-\textbf{出力を「属性を保持した記述」へ誘導し，さらに grounding（記述と領域の対応付け）まで含めて構造化する}
-という設計を取ることで，
+出力を属性を保持した記述へと誘導し，さらに記述と領域の対応付けを行い
 漫画の内容理解を段階的に外在化する方針を示している~\cite{vivoli2024comiccap}．
 この観点は，
-多段タスク構造を「一発で解く」のではなく，
-\textbf{何を出力すべきかを明示し，途中表現を構造化して積み上げる}ことで
+漫画の読解における多段タスク構造において
+何を出力すべきかを段階的に明示し，途中表現を構造化して積み上げることで
 全体の頑健性を高める戦略として重要である．
 
 \vspace{0.5em}
 \paragraph{本研究との接続}
 以上より，
-漫画読解は多段タスクであり（MangaUB, CoMix），特に複数パネル統合や対応付けで困難が顕在化する．
-本研究はこの「難しいギャップ」を前提として，
+漫画の読解は多段タスクであり，特に複数パネルの意味的な整序を伴う統合やキャラクター認識，セリフなどの結びつきにおいて依然として困難なタスクであるといえる．
+本研究はこの課題を前提として，
 LVLM を基盤にしつつ，
 (1) キャラクター識別子（ID）の付与による同一性の明示，
 (2) 読解順序の明示的付与，
 (3) 段階的な問い・入力設計（Visual Prompting）による中間表現の構造化，
 を通じて，多段構造の誤り伝播を抑えながら，
-漫画画像から物語文および演出情報を\textbf{構造化して抽出}し，
+漫画画像から物語文および演出情報を抽出し構造化することで
 脚本に基づくネーム生成へ接続することに取り組んだ．
-
+本研究が対象としたのは，Manga109Datasetであり，これは，そのジャンルの多様性から汎用性の高いデータの構築およびモデルの学習が可能であることを考慮して選択したものである．
 
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
 \ifdefined\ismain\else

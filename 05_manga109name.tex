@@ -234,7 +234,7 @@ LVLMを用いて漫画画像から必要な情報を抽出することを基本�
 データの取得単位をページ単位ではなく見開き画像単位へと拡張し，
 より高次な文脈および演出情報を扱う点で設定が異なる．
 使用した LVLM は，
-Gemini 3 および GPT-5.2 であり，いずれも API を介して利用した．
+Gemini 3~\cite{woodward2025gemini3} および GPT-5.2~\cite{openai2025gpt52} であり，いずれも API を介して利用した．
 
 漫画画像の読解における困難さについては，
 Manga109ScriptDataset の構築過程において既に議論したとおりであり，
@@ -293,7 +293,7 @@ Manga109Dataset に含まれる
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=\textwidth]{pict/05/reading_order_tool.png}
-   \caption{読み順アノテーションツールの操作画面}
+   \caption{読み順アノテーションツールの操作画面(漫画:『ARMS』©加藤 雅基/東京三世社)}
    \label{fig:reading_order_tool}
 \end{figure}
 
@@ -310,8 +310,8 @@ Manga109Dataset に含まれる
 LVLM に与える重要な手がかりとして利用されるほか，
 データセット全体の構造的整合性を保証する基盤情報として機能する．
 
-\paragraph{既存手法（Magi）との読み順の差異}
-読み順推定手法として知られる Magi アルゴリズムについて，
+\paragraph{既存手法との読み順の差異}
+読み順推定手法として知られる Manga Whisperer~\cite{sachdeva_manga_2024-1}のアルゴリズムについて，
 本研究では，
 人手アノテーションとの順序一致率を比較評価した．
 その結果，
@@ -329,7 +329,7 @@ LVLM に与える重要な手がかりとして利用されるほか，
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=\textwidth]{pict/05/reading_order_diff1.png}
-   \caption{コマの読み順が一致しなかった見開き画像の例．本来は4，5と読み進めるべきコマの順序が，自動推定では逆転してしまった．}\label{fig:reading_order_diff1}
+   \caption{コマの読み順が一致しなかった見開き画像の例．本来は4，5と読み進めるべきコマの順序が，自動推定では逆転してしまった(漫画:『空っぽハイスクール』©	高口 里純/角川書店)．}\label{fig:reading_order_diff1}
 \end{figure}
 
 コマの読み順について，
@@ -348,8 +348,7 @@ Magi による自動推定が正しく行えなかった事例を分析した結
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=\textwidth]{pict/05/reading_order_diff2.png}
-   \caption{セリフの読み順が一致しなかった見開き画像の例．本来は6番のコマに帰属するセリフは，5番のコマに帰属する２つのセリフの間で読まれるべきであるが，自動推定では5番のコマの２つのセリフよりも後に推定されてしまった．}
-   \label{fig:reading_order_diff2}
+   \caption{セリフの読み順が一致しなかった見開き画像の例．本来は6番のコマに帰属するセリフは，5番のコマに帰属する２つのセリフの間で読まれるべきであるが，自動推定では5番のコマの２つのセリフよりも後に推定されてしまった(漫画:『ヒーリング・プラネット』©桜野 みねね/	エニックス)．}\label{fig:reading_order_diff2}
 \end{figure}
 
 一方，セリフの読み順についても，
@@ -392,7 +391,7 @@ LVLM による漫画理解および情報抽出に
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=\textwidth]{pict/05/id_visualprompting.jpg}
-   \caption{IDを付記したVisual Prompting の例．}
+   \caption{IDを付記したVisual Prompting の例(漫画:『愛さずにはいられない』©よし まさこ/集英社)．}
    \label{fig:visual_prompting_with_id}
 \end{figure}
 
@@ -531,7 +530,7 @@ LVLM は，
       }
    \end{tabular}
 
-   \caption{IDラベルによりキャラクターの識別等状況が正確に構造化された例．画像内のIDタグである \texttt{ci} (Character Instance) はキャラクターを，\texttt{s} (Speech) はセリフを一意に識別しており，これらが右側の構造化データとして正しく対応付けられている．}
+   \caption{IDラベルによりキャラクターの識別等状況が正確に構造化された例．画像内のIDタグである \texttt{ci} (Character Instance) はキャラクターを，\texttt{s} (Speech) はセリフを一意に識別しており，これらが右側の構造化データとして正しく対応付けられている(漫画:『愛さずにはいられない』©よし まさこ/集英社)．}
    \label{fig:panel_json_structure_with_id}
 \end{figure}
 
@@ -564,8 +563,8 @@ LVLM による視覚的理解の安定化と，また ID が付記できるス�
 \begin{figure}[htbp]
    \centering
    \includegraphics[width=0.5\textwidth]{pict/05/super_resolution.png}
-   \captionsetup{font=footnotesize}
-   \caption{超解像度処理によるIDラベルの視認性が向上した例．左が最小フォントサイズを12ptに設定した画像，中央が画像比率にあわせ最小フォントサイズを設定した画像，右が超解像度処理を施し12ptのフォントサイズを設定した画像である．左は画像全体にオクルージョンが生じ，中央はラベル自体が付記できていないが，右は適度なサイズでIDラベルを描画できている．}
+
+   \caption{超解像度処理によるIDラベルの視認性が向上した例．左が最小フォントサイズを12ptに設定した画像，中央が画像比率にあわせ最小フォントサイズを設定した画像，右が超解像度処理を施し12ptのフォントサイズを設定した画像である．左は画像全体にオクルージョンが生じ，中央はラベル自体が付記できていないが，右は適度なサイズでIDラベルを描画できている(漫画:『うるとら★イレブン』©やぶの てんや, 渡辺 達也/集英社)．}
    \label{fig:super_resolution}
 \end{figure}
 
@@ -612,7 +611,7 @@ ID ラベルの最小フォントサイズを
 \begin{figure}[h]
    \centering
    \includegraphics[width=\textwidth]{pict/05/super_resolution_box.png}
-   \captionsetup{font=footnotesize}
+
    \caption{IDラベルの最小フォントサイズの縮小に伴う遮蔽率の変化と超解像度処理に伴う遮蔽率の比較．Normal の最小フォントサイズは12ptで設定され，Small は9pt，Extra Small は6ptに設定された．SuperRes(Half)は２倍の超解像度処理画像，SuperRes(Full)は4倍の超解像度処理画像を表す．}
    \label{fig:super_resolution_box}
 \end{figure}
@@ -744,7 +743,7 @@ LVLM は，
          }
    \end{tabular}
 
-   \caption{文脈付与入力により，見開き単体では理解が困難な場面で，過去の状況を正しく盛り込み正確な理解で summary が生成された例．}
+   \caption{文脈付与入力により，見開き単体では理解が困難な場面で，過去の状況を正しく盛り込み正確な理解で summary が生成された例(漫画:『愛さずにはいられない』©よし まさこ/集英社)．}
    \label{fig:contextual_summary_example}
 \end{figure}
 
@@ -1032,6 +1031,15 @@ Character ノードには，
 物語における役割や重要度を表す属性が付与されている．
 これらの分布を表~\ref{tab:character_role_stats} および
 表~\ref{tab:character_importance_stats} に示す．
+表~\ref{tab:character_role_stats} より，
+主人公（protagonist）や副主人公（deuteragonist）など，
+物語の中心人物に相当する役割に加え，
+支援者（suppo  rting）や背景キャラクター（background）など，
+補助的・周辺的な役割を担うキャラクターの描写についても属性の抽出が行えていることが確認できた．また，表~\ref{tab:character_importance_stats}に示される重要度分布では，main，sub，minor が広く分布しており，少数の主要キャラクター
+を軸としつつ，多数の準主要・脇役キャラクターが物語を構成している典型的な漫画作品の構造が確認
+できた．このような重要度の階層性は，キャラクターごとの描写密度や演出上の扱いの違いを学習・分
+析する上で重要な情報となる．
+
 
 \begin{table}[htbp]
    \centering
@@ -1082,71 +1090,55 @@ Character ノードには，
    \end{minipage}
 \end{table}
 
-表~\ref{tab:character_role_stats} より，
-主人公（protagonist）や副主人公（deuteragonist）など，
-物語の中心人物に相当する役割に加え，
-支援者（suppo  rting）や背景キャラクター（background）など，
-補助的・周辺的な役割を担うキャラクターの描写についても属性の抽出が行えていることが確認できた．
-
 \paragraph{物語的属性および主人公との関係}
 さらに，
-キャラクターの物語的立場を表す属性および
+Character ノードには，物語的立場を表す属性および
 主人公との関係を示す属性が付与されている．
-これらの分布を表~\ref{tab:character_alignment_relation} に示す．
+これらの分布を表~\ref{tab:character_alignment_stats}および \ref{tab:character_relation_stats} に示す．表~\ref{tab:character_alignment_stats}より物語立場の多くはheroと判定されていることがわかる．この属性
 
-\begin{table}[htbp]
-   \centering
-   % --- 左：alignment ---
-   \begin{minipage}[t]{0.48\linewidth}
-      \centering
-      \caption{Character alignment の分布}
-      \label{tab:character_alignment_stats}
-      \begin{tabular}{lr}
-         \toprule
-         \textbf{alignment} & \textbf{数} \\
-         \midrule
-         hero               & 22{,}652   \\
-         neutral            & 13{,}704   \\
-         villain            & 2{,}845    \\
-         unknown            & 296        \\
-         \bottomrule
-      \end{tabular}
-   \end{minipage}
-   \hfill
-   % --- 右：relation ---
-   \begin{minipage}[t]{0.48\linewidth}
-      \centering
-      \caption{relation\_to\_protagonist の分布}
-      \label{tab:character_relation_stats}
-      \begin{tabular}{lr}
-         \toprule
-         \textbf{relation\_to\_protagonist} & \textbf{数} \\
-         \midrule
-         ally                               & 8{,}981    \\
-         self                               & 8{,}560    \\
-         other                              & 8{,}087    \\
-         love\_interest                     & 3{,}216    \\
-         enemy                              & 2{,}931    \\
-         family                             & 2{,}870    \\
-         mentor                             & 1{,}279    \\
-         rival                              & 1{,}243    \\
-         authority                          & 966        \\
-         subordinate                        & 690        \\
-         unknown                            & 674        \\
-         \bottomrule
-      \end{tabular}
-   \end{minipage}
-\end{table}
+% \begin{table}[htbp]
+% \centering
+% % --- 左：alignment ---
+% \begin{minipage}[t]{0.48\linewidth}
+%    \centering
+%    \caption{Character alignment の分布}
+%    \label{tab:character_alignment_stats}
+%    \begin{tabular}{lr}
+%       \toprule
+%       \textbf{alignment} & \textbf{数} \\
+%       \midrule
+%       hero               & 22{,}652   \\
+%       neutral            & 13{,}704   \\
+%       villain            & 2{,}845    \\
+%       unknown            & 296        \\
+%       \bottomrule
+%    \end{tabular}
+% \end{minipage}
 
-表~\ref{tab:character_importance_stats} に示す重要度分布では，
-main，sub，minor が広く分布しており，
-少数の主要キャラクターを軸としつつ，
-多数の準主要・脇役キャラクターが物語を構成している
-典型的な漫画作品の構造が確認できた。
-このような重要度の階層性は，
-キャラクターごとの描写密度や
-演出上の扱いの違いを学習・分析する上で
-重要な情報となる。
+% --- 右：relation ---
+% \begin{minipage}[t]{0.48\linewidth}
+% \centering
+%    \caption{relation\_to\_protagonist の分布}
+%    \label{tab:character_relation_stats}
+%    \begin{tabular}{lr}
+%       \toprule
+%       \textbf{relation\_to\_protagonist} & \textbf{数} \\
+%       \midrule
+%       ally                               & 8{,}981    \\
+%       self                               & 8{,}560    \\
+%       other                              & 8{,}087    \\
+%       love\_interest                     & 3{,}216    \\
+%       enemy                              & 2{,}931    \\
+%       family                             & 2{,}870    \\
+%       mentor                             & 1{,}279    \\
+%       rival                              & 1{,}243    \\
+%       authority                          & 966        \\
+%       subordinate                        & 690        \\
+%       unknown                            & 674        \\
+%       \bottomrule
+%    \end{tabular}
+%    % \end{minipage}
+% \end{table}
 
 以上より，
 Manga109NameDataset における Character ノードは，
@@ -1551,7 +1543,7 @@ Action Edge は，
 \begin{figure}[p]
    \centering
    \includegraphics[width=0.8\textwidth]{pict/05/samples_manga.jpg}
-   \caption{本節で例示する Manga109NameDataset の入力見開き画像．}
+   \caption{本節で例示する Manga109NameDataset の入力見開き画像(漫画:『	あっけら貫刃帖』©小林 ゆき/集英社)．}
    \label{fig:sample_manga}
 \end{figure}
 

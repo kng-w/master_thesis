@@ -140,12 +140,12 @@ $N \in \mathbb{N}$ 個の構成要素と，
 場面全体に関わる演出情報からなる表現として定義する．
 具体的には，
 ネーム $n$ を
-\[
+\begin{equation}
    n = \left(
    \mathbf{d}^{\mathrm{global}},
    \{(c_1, \mathbf{d}_1, \mathbf{b}_1), \dots, (c_N, \mathbf{d}_N, \mathbf{b}_N)\}
    \right)
-\]
+\end{equation}
 と定義する．
 
 ここで $c_i$ は $i$ 番目の要素のカテゴリを表し，
@@ -161,7 +161,7 @@ $\mathbf{d}^{\mathrm{global}}$ は，
 コマ，キャラクター，セリフといった
 基本要素種別に基づくカテゴリ集合 $\mathcal{C}$ の要素であり，
 $\mathcal{C}$ は
-\[
+\begin{equation}
    \mathcal{C}
    =
    \{\text{panel}\}
@@ -169,7 +169,7 @@ $\mathcal{C}$ は
    \{\text{character}_k\}
    \;\cup\;
    \{\text{speech}_k\}
-\]
+\end{equation}
 として定義される．
 
 局所的な演出情報 $\mathbf{d}_i$ には，
@@ -192,14 +192,14 @@ $\mathcal{C}$ は
 対応するネーム $n$ を生成する
 条件付き生成問題として定式化される．
 すなわち，
-\[
+\begin{equation}
    f : s
    \;\mapsto\;
    \left(
    \mathbf{d}^{\mathrm{global}},
    \{(c_i, \mathbf{d}_i, \mathbf{b}_i)\}_{i=1}^{N}
    \right)
-\]
+\end{equation}
 を学習することが目的である．
 
 第~\ref{chap:script2layout}章で扱った
@@ -273,15 +273,15 @@ LLM による生成および学習を可能にするため，
 $\{(c_i, \mathbf{d}_i, \mathbf{b}_i)\}_{i=1}^{N}$ は，
 JSON 構造に沿って列挙され，
 系列
-\[
+\begin{equation}
    \mathcal{N} = (\nu_1, \nu_2, \dots, \nu_T)
-\]
+\end{equation}
 として表現される．
 各トークン $\nu_t$ は，
 単一の要素に対応する
-\[
+\begin{equation}
    \nu_t = (c_{\pi(t)}, \mathbf{d}_{\pi(t)}, \mathbf{b}_{\pi(t)})
-\]
+\end{equation}
 として定義され，
 $\pi(t)$ は
 ネームを構成する全要素を
@@ -313,12 +313,12 @@ $\mathbf{b}_i = (x_i, y_i, w_i, h_i)$ として定義され，
 それに対応する正解ネーム列 $\mathcal{N}$ からなる
 教師データを用い，
 LLM による条件付き確率
-\[
+\begin{equation}
    p_{\theta}(\mathcal{N} \mid S)
    =
    \prod_{t=1}^{T}
    p_{\theta}(\nu_t \mid \nu_{<t}, S)
-\]
+\end{equation}
 を最大化するように，
 モデルパラメータ $\theta$ を最適化する．
 損失関数としては，
@@ -569,7 +569,7 @@ Script2Direction2Layoutは
 第~\ref{chap:script2layout}章のレイアウト生成実験と同様，
 既存のレイアウト生成手法との比較を行った．
 比較に用いた手法も同じく，
-LayoutDM~\cite{inoue2023layoutdm}，
+LayoutDM~\cite{inoue_layoutdm_2023}，
 LayoutFormer++~\cite{jiang_layoutformer_2023}，
 LayoutPrompter~\cite{lin_layoutprompter_2023}
 の 3 手法である．
@@ -589,7 +589,7 @@ LLM による生成設定である Script2Layout / Script2Name (Joint) / (Script
 レイアウト生成にはグラフニューラルネットワーク（GNN）を用いた．
 
 \paragraph{LLM の選定}
-本実験では，LLM として \texttt{gpt-oss-20b}，\texttt{Qwen3-14B}，\texttt{Llama-3.1-8B} を選定した．
+本実験では，LLM として GPT-OSS-20b~\cite{openai2024gptoss}，Qwen3-14B~\cite{qwen3_tech_2025}，Llama-3.1-8B~\cite{touvron2024llama31} を選定した．
 これらはいずれも公開モデルの中で比較的新しく，
 汎用的な言語能力において高い評価を得ていることから採用した．
 複数の基盤モデルを用いることで，
@@ -598,6 +598,7 @@ LLM による生成設定である Script2Layout / Script2Name (Joint) / (Script
 JSON 形式に線形化した出力列を教師信号として，
 次トークン予測に基づくクロスエントロピー損失を最小化することで行った．
 学習手順は，第~\ref{chap:script2layout}章のレイアウト生成と同様である．
+詳細な学習設定は付録~\ref{app:script2name_hyperparams} に示す．
 
 \paragraph{GNN によるレイアウト生成（Script2Direction2Layout）}
 段階的生成設定 Script2Direction2Layout では，
@@ -614,6 +615,7 @@ Manga109NameDataset に含まれる主要な関係情報を用いた．
 メッセージパッシングによって特徴を更新した後，
 Panel，CharacterInstance，Speech の各ノードに対して
 混合密度ネットワーク（MDN）を用いてバウンディングボックスを推定した．
+詳細なアーキテクチャについては付録~\ref{app:script2name_gnn} に示す．
 
 \paragraph{レイアウト表現の量子化と座標系}
 レイアウト情報は，
@@ -975,11 +977,11 @@ Direction の品質差を反映する間接指標として一定の感度を持�
 
    \caption{
       ネーム生成におけるレイアウト生成結果の定性的比較．
-      左から順に，正解となる漫画画像，既存手法の生成結果，
+      左の列から順に，正解となる漫画画像，既存手法の生成結果，
       Script2Layoutの生成結果，
       Script $\rightarrow$ (Direction + Layout)の生成結果，
       (Script + Direction) $\rightarrow$ Layoutの生成結果，
-      Script2Direction2Layoutの生成結果．を示し，ScrはScriptを，DirはDirectionを，LytはLayoutを表す．各行は，モデルの違いに対応している．
+      Script2Direction2Layoutの生成結果．を示し，それぞれの列で各行は，モデルの違いに対応している．ScrはScriptを，DirはDirectionを，LytはLayoutを表す(漫画:上段『うるとら☆イレブン』©	やぶの てんや, 渡辺 達也/集英社，下段『永遠のウィズ』©	みやうち 沙矢/講談社)．
    }
    \label{fig:script2name_layout_qualitative}
 \end{figure*}
@@ -1000,9 +1002,9 @@ Direction の品質差を反映する間接指標として一定の感度を持�
 \begin{figure*}[htbp]
    \centering
    \includegraphics[width=\linewidth]{pict/06/evaluation_quality_predicted_directions.png}
-   \captionsetup{font=scriptsize}
+
    \caption{
-      脚本に基づくネーム生成において推定されたコマに対する演出情報の可視化の例．上段左が対象となったコマ画像，上段中央が，対象のコマを含んだ見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となる演出情報(Direction)，下段が，Scriptを入力に推定されたDirectionを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Directionを示すパネルには，そのパネルにおける要約文(Sum)および，役割(ROLES)，形状(SHAPE)，カメラ距離(DIST)，カメラ角度(ANG)がカテゴリ情報として示されている．
+      脚本に基づくネーム生成において推定されたコマに対する演出情報の可視化の例．上段左が対象となったコマ画像，上段中央が，対象のコマを含んだ見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となる演出情報(Direction)，下段が，Scriptを入力に推定されたDirectionを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Directionを示すパネルには，そのパネルにおける要約文(Sum)および，役割(ROLES)，形状(SHAPE)，カメラ距離(DIST)，カメラ角度(ANG)がカテゴリ情報として示されている(漫画:『太陽にスマッシュ！』©あゆみ ゆい/講談社)．
    }
    \label{fig:script2name_direction_qualitative}
 \end{figure*}
@@ -1026,9 +1028,8 @@ Ground Truth と異なる値が生成されたこと自体をもって，
 \begin{figure*}[htbp]
    \centering
    \includegraphics[width=\linewidth]{pict/06/evaluation_quality_predicted_edges.png}
-   \captionsetup{font=scriptsize}
    \caption{
-      脚本に基づくネーム生成において推定されたaction edgeの可視化の例．上段左側が対象となった見開き，上段中央が，対象の見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となるAction Edge，下段が，Scriptを入力に推定されたAction Edgeを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Action Edge内に示されたC\_instはCharacter Instance ノードを表す．
+      脚本に基づくネーム生成において推定されたaction edgeの可視化の例．上段左側が対象となった見開き，上段中央が，対象の見開きに対する入力に用いられた脚本情報(Input Script)，上段右Ground Truth(GT)となるAction Edge，下段が，Scriptを入力に推定されたAction Edgeを示す．Input Scriptを示すパネルには，見開き全体の要約文 (Sum)と脚本(Scr)，注意書き(Note)が途中まで示され，Action Edge内に示されたC\_instはCharacter Instance ノードを表す(漫画:『太陽にスマッシュ！』©あゆみ ゆい/講談社)．
    }
    \label{fig:script2name_edges_qualitative}
 \end{figure*}

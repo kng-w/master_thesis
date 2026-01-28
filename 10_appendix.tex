@@ -60,19 +60,245 @@
 
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけヘッダー設定 ▼▼▼
 \ifdefined\ismain\else
-   \pagestyle{fancy}
-   \lhead{\rightmark}
-   \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
-   \setlength{\headheight}{16.5pt}
-   \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
+  \pagestyle{fancy}
+  \lhead{\rightmark}
+  \renewcommand{\chaptermark}[1]{\markboth{第\ \thechapter\ 章\ #1}{}}
+  \setlength{\headheight}{16.5pt}
+  \titleformat{\chapter}[hang]{\LARGE\bfseries}{\prechaptername\thechapter\postchaptername}{1em}{}
 \fi
 % ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+\chapter{学習および実装の詳細}
+\label{app:training}
 
+\section{Script2Layout の LoRA ファインチューニングの学習設定およびハイパーパラメータ}
+\label{app:script2layout_hyperparams}
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{threeparttable}
+    \caption{Script2Layout の LoRA ファインチューニングに用いた学習ハイパーパラメータ}
+    \label{tab:script2layout_hyperparams}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{項目} & \textbf{設定内容}                      \\
+      \midrule
+      データ設定       &
+      最大トークン長 = 4096                                   \\
+      \midrule
+      モデル設定       &
+      計算精度 = \texttt{torch.float16}                    \\
+                  &
+      Attention 実装 = FlashAttention 2                  \\
+                  &
+      トークナイザ設定 = right padding，EOS 付与\tnote{a}         \\
+      \midrule
+      LoRA 設定     &
+      Rank $r$ = 8，$\alpha$ = 16，dropout = 0.1         \\
+                  &
+      対象モジュール = \texttt{q\_proj}, \texttt{v\_proj}     \\
+                  &
+      Bias = \texttt{none}，タスク種別 = \texttt{CAUSAL\_LM} \\
+      \midrule
+      学習設定        &
+      バッチサイズ = 1 / device（学習・評価）                       \\
+                  &
+      勾配累積ステップ数 = 32                                   \\
+                  &
+      学習エポック数 = 20                                     \\
+                  &
+      最適化手法 = \texttt{adamw\_torch\_fused}             \\
+                  &
+      学習率 = $2\times10^{-4}$，スケジューラ = cosine           \\
+                  &
+      Mixed precision = FP16                           \\
+                  &
+      ログ出力間隔 = 100 ステップごと                              \\
+                  &
+      評価頻度 = 100 ステップごと（系列長でグループ化）                     \\
+                  &
+      モデル保存 = 各エポック終了時                                 \\
+                  &
+      実験管理 = Weights \& Biases (W\&B)                  \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}[flushleft]
+      \footnotesize
+      \item[a] トークン化時に EOS トークンを付与し，パディングは右詰めとした．
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
 
+\section{Script2Name の LoRA ファインチューニングの学習設定およびハイパーパラメータ}
 
+\label{app:script2name_hyperparams}
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{threeparttable}
+    \caption{Script2NameのLoRA ファインチューニング設定（再現用ハイパーパラメータ）}
+    \label{tab:script2name_hparams}
+    \begin{tabular}{ll}
+      \toprule
+      \textbf{項目} & \textbf{設定内容}                                                                        \\
+      \midrule
+      計算環境        &
+      PBS: select=1, ncpus=8, mem=120GB, ngpus=1                                                         \\
+                  &
+      実行: \texttt{torchrun}（\texttt{--nproc\_per\_node=1}）                                               \\
+                  &
+      GPU: NVIDIA H100 $\times$ 1                                                                        \\
+                  &
+      量子化: 4-bit 読み込み（\texttt{--load-in-4bit}）                                                           \\
+                  &
+      精度: BF16（\texttt{--bf16}）                                                                          \\
+                  &
+      Attention 実装: FlashAttention 2（\texttt{--attn-impl flash\_attention\_2}）                           \\
+      \midrule
+      ベースモデル      &
+      \texttt{unsloth/gpt-oss-20b}                                                                       \\
+      \midrule
+      データ         &
+      形式: JSONL（\texttt{prompt}, \texttt{response}）                                                      \\
+                  &
+      学習: \texttt{layout\_m\_coarse\_json/train.jsonl}                                                   \\
+                  &
+      検証: \texttt{layout\_m\_coarse\_json/valid.jsonl}                                                   \\
+      \midrule
+      入力長         &
+      学習最大長: 23552（\texttt{--max-length}）                                                                \\
+                  &
+      評価最大長: 12288（\texttt{--eval-max-length}）                                                           \\
+                  &
+      評価サンプル上限: 64（\texttt{--max-eval-samples}）                                                          \\
+      \midrule
+      最適化         &
+      学習率: $2\times10^{-4}$（\texttt{--learning-rate}）                                                    \\
+                  &
+      バッチサイズ: 1 / device（train, eval）                                                                    \\
+                  &
+      勾配累積: 16（\texttt{--gradient-accumulation-steps}）                                                   \\
+                  &
+      エポック数: 20（\texttt{--num-train-epochs}）                                                             \\
+                  &
+      最大ステップ数: 20000（\texttt{--max-steps}）                                                               \\
+      \midrule
+      LoRA        &
+      有効化: \texttt{--use-lora}                                                                           \\
+                  &
+      dropout: 0（\texttt{--lora-dropout 0}）                                                              \\
+                  &
+      rank $r$: 16（default）\tnote{a}                                                                     \\
+                  &
+      $\alpha$: 32（default）\tnote{a}                                                                     \\
+                  &
+      対象モジュール: \texttt{q\_proj,k\_proj,v\_proj,o\_proj,up\_proj,down\_proj,gate\_proj}（default）\tnote{a} \\
+      \midrule
+      チェックポイント    &
+      保存間隔: 700 steps（\texttt{--save-steps}）                                                             \\
+                  &
+      保存上限: 30（\texttt{--save-total-limit}）                                                              \\
+                  &
+      評価間隔: 700 steps（\texttt{--eval-steps}）                                                             \\
+                  &
+      ログ間隔: 20 steps（\texttt{--logging-steps}）                                                           \\
+      \midrule
+      DDP / ログ    &
+      \texttt{ddp\_find\_unused\_parameters=false}                                                       \\
+                  &
+      rank0 のみ保存: \texttt{--save-on-rank0}                                                               \\
+                  &
+      W\&B: 有効（\texttt{--wandb}），rank0 のみログ（\texttt{--wandb-on-rank0}）                                   \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}[flushleft]
+      \footnotesize
+      \item[a] CLI で明示指定されていないため，学習コード（\texttt{train\_layout\_llm.py}）のデフォルト値が適用される．
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\newpage
+
+\section{GNN によるレイアウト推定モデルの詳細}
+\label{app:script2name_gnn}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{threeparttable}
+    \caption{Script2Direction2Layout における GNN（HeteroConv）モデル構成（実装に基づく）}
+    \label{tab:gnn_arch}
+    \begin{tabular}{p{0.33\linewidth} p{0.60\linewidth}}
+      \toprule
+      \textbf{項目} & \textbf{設定}                                           \\
+      \midrule
+      入力グラフ       & 見開き単位の異種グラフ（Heterogeneous graph）                      \\
+      ノード種別       &
+      Spread / Panel / Character / Character Instance / Speech            \\
+      エッジ種別（例）    &
+      action edges（Character Instance 間），
+      Panel--Character Instance（包含），
+      Speech の読順関係（順序）など                                                  \\
+      ノード特徴       &
+      テキスト特徴（Tokenizer による入力），および列挙型の演出属性（pose/action/emotion 等）\tnote{a} \\
+      テキストエンコーダ   &
+      scratch Transformer または pretrained HF モデル（QLoRA 対応）\tnote{b}        \\
+      GNN 本体      &
+      HeteroConv によるメッセージパッシング，層数 = \texttt{num\_layers}（既定3）             \\
+      出力ノード       &
+      Panel / Character Instance / Speech                                 \\
+      出力形式        &
+      混合密度ネットワーク（MDN）により $\mathbf{b}=(x,y,w,h)$ を推定                       \\
+      混合数         &
+      ガウス混合数 $K$ = \texttt{num\_gaussians}（既定5）                           \\
+      損失関数        &
+      MDN の負の対数尤度（NLL）                                                    \\
+      \bottomrule
+    \end{tabular}
+    \begin{tablenotes}[flushleft]
+      \footnotesize
+      \item[a] 実装では node type ごとに列挙特徴（例：Character Instance の pose/action/emotion 等）を付与する（\texttt{extract\_enum\_features}）。
+      \item[b] 事前学習テキストエンコーダ使用時は \texttt{text\_encoder\_freeze} と \texttt{text\_encoder\_qlora} により凍結・QLoRA を切替可能。
+    \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \begin{threeparttable}
+    \caption{GNN（Script2Direction2Layout）学習設定（実装の既定値）}
+    \label{tab:gnn_hparams}
+    \begin{tabular}{p{0.38\linewidth} p{0.22\linewidth} p{0.33\linewidth}}
+      \toprule
+      \textbf{項目}                 & \textbf{値}       & \textbf{備考}                            \\
+      \midrule
+      バッチサイズ                      & 4                & \texttt{--batch-size}                  \\
+      隠れ次元                        & 512              & \texttt{--hidden-dim}                  \\
+      層数（GNN）                     & 3                & \texttt{--num-layers}                  \\
+      学習率                         & $1\times10^{-3}$ & Adam                                   \\
+      最大学習エポック                    & 10               & \texttt{--epochs}                      \\
+      最大学習ステップ/epoch              & なし               & \texttt{--max-steps}（未指定）              \\
+      評価間隔                        & なし               & \texttt{--eval-steps}（未指定）             \\
+      チェックポイント間隔                  & 10 epoch         & \texttt{--save-interval}               \\
+      混合数（MDN）                    & 5                & \texttt{--num-gaussians}               \\
+      Concept bottleneck          & off              & \texttt{--concept-only} で text を無効化    \\
+      テキストエンコーダ種別                 & scratch          & \texttt{--text-encoder}                \\
+      Pretrained encoder          & gemma-3-270m     & QLoRA 有効時の既定                           \\
+      QLoRA                       & on               & \texttt{--text-encoder-qlora}（既定 true） \\
+      LoRA rank / alpha / dropout & 8 / 16 / 0.05    & \texttt{--text-encoder-lora-*}         \\
+      Flip augmentation           & visual\_flip     & \texttt{--x-flip-mode}                 \\
+      Cinematic source            & gt               & \texttt{--cinematic-source}            \\
+      トークン長（Spread）               & 3072             & \texttt{--spread-max-length}           \\
+      トークン長（Speech）               & 256              & \texttt{--speech-max-length}           \\
+      トークン長（Panel/Char/Inst）      & 160              & 各 \texttt{--*-max-length}              \\
+      \bottomrule
+    \end{tabular}
+  \end{threeparttable}
+\end{table}
 % ▼▼▼ 仕掛け：main じゃないとき（単体のとき）だけ参考文献を表示 ▼▼▼
 \ifdefined\ismain\else
-   \printbibliography[title=参考文献]
+  \printbibliography[title=参考文献]
 \fi
 % ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
