@@ -139,19 +139,14 @@
   file       = {al-Papinenietal-2002-BleuaMethodforAutomaticEvaluationofMachine.pdf:/Users/kengowatanabe/Zotero/storage/6JGM6BPW/al-Papinenietal-2002-BleuaMethodforAutomaticEvaluationofMachine.pdf:application/pdf;Full Text PDF:/Users/kengowatanabe/Zotero/storage/33VZKRCU/Papineni et al. - 2002 - Bleu a Method for Automatic Evaluation of Machine.pdf:application/pdf;ja-Papinenietal-2002-BleuaMethodforAutomaticEvaluationofMachine.pdf:/Users/kengowatanabe/Zotero/storage/5F6Q62LG/ja-Papinenietal-2002-BleuaMethodforAutomaticEvaluationofMachine.pdf:application/pdf}
 }
 
-@misc{horita_retrieval-augmented_2023,
-  title     = {Retrieval-{Augmented} {Layout} {Transformer} for {Content}-{Aware} {Layout} {Generation}},
-  url       = {http://arxiv.org/abs/2311.13602},
-  doi       = {10.48550/arXiv.2311.13602},
-  abstract  = {Content-aware graphic layout generation aims to automatically arrange visual elements along with a given content, such as an e-commerce product image. In this paper, we argue that the current layout generation approaches suffer from the limited training data for the high-dimensional layout structure. We show that a simple retrieval augmentation can significantly improve the generation quality. Our model, which is named Retrieval-Augmented Layout Transformer (RALF), retrieves nearest neighbor layout examples based on an input image and feeds these results into an autoregressive generator. Our model can apply retrieval augmentation to various controllable generation tasks and yield high-quality layouts within a unified architecture. Our extensive experiments show that RALF successfully generates content-aware layouts in both constrained and unconstrained settings and significantly outperforms the baselines.},
-  urldate   = {2024-02-28},
-  publisher = {arXiv},
+@InProceedings{horita_retrieval-augmented_2023,
   author    = {Horita, Daichi and Inoue, Naoto and Kikuchi, Kotaro and Yamaguchi, Kota and Aizawa, Kiyoharu},
-  month     = nov,
-  year      = {2023},
-  note      = {arXiv:2311.13602 [cs]},
-  keywords  = {Computer Science - Computer Vision and Pattern Recognition},
-  file      = {al-Retrieval_Augmented_Layout_Transformer_for_Content_Aware_Layout_Generation.pdf:/Users/kengowatanabe/Zotero/storage/9XMP4TE2/al-Retrieval_Augmented_Layout_Transformer_for_Content_Aware_Layout_Generation.pdf:application/pdf;arXiv Fulltext PDF:/Users/kengowatanabe/Zotero/storage/XJR2N94C/Horita et al. - 2023 - Retrieval-Augmented Layout Transformer for Content.pdf:application/pdf;arXiv.org Snapshot:/Users/kengowatanabe/Zotero/storage/F4A5YYGW/2311.html:text/html;ja-Retrieval_Augmented_Layout_Transformer_for_Content_Aware_Layout_Generation.pdf:/Users/kengowatanabe/Zotero/storage/22TKFWT3/ja-Retrieval_Augmented_Layout_Transformer_for_Content_Aware_Layout_Generation.pdf:application/pdf}
+  title     = {Retrieval-Augmented Layout Transformer for Content-Aware Layout Generation},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  month     = {June},
+  year      = {2024},
+  pages     = {67--76},
+  url       = {https://openaccess.thecvf.com/content/CVPR2024/html/Horita_Retrieval-Augmented_Layout_Transformer_for_Content-Aware_Layout_Generation_CVPR_2024_paper.html}
 }
 
 @misc{yang_vidchapters-7m_2023,
@@ -715,20 +710,14 @@
   doi     = {10.3724/SP.J.1089.2024.2023-00466}
 }
 
-@misc{li_layoutgan_2019,
-  title      = {{LayoutGAN}: {Generating} {Graphic} {Layouts} with {Wireframe} {Discriminators}},
-  shorttitle = {{LayoutGAN}},
-  url        = {http://arxiv.org/abs/1901.06767},
-  doi        = {10.48550/arXiv.1901.06767},
-  abstract   = {Layout is important for graphic design and scene generation. We propose a novel Generative Adversarial Network, called LayoutGAN, that synthesizes layouts by modeling geometric relations of different types of 2D elements. The generator of LayoutGAN takes as input a set of randomly-placed 2D graphic elements and uses self-attention modules to refine their labels and geometric parameters jointly to produce a realistic layout. Accurate alignment is critical for good layouts. We thus propose a novel differentiable wireframe rendering layer that maps the generated layout to a wireframe image, upon which a CNN-based discriminator is used to optimize the layouts in image space. We validate the effectiveness of LayoutGAN in various experiments including MNIST digit generation, document layout generation, clipart abstract scene generation and tangram graphic design.},
-  urldate    = {2024-08-30},
-  publisher  = {arXiv},
-  author     = {Li, Jianan and Yang, Jimei and Hertzmann, Aaron and Zhang, Jianming and Xu, Tingfa},
-  month      = jan,
-  year       = {2019},
-  note       = {arXiv:1901.06767 [cs]},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition},
-  file       = {al-Lietal-2019-LayoutGANGeneratingGraphicLayoutswithWirefra.pdf:/Users/kengowatanabe/Zotero/storage/DLEYB45R/al-Lietal-2019-LayoutGANGeneratingGraphicLayoutswithWirefra.pdf:application/pdf;arXiv Fulltext PDF:/Users/kengowatanabe/Zotero/storage/PUDBH8SQ/Li et al. - 2019 - LayoutGAN Generating Graphic Layouts with Wirefra.pdf:application/pdf;arXiv.org Snapshot:/Users/kengowatanabe/Zotero/storage/GXX9PUPF/1901.html:text/html}
+@inproceedings{li_layoutgan_2019,
+  author    = {Li, Jianan and Yang, Jimei and Hertzmann, Aaron and Zhang, Jianming and Xu, Tingfa},
+  title     = {LayoutGAN: Generating Graphic Layouts with Wireframe Discriminators},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  year      = {2019},
+  pages     = {2988--2997},
+  publisher = {IEEE},
+  doi       = {10.1109/ICCV.2019.00308}
 }
 @inproceedings{li2020docbank,
   title     = {DocBank: A Benchmark Dataset for Document Layout Analysis},
@@ -786,20 +775,16 @@
   year      = {2020}
 }
 
-@misc{zhong_publaynet_2019,
-  title      = {{PubLayNet}: largest dataset ever for document layout analysis},
-  shorttitle = {{PubLayNet}},
-  url        = {http://arxiv.org/abs/1908.07836},
-  doi        = {10.48550/arXiv.1908.07836},
-  abstract   = {Recognizing the layout of unstructured digital documents is an important step when parsing the documents into structured machine-readable format for downstream applications. Deep neural networks that are developed for computer vision have been proven to be an effective method to analyze layout of document images. However, document layout datasets that are currently publicly available are several magnitudes smaller than established computing vision datasets. Models have to be trained by transfer learning from a base model that is pre-trained on a traditional computer vision dataset. In this paper, we develop the PubLayNet dataset for document layout analysis by automatically matching the XML representations and the content of over 1 million PDF articles that are publicly available on PubMed Central. The size of the dataset is comparable to established computer vision datasets, containing over 360 thousand document images, where typical document layout elements are annotated. The experiments demonstrate that deep neural networks trained on PubLayNet accurately recognize the layout of scientific articles. The pre-trained models are also a more effective base mode for transfer learning on a different document domain. We release the dataset (https://github.com/ibm-aur-nlp/PubLayNet) to support development and evaluation of more advanced models for document layout analysis.},
-  urldate    = {2024-08-30},
-  publisher  = {arXiv},
-  author     = {Zhong, Xu and Tang, Jianbin and Yepes, Antonio Jimeno},
-  month      = aug,
-  year       = {2019},
-  note       = {arXiv:1908.07836 [cs]},
-  keywords   = {Computer Science - Computation and Language},
-  file       = {arXiv Fulltext PDF:/Users/kengowatanabe/Zotero/storage/S8CNHJXU/Zhong et al. - 2019 - PubLayNet largest dataset ever for document layou.pdf:application/pdf;arXiv.org Snapshot:/Users/kengowatanabe/Zotero/storage/YESKQJF5/1908.html:text/html}
+@inproceedings{zhong_publaynet_2019,
+  author    = {Zhong, Xu and Tang, Jianbin and Yepes, Antonio Jimeno},
+  title     = {PubLayNet: Largest Dataset Ever for Document Layout Analysis},
+  booktitle = {2019 International Conference on Document Analysis and Recognition (ICDAR)},
+  year      = {2019},
+  pages     = {1015--1022},
+  doi       = {10.1109/ICDAR.2019.00166},
+  publisher = {IEEE},
+  address   = {Sydney, Australia},
+  month     = {Sep.}
 }
 
 @inproceedings{gupta_iccv_nodate,
@@ -841,19 +826,14 @@
 }
 
 @inproceedings{kikuchi_constrained_2021,
-  title     = {Constrained {Graphic} {Layout} {Generation} via {Latent} {Optimization}},
-  url       = {http://arxiv.org/abs/2108.00871},
-  doi       = {10.1145/3474085.3475497},
-  abstract  = {It is common in graphic design humans visually arrange various elements according to their design intent and semantics. For example, a title text almost always appears on top of other elements in a document. In this work, we generate graphic layouts that can flexibly incorporate such design semantics, either specified implicitly or explicitly by a user. We optimize using the latent space of an off-the-shelf layout generation model, allowing our approach to be complementary to and used with existing layout generation models. Our approach builds on a generative layout model based on a Transformer architecture, and formulates the layout generation as a constrained optimization problem where design constraints are used for element alignment, overlap avoidance, or any other user-specified relationship. We show in the experiments that our approach is capable of generating realistic layouts in both constrained and unconstrained generation tasks with a single model. The code is available at https://github.com/ktrk115/const\_layout .},
-  urldate   = {2024-08-30},
-  booktitle = {Proceedings of the 29th {ACM} {International} {Conference} on {Multimedia}},
-  author    = {Kikuchi, Kotaro and Simo-Serra, Edgar and Otani, Mayu and Yamaguchi, Kota},
-  month     = oct,
+  author    = {Kotaro Kikuchi and Edgar Simo-Serra and Mayu Otani and Kota Yamaguchi},
+  title     = {Constrained Graphic Layout Generation via Latent Optimization},
+  booktitle = {Proceedings of the 29th ACM International Conference on Multimedia (MM ’21)},
   year      = {2021},
-  note      = {arXiv:2108.00871 [cs]},
-  keywords  = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Multimedia},
   pages     = {88--96},
-  file      = {arXiv Fulltext PDF:/Users/kengowatanabe/Zotero/storage/LZMRNCDS/Kikuchi et al. - 2021 - Constrained Graphic Layout Generation via Latent O.pdf:application/pdf;arXiv.org Snapshot:/Users/kengowatanabe/Zotero/storage/YH894HXR/2108.html:text/html}
+  publisher = {Association for Computing Machinery, Inc.},
+  doi       = {10.1145/3474085.3475497},
+  url       = {https://doi.org/10.1145/3474085.3475497}
 }
 
 @misc{yamaguchi_canvasvae_2021,
@@ -1151,20 +1131,14 @@
   file       = {arXiv Fulltext PDF:/Users/kengowatanabe/Zotero/storage/JG8PQC5D/Guerreiro et al. - 2024 - LayoutFlow Flow Matching for Layout Generation.pdf:application/pdf;arXiv.org Snapshot:/Users/kengowatanabe/Zotero/storage/J3Q3KGMQ/2403.html:text/html}
 }
 
-@misc{tanaka_scipostlayout_2024,
-  title      = {{SciPostLayout}: {A} {Dataset} for {Layout} {Analysis} and {Layout} {Generation} of {Scientific} {Posters}},
-  shorttitle = {{SciPostLayout}},
-  url        = {http://arxiv.org/abs/2407.19787},
-  doi        = {10.48550/arXiv.2407.19787},
-  abstract   = {Scientific posters are used to present the contributions of scientific papers effectively in a graphical format. However, creating a well-designed poster that efficiently summarizes the core of a paper is both labor-intensive and time-consuming. A system that can automatically generate well-designed posters from scientific papers would reduce the workload of authors and help readers understand the outline of the paper visually. Despite the demand for poster generation systems, only a limited research has been conduced due to the lack of publicly available datasets. Thus, in this study, we built the SciPostLayout dataset, which consists of 7,855 scientific posters and manual layout annotations for layout analysis and generation. SciPostLayout also contains 100 scientific papers paired with the posters. All of the posters and papers in our dataset are under the CC-BY license and are publicly available. As benchmark tests for the collected dataset, we conducted experiments for layout analysis and generation utilizing existing computer vision models and found that both layout analysis and generation of posters using SciPostLayout are more challenging than with scientific papers. We also conducted experiments on generating layouts from scientific papers to demonstrate the potential of utilizing LLM as a scientific poster generation system. The dataset is publicly available at https://huggingface.co/datasets/omron-sinicx/scipostlayout\_v2. The code is also publicly available at https://github.com/omron-sinicx/scipostlayout.},
-  urldate    = {2024-10-10},
-  publisher  = {arXiv},
-  author     = {Tanaka, Shohei and Wang, Hao and Ushiku, Yoshitaka},
-  month      = jul,
-  year       = {2024},
-  note       = {arXiv:2407.19787},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/H54TIDLU/Tanaka et al. - 2024 - SciPostLayout A Dataset for Layout Analysis and L.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/TNNAMHF4/2407.html:text/html}
+@inproceedings{tanaka_scipostlayout_2024,
+  author    = {Wang, Hao and Tanaka, Shohei and Ushiku, Yoshitaka},
+  title     = {SciPostLayout: A Dataset for Layout Analysis and Layout Generation of Scientific Posters},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+  month     = {June},
+  year      = {2024},
+  pages     = {8136--8141},
+  publisher = {IEEE/CVF}
 }
 
 @misc{chai_layoutdm_2023,
@@ -1219,12 +1193,15 @@
   year    = {2021}
 }
 
-@misc{jiang_layoutformer_2023,
-  title     = {LayoutFormer++: Conditional Layout Generation with Transformer-based Models},
-  author    = {Jiang, Zhe and Yang, Jianwei and Luo, Ping},
-  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+@inproceedings{jiang_layoutformer_2023,
+  title     = {LayoutFormer++: Conditional Graphic Layout Generation via Constraint Serialization and Decoding Space Restriction},
+  author    = {Jiang, Zhaoyun and Guo, Jiaqi and Sun, Shizhao and Deng, Huayu and Wu, Zhongkai and Mijovic, Vuksan and Yang, Zijiang James and Lou, Jian-Guang and Zhang, Dongmei},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
   year      = {2023},
-  pages     = {1511--1520}
+  pages     = {18403--18412},
+  publisher = {IEEE/CVF},
+  doi       = {10.1109/CVPR52688.2023.01799},
+  url       = {https://openaccess.thecvf.com/content/CVPR2023/papers/Jiang_LayoutFormer_Conditional_Graphic_Layout_Generation_via_Constraint_Serialization_and_Decoding_CVPR_2023_paper.html}
 }
 
 @inproceedings{vaswani2017attention,
@@ -1235,20 +1212,16 @@
   year      = {2017}
 }
 
-@misc{ikuta_mangaub_2024,
-  title      = {{MangaUB}: {A} {Manga} {Understanding} {Benchmark} for {Large} {Multimodal} {Models}},
-  shorttitle = {{MangaUB}},
-  url        = {http://arxiv.org/abs/2407.19034},
-  abstract   = {Manga is a popular medium that combines stylized drawings and text to convey stories. As manga panels differ from natural images, computational systems traditionally had to be designed specifically for manga. Recently, the adaptive nature of modern large multimodal models (LMMs) shows possibilities for more general approaches. To provide an analysis of the current capability of LMMs for manga understanding tasks and identifying areas for their improvement, we design and evaluate MangaUB, a novel manga understanding benchmark for LMMs. MangaUB is designed to assess the recognition and understanding of content shown in a single panel as well as conveyed across multiple panels, allowing for a fine-grained analysis of a model's various capabilities required for manga understanding. Our results show strong performance on the recognition of image content, while understanding the emotion and information conveyed across multiple panels is still challenging, highlighting future work towards LMMs for manga understanding.},
-  urldate    = {2024-10-23},
-  publisher  = {arXiv},
-  author     = {Ikuta, Hikaru and Wöhler, Leslie and Aizawa, Kiyoharu},
-  month      = jul,
-  year       = {2024},
-  note       = {arXiv:2407.19034 
-                version: 1},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition, Computer Science - Multimedia},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/6M5MDPFG/Ikuta et al. - 2024 - MangaUB A Manga Understanding Benchmark for Large.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/8BC7PQWH/2407.html:text/html}
+@article{ikuta_mangaub_2024,
+  author  = {Hikaru Ikuta and Leslie W{\"o}hler and Kiyoharu Aizawa},
+  title   = {MangaUB: A Manga Understanding Benchmark for Large Multimodal Models},
+  journal = {IEEE MultiMedia},
+  year    = {2025},
+  volume  = {32},
+  number  = {2},
+  pages   = {33--43},
+  doi     = {10.1109/MMUL.2025.3550451},
+  url     = {https://doi.org/10.1109/MMUL.2025.3550451}
 }
 
 @article{aditya_image_2018,
@@ -1302,12 +1275,15 @@
   file     = {Hodosh et al. - Framing Image Description as a Ranking Task Data, .pdf:/Users/kengowatanabe/Zotero/storage/7FFHHL3G/Hodosh et al. - Framing Image Description as a Ranking Task Data, .pdf:application/pdf}
 }
 
-@misc{lin_layoutprompter_2023,
-  title     = {LayoutPrompter: Learning to Prompt for Layout Generation},
-  author    = {Jiang, Zhe and Yang, Jianwei and Luo, Ping},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+@inproceedings{lin_layoutprompter_2023,
+  author    = {Lin, Jiawei and Guo, Jiaqi and Sun, Shizhao and Yang, Zijiang and Lou, Jian-Guang and Zhang, Dongmei},
+  title     = {LayoutPrompter: Awaken the Design Ability of Large Language Models},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS 2023)},
+  editor    = {A. Oh and T. Naumann and A. Globerson and K. Saenko and M. Hardt and S. Levine},
+  pages     = {43852--43879},
+  publisher = {Curran Associates, Inc.},
   year      = {2023},
-  pages     = {1949--1958}
+  url       = {https://proceedings.neurips.cc/paper_files/paper/2023/file/88a129e44f25a571ae8b838057c46855-Paper-Conference.pdf}
 }
 
 @inproceedings{deka_rico_2017,
@@ -1561,20 +1537,16 @@
   file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/R4QGU48W/Yang et al. - 2024 - PosterLLaVa Constructing a Unified Multi-modal La.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/YMHM2BR5/2406.html:text/html}
 }
 
-@misc{seol_posterllama_2024,
-  title      = {{PosterLlama}: {Bridging} {Design} {Ability} of {Langauge} {Model} to {Contents}-{Aware} {Layout} {Generation}},
-  shorttitle = {{PosterLlama}},
-  url        = {http://arxiv.org/abs/2404.00995},
-  doi        = {10.48550/arXiv.2404.00995},
-  abstract   = {Visual layout plays a critical role in graphic design fields such as advertising, posters, and web UI design. The recent trend towards content-aware layout generation through generative models has shown promise, yet it often overlooks the semantic intricacies of layout design by treating it as a simple numerical optimization. To bridge this gap, we introduce PosterLlama, a network designed for generating visually and textually coherent layouts by reformatting layout elements into HTML code and leveraging the rich design knowledge embedded within language models. Furthermore, we enhance the robustness of our model with a unique depth-based poster augmentation strategy. This ensures our generated layouts remain semantically rich but also visually appealing, even with limited data. Our extensive evaluations across several benchmarks demonstrate that PosterLlama outperforms existing methods in producing authentic and content-aware layouts. It supports an unparalleled range of conditions, including but not limited to unconditional layout generation, element conditional layout generation, layout completion, among others, serving as a highly versatile user manipulation tool.},
-  urldate    = {2025-01-31},
-  publisher  = {arXiv},
-  author     = {Seol, Jaejung and Kim, Seojun and Yoo, Jaejun},
-  month      = jul,
-  year       = {2024},
-  note       = {arXiv:2404.00995 [cs]},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/KZ6HAP8N/Seol et al. - 2024 - PosterLlama Bridging Design Ability of Langauge M.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/ZWLF7I6T/2404.html:text/html}
+@inproceedings{seol_posterllama_2024,
+  author    = {Seol, Jaejung and Kim, Seojun and Yoo, Jaejun},
+  title     = {PosterLlama: Bridging Design Ability of Language Model to Content-Aware Layout Generation},
+  booktitle = {Computer Vision -- ECCV 2024},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {15140},
+  pages     = {451--468},
+  year      = {2024},
+  publisher = {Springer},
+  doi       = {10.1007/978-3-031-73007-8_26}
 }
 
 @misc{huang_survey_2023,
@@ -1722,22 +1694,25 @@
   year        = {2024},
   url         = {https://openai.com/research}
 }
-@misc{qwen3_tech_2025,
-  title         = {Qwen3 Technical Report},
-  author        = {Yang, An and Li, Anfeng and Yang, Baosong and others},
-  year          = {2025},
-  eprint        = {2505.09388},
-  archiveprefix = {arXiv},
-  primaryclass  = {cs.CL},
-  url           = {https://arxiv.org/abs/2505.09388}
+
+@techreport{qwen3_tech_2025,
+  title       = {Qwen3 Technical Report},
+  author      = {{Qwen Team}},
+  institution = {Alibaba Cloud},
+  year        = {2025},
+  url         = {https://github.com/QwenLM/Qwen3/blob/main/Qwen3_Technical_Report.pdf},
+  note        = {Technical report (public PDF in official repository)}
 }
 
 @inproceedings{inoue_layoutdm_2023,
   title     = {LayoutDM: Discrete Diffusion Model for Controllable Layout Generation},
-  author    = {Inoue, Naoto and Sekine, Satoshi and Ishida, Takashi},
+  author    = {Inoue, Naoto and Kikuchi, Kotaro and Simo-Serra, Edgar and Otani, Mayu and Yamaguchi, Kota},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
   year      = {2023},
-  pages     = {10173--10182}
+  pages     = {10167--10176},
+  publisher = {IEEE/CVF},
+  doi       = {10.1109/CVPR52688.2023.00980},
+  url       = {https://openaccess.thecvf.com/content/CVPR2023/papers/Inoue_LayoutDM_Discrete_Diffusion_Model_for_Controllable_Layout_Generation_CVPR_2023_paper.pdf}
 }
 
 @misc{oliveira_story_2024,
@@ -1854,19 +1829,20 @@
   urldate  = {2025-02-08}
 }
 
-@misc{nahian_hierarchical_2019,
-  title     = {A {Hierarchical} {Approach} for {Visual} {Storytelling} {Using} {Image} {Description}},
-  url       = {http://arxiv.org/abs/1909.12401},
-  doi       = {10.48550/arXiv.1909.12401},
-  abstract  = {One of the primary challenges of visual storytelling is developing techniques that can maintain the context of the story over long event sequences to generate human-like stories. In this paper, we propose a hierarchical deep learning architecture based on encoder-decoder networks to address this problem. To better help our network maintain this context while also generating long and diverse sentences, we incorporate natural language image descriptions along with the images themselves to generate each story sentence. We evaluate our system on the Visual Storytelling (VIST) dataset and show that our method outperforms state-of-the-art techniques on a suite of different automatic evaluation metrics. The empirical results from this evaluation demonstrate the necessities of different components of our proposed architecture and shows the effectiveness of the architecture for visual storytelling.},
-  urldate   = {2025-02-08},
-  publisher = {arXiv},
-  author    = {Nahian, Md Sultan Al and Tasrin, Tasmia and Gandhi, Sagar and Gaines, Ryan and Harrison, Brent},
-  month     = sep,
+
+@inproceedings{nahian_hierarchical_2019,
+  author    = {Nahian, Md. Sultan Al and Tasrin, Tasmia and Gandhi, Sagar and Gaines, Ryan and Harrison, Brent},
+  title     = {A Hierarchical Approach for Visual Storytelling Using Image Description},
+  booktitle = {Interactive Storytelling (ICIDS 2019)},
+  editor    = {Cardona-Rivera, Rogelio E. and Sullivan, Anne and Young, R. Michael},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {11869},
+  pages     = {304--317},
+  publisher = {Springer},
+  address   = {Cham},
   year      = {2019},
-  note      = {arXiv:1909.12401 [cs]},
-  keywords  = {Computer Science - Computation and Language, Computer Science - Machine Learning, Computer Science - Computer Vision and Pattern Recognition, Statistics - Machine Learning},
-  file      = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/QARJEGA2/Nahian et al. - 2019 - A Hierarchical Approach for Visual Storytelling Us.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/MVVTKVVQ/1909.html:text/html}
+  doi       = {10.1007/978-3-030-33894-7_30},
+  url       = {https://link.springer.com/chapter/10.1007/978-3-030-33894-7_30}
 }
 
 @misc{karpathy_deep_2015,
@@ -2048,13 +2024,13 @@
   year      = {2014}
 }
 
-@article{kingma2013autoencoding,
-  title   = {Auto-Encoding Variational Bayes},
-  author  = {Kingma, Diederik P and Welling, Max},
-  journal = {arXiv preprint arXiv:1312.6114},
-  year    = {2013}
+@inproceedings{kingma2013autoencoding,
+  title     = {Auto-Encoding Variational Bayes},
+  author    = {Kingma, Diederik P. and Welling, Max},
+  booktitle = {Proceedings of the 2nd International Conference on Learning Representations (ICLR 2014)},
+  year      = {2014},
+  url       = {https://openreview.net/forum?id=33X9fd2-9FyZd}
 }
-
 @inproceedings{fan_hierarchical_2018,
   address   = {Melbourne, Australia},
   title     = {Hierarchical {Neural} {Story} {Generation}},
@@ -2738,20 +2714,15 @@
   file      = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/646N3DD8/Arroyo et al. - 2021 - Variational Transformer Networks for Layout Genera.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/NLBNECMB/2104.html:text/html}
 }
 
-@misc{jyothi_layoutvae_2021,
-  title      = {{LayoutVAE}: {Stochastic} {Scene} {Layout} {Generation} {From} a {Label} {Set}},
-  shorttitle = {{LayoutVAE}},
-  url        = {http://arxiv.org/abs/1907.10719},
-  doi        = {10.48550/arXiv.1907.10719},
-  abstract   = {Recently there is an increasing interest in scene generation within the research community. However, models used for generating scene layouts from textual description largely ignore plausible visual variations within the structure dictated by the text. We propose LayoutVAE, a variational autoencoder based framework for generating stochastic scene layouts. LayoutVAE is a versatile modeling framework that allows for generating full image layouts given a label set, or per label layouts for an existing image given a new label. In addition, it is also capable of detecting unusual layouts, potentially providing a way to evaluate layout generation problem. Extensive experiments on MNIST-Layouts and challenging COCO 2017 Panoptic dataset verifies the effectiveness of our proposed framework.},
-  urldate    = {2025-04-12},
-  publisher  = {arXiv},
-  author     = {Jyothi, Akash Abdu and Durand, Thibaut and He, Jiawei and Sigal, Leonid and Mori, Greg},
-  month      = jun,
-  year       = {2021},
-  note       = {arXiv:1907.10719 [cs]},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/5WNZQG4Q/Jyothi et al. - 2021 - LayoutVAE Stochastic Scene Layout Generation From.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/RFHMV8T7/1907.html:text/html}
+@inproceedings{jyothi_layoutvae_2021,
+  author    = {Akash Abdu Jyothi and Thibaut Durand and Jiawei He and Leonid Sigal and Greg Mori},
+  title     = {LayoutVAE: Stochastic Scene Layout Generation From a Label Set},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  year      = {2019},
+  pages     = {9895--9904},
+  publisher = {IEEE/CVF},
+  doi       = {10.1109/ICCV.2019.00999},
+  url       = {https://openaccess.thecvf.com/content_ICCV_2019/html/Jyothi_LayoutVAE_Stochastic_Scene_Layout_Generation_From_a_Label_Set_ICCV_2019_paper.html}
 }
 
 @misc{song_causal-story_2024,
@@ -2785,19 +2756,16 @@
   file      = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/TFRCBIRC/Sigurdsson et al. - 2016 - Learning Visual Storylines with Skipping Recurrent.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/HUFU9HZY/1604.html:text/html}
 }
 
-@misc{yu_hierarchically-attentive_2017,
-  title     = {Hierarchically-{Attentive} {RNN} for {Album} {Summarization} and {Storytelling}},
-  url       = {http://arxiv.org/abs/1708.02977},
-  doi       = {10.48550/arXiv.1708.02977},
-  abstract  = {We address the problem of end-to-end visual storytelling. Given a photo album, our model first selects the most representative (summary) photos, and then composes a natural language story for the album. For this task, we make use of the Visual Storytelling dataset and a model composed of three hierarchically-attentive Recurrent Neural Nets (RNNs) to: encode the album photos, select representative (summary) photos, and compose the story. Automatic and human evaluations show our model achieves better performance on selection, generation, and retrieval than baselines.},
-  urldate   = {2025-04-12},
-  publisher = {arXiv},
+
+@inproceedings{yu_hierarchically-attentive_2017,
+  title     = {Hierarchically-Attentive RNN for Album Summarization and Storytelling},
   author    = {Yu, Licheng and Bansal, Mohit and Berg, Tamara L.},
-  month     = aug,
+  booktitle = {Proceedings of the 2017 Conference on Empirical Methods in Natural Language Processing},
+  pages     = {966--971},
   year      = {2017},
-  note      = {arXiv:1708.02977 [cs]},
-  keywords  = {Computer Science - Artificial Intelligence, Computer Science - Computation and Language, Computer Science - Machine Learning, Computer Science - Computer Vision and Pattern Recognition},
-  file      = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/EQUGRRWQ/Yu et al. - 2017 - Hierarchically-Attentive RNN for Album Summarizati.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/BRHJZ7ZT/1708.html:text/html}
+  address   = {Copenhagen, Denmark},
+  publisher = {Association for Computational Linguistics},
+  url       = {https://aclanthology.org/D17-1101/}
 }
 
 @misc{oquab_dinov2_2024,
@@ -3095,13 +3063,15 @@
   year    = {2024},
   url     = {https://arxiv.org/abs/2401.06066}
 }
-@article{bai2023qwen,
-  title   = {Qwen Technical Report},
-  author  = {Bai, Jinze and others},
-  journal = {arXiv preprint arXiv:2309.16609},
-  year    = {2023},
-  url     = {https://arxiv.org/abs/2309.16609}
+
+@techreport{bai2023qwen,
+  title       = {Qwen Technical Report},
+  author      = {Bai, Jinze and Bai, Shuai and Chu, Yunfei and Cui, Zeyu and Dang, Kai and Deng, Xiaodong and Fan, Yang and Ge, Wenbin and Han, Yu and Huang, Fei and Hui, Binyuan and Ji, Luo and Li, Mei and Lin, Junyang and Lin, Runji and Liu, Dayiheng and Liu, Gao and Lu, Chengqiang and Lu, Keming and Ma, Jianxin and Men, Rui and Ren, Xingzhang and Ren, Xuancheng and Tan, Chuanqi and Tan, Sinan and Tu, Jianhong and Wang, Peng and Wang, Shijie and Wang, Wei and Wu, Shengguang and Xu, Benfeng and Xu, Jin and Yang, An and Yang, Hao and Yang, Jian and Yang, Shusheng and Yao, Yang and Yu, Bowen and Yuan, Hongyi and Yuan, Zheng and Zhang, Jianwei and Zhang, Xingxuan and Zhang, Yichang and Zhang, Zhenru and Zhou, Chang and Zhou, Jingren and Zhou, Xiaohuan and Zhu, Tianhang},
+  institution = {Alibaba Cloud / Qwen Team},
+  year        = {2023},
+  url         = {https://qianwen-res.oss-cn-beijing.aliyuncs.com/QWEN_TECHNICAL_REPORT.pdf}
 }
+
 @article{otani_ltsim_2024,
   title   = {LTSim: Layout Transportation-based Similarity Measure for Evaluating Layout Generation},
   author  = {Otani, Mayu and Inoue, Naoto and Kikuchi, Kotaro and Togashi, Riku},
@@ -3865,20 +3835,29 @@
   booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
   year      = {2024}
 }
-@misc{feng_layoutgpt_2023,
-  title      = {{LayoutGPT}: {Compositional} {Visual} {Planning} and {Generation} with {Large} {Language} {Models}},
-  shorttitle = {{LayoutGPT}},
-  url        = {http://arxiv.org/abs/2305.15393},
-  doi        = {10.48550/arXiv.2305.15393},
-  abstract   = {Attaining a high degree of user controllability in visual generation often requires intricate, fine-grained inputs like layouts. However, such inputs impose a substantial burden on users when compared to simple text inputs. To address the issue, we study how Large Language Models (LLMs) can serve as visual planners by generating layouts from text conditions, and thus collaborate with visual generative models. We propose LayoutGPT, a method to compose in-context visual demonstrations in style sheet language to enhance the visual planning skills of LLMs. LayoutGPT can generate plausible layouts in multiple domains, ranging from 2D images to 3D indoor scenes. LayoutGPT also shows superior performance in converting challenging language concepts like numerical and spatial relations to layout arrangements for faithful text-to-image generation. When combined with a downstream image generation model, LayoutGPT outperforms text-to-image models/systems by 20-40\% and achieves comparable performance as human users in designing visual layouts for numerical and spatial correctness. Lastly, LayoutGPT achieves comparable performance to supervised methods in 3D indoor scene synthesis, demonstrating its effectiveness and potential in multiple visual domains.},
-  urldate    = {2025-06-18},
-  publisher  = {arXiv},
-  author     = {Feng, Weixi and Zhu, Wanrong and Fu, Tsu-jui and Jampani, Varun and Akula, Arjun and He, Xuehai and Basu, Sugato and Wang, Xin Eric and Wang, William Yang},
-  month      = oct,
-  year       = {2023},
-  note       = {arXiv:2305.15393 [cs]},
-  keywords   = {Computer Science - Artificial Intelligence, Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/RP4XNFI3/Feng et al. - 2023 - LayoutGPT Compositional Visual Planning and Gener.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/A8EK2AWC/2305.html:text/html}
+
+@inproceedings{feng_layoutgpt_2023,
+  author       = {Weixi Feng and
+                  Wanrong Zhu and
+                  Tsu{-}Jui Fu and
+                  Varun Jampani and
+                  Arjun R. Akula and
+                  Xuehai He and
+                  Sugato Basu and
+                  Xin Eric Wang and
+                  William Yang Wang},
+  editor       = {Alice Oh and
+                  Tristan Naumann and
+                  Amir Globerson and
+                  Kate Saenko and
+                  Moritz Hardt and
+                  Sergey Levine},
+  title        = {LayoutGPT: Compositional Visual Planning and Generation with Large Language Models},
+  booktitle    = {Advances in Neural Information Processing Systems 36: Annual Conference
+                  on Neural Information Processing Systems 2023, NeurIPS 2023, New Orleans,
+                  LA, USA, December 10 - 16, 2023},
+  year         = {2023},
+  url          = {http://papers.nips.cc/paper_files/paper/2023/hash/3a7f9e485845dac27423375c934cb4db-Abstract-Conference.html}
 }
 
 @misc{maaz_video-chatgpt_2024,
@@ -4401,7 +4380,7 @@
 
 
 
-@article{matsui2017sketch,
+@article{matsui_2017_sketch,
   title     = {Sketch-based Manga Retrieval Using Manga109 Dataset},
   author    = {Matsui, Yusuke and Ito, Kota and Aramaki, Yuji and Fujimoto, Azuma and Ogawa, Toru and Yamasaki, Toshihiko and Aizawa, Kiyoharu},
   journal   = {Multimedia tools and applications},
@@ -6012,20 +5991,13 @@
   file       = {Full Text PDF:/Users/kengowatanabe/Zotero/storage/V6RKCUVH/Yang et al. - 2025 - StoryLLaVA Enhancing Visual Storytelling with Multi-Modal Large Language Models.pdf:application/pdf}
 }
 
-@misc{hsu_drct_2024,
-  title      = {{DRCT}: {Saving} {Image} {Super}-resolution away from {Information} {Bottleneck}},
-  shorttitle = {{DRCT}},
-  url        = {http://arxiv.org/abs/2404.00722},
-  doi        = {10.48550/arXiv.2404.00722},
-  abstract   = {In recent years, Vision Transformer-based approaches for low-level vision tasks have achieved widespread success. Unlike CNN-based models, Transformers are more adept at capturing long-range dependencies, enabling the reconstruction of images utilizing non-local information. In the domain of super-resolution, Swin-transformer-based models have become mainstream due to their capability of global spatial information modeling and their shifting-window attention mechanism that facilitates the interchange of information between different windows. Many researchers have enhanced model performance by expanding the receptive fields or designing meticulous networks, yielding commendable results. However, we observed that it is a general phenomenon for the feature map intensity to be abruptly suppressed to small values towards the network's end. This implies an information bottleneck and a diminishment of spatial information, implicitly limiting the model's potential. To address this, we propose the Dense-residual-connected Transformer (DRCT), aimed at mitigating the loss of spatial information and stabilizing the information flow through dense-residual connections between layers, thereby unleashing the model's potential and saving the model away from information bottleneck. Experiment results indicate that our approach surpasses state-of-the-art methods on benchmark datasets and performs commendably at the NTIRE-2024 Image Super-Resolution (x4) Challenge. Our source code is available at https://github.com/ming053l/DRCT},
-  urldate    = {2026-01-23},
-  publisher  = {arXiv},
-  author     = {Hsu, Chih-Chung and Lee, Chia-Ming and Chou, Yi-Shiuan},
-  month      = nov,
-  year       = {2024},
-  note       = {arXiv:2404.00722 [cs]},
-  keywords   = {Computer Science - Artificial Intelligence, Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/ZMGV4FJX/Hsu et al. - 2024 - DRCT Saving Image Super-resolution away from Information Bottleneck.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/MKX24TUB/2404.html:text/html}
+@inproceedings{Hsu_2024_DRCT,
+  author    = {Hsu, Chih-Chung and Lee, Chia-Ming and Chou, Yi-Shiuan},
+  title     = {DRCT: Saving Image Super-Resolution Away from Information Bottleneck},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR) Workshops},
+  month     = {June},
+  year      = {2024},
+  pages     = {6133--6142}
 }
 
 @inproceedings{barnaghi_survey_2007,
@@ -6129,20 +6101,19 @@
   file      = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/LYNMHETW/Huang et al. - 2023 - A Survey for Graphic Design Intelligence.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/JB8HTZSG/2309.html:text/html}
 }
 
-@misc{kong_blt_2022,
-  title      = {{BLT}: {Bidirectional} {Layout} {Transformer} for {Controllable} {Layout} {Generation}},
-  shorttitle = {{BLT}},
-  url        = {http://arxiv.org/abs/2112.05112},
-  doi        = {10.48550/arXiv.2112.05112},
-  abstract   = {Creating visual layouts is a critical step in graphic design. Automatic generation of such layouts is essential for scalable and diverse visual designs. To advance conditional layout generation, we introduce BLT, a bidirectional layout transformer. BLT differs from previous work on transformers in adopting non-autoregressive transformers. In training, BLT learns to predict the masked attributes by attending to surrounding attributes in two directions. During inference, BLT first generates a draft layout from the input and then iteratively refines it into a high-quality layout by masking out low-confident attributes. The masks generated in both training and inference are controlled by a new hierarchical sampling policy. We verify the proposed model on six benchmarks of diverse design tasks. Experimental results demonstrate two benefits compared to the state-of-the-art layout transformer models. First, our model empowers layout transformers to fulfill controllable layout generation. Second, it achieves up to 10x speedup in generating a layout at inference time than the layout transformer baseline. Code is released at https://shawnkx.github.io/blt.},
-  urldate    = {2026-01-25},
-  publisher  = {arXiv},
-  author     = {Kong, Xiang and Jiang, Lu and Chang, Huiwen and Zhang, Han and Hao, Yuan and Gong, Haifeng and Essa, Irfan},
-  month      = jul,
-  year       = {2022},
-  note       = {arXiv:2112.05112 [cs]},
-  keywords   = {Computer Science - Computer Vision and Pattern Recognition},
-  file       = {Preprint PDF:/Users/kengowatanabe/Zotero/storage/BJIHP76B/Kong et al. - 2022 - BLT Bidirectional Layout Transformer for Controllable Layout Generation.pdf:application/pdf;Snapshot:/Users/kengowatanabe/Zotero/storage/EJ9SZWHE/2112.html:text/html}
+@inproceedings{kong_blt_2022,
+  author    = {Kong, Xiang and Jiang, Lu and Chang, Huiwen and Zhang, Han and Hao, Yuan and Gong, Haifeng and Essa, Irfan},
+  title     = {BLT: Bidirectional Layout Transformer for Controllable Layout Generation},
+  booktitle = {Computer Vision -- ECCV 2022},
+  editor    = {Avidan, Shai and Brostow, Gabriel and Ciss{\'e}, Moustapha and Farinella, Giovanni Maria and Hassner, Tal},
+  series    = {Lecture Notes in Computer Science},
+  volume    = {13677},
+  pages     = {474--490},
+  publisher = {Springer},
+  address   = {Cham},
+  year      = {2022},
+  doi       = {10.1007/978-3-031-19790-1_29},
+  url       = {https://link.springer.com/chapter/10.1007/978-3-031-19790-1_29}
 }
 
 @incollection{avidan_blt_2022,
